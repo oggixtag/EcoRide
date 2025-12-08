@@ -1,0 +1,33 @@
+/* -------------------------------------------
+   Styles spécifiques pour la page Mentions Légales
+   ------------------------------------------- */
+
+.legal-content-container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    line-height: 1.6;
+}
+
+.legal-content-container section {
+    margin-bottom: 30px;
+    padding-top: 10px;
+}
+
+.legal-content-container h2 {
+    font-size: 1.4em;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.legal-content-container p {
+    margin-bottom: 10px;
+}
+
+/* Responsive simple pour les petits écrans */
+@media (max-width: 600px) {
+    .legal-content-container {
+        padding: 20px;
+    }
+}

@@ -1,0 +1,150 @@
+/* -------------------------------------------
+   Styles spécifiques pour la page Covoiturage
+   ------------------------------------------- */
+
+.ecoride-trip-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 1000px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    padding: 20px;
+}
+
+.section-title {
+    color: #2c3e50;
+}
+
+.section-soustitle {
+    color: #2c3e50;
+    border-bottom: 2px solid #4CAF50; /* Vert EcoRide */
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.trip-row-empty {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    align-items: left; 
+}
+
+/* --- Structure en Grille (Grid) --- */
+.trip-row {
+    display: grid;
+    /* Définition des colonnes : Date | Heure | Lieu (flexible) | Statut | Détails (flexible) */
+    grid-template-columns: 120px 100px 1.5fr 120px 2fr;
+    gap: 15px;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    align-items: center; /* Centre verticalement le contenu */
+}
+
+/* Style de l'entête */
+.trip-header {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #666;
+    border-radius: 5px 5px 0 0;
+    border-bottom: 2px solid #ddd;
+}
+
+/* Effet au survol des lignes de données */
+.trip-row:not(.trip-header):hover {
+    background-color: #f1f8f1; /* Vert très pâle */
+}
+
+/* --- Badges de Statut (Optionnel pour le style) --- */
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Exemple de couleurs selon le statut */
+.status-badge.confirmé { background-color: #d4edda; color: #155724; }
+.status-badge.annulé { background-color: #f8d7da; color: #721c24; }
+.status-badge.prévu { background-color: #cce5ff; color: #004085; }
+
+/* --- RESPONSIVE MOBILE (Max 768px) --- */
+@media (max-width: 768px) {
+    /* On cible spécifiquement l'élément qui a LES DEUX classes */
+    .trip-row.trip-header {
+        display: none !important;
+    }
+	
+    .trip-row {
+        /* On passe d'une grille à une seule colonne (block) */
+        display: block; 
+        border: 1px solid #ddd;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .trip-cell {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .trip-cell:last-child {
+        border-bottom: none;
+    }
+
+    /* Astuce CSS : On utilise l'attribut data-label pour créer un "faux" entête à gauche */
+    .trip-cell::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #4CAF50;
+        margin-right: 15px;
+        text-transform: uppercase;
+        font-size: 0.85em;
+    }
+}
+
+/* Section de présentation */
+.presentation-section {
+    background-color: white;
+    padding: 40px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    margin-top: 30px;
+    display: flex;
+    gap: 30px;
+    align-items: flex-start; /* Alignement en haut pour le contenu */
+}
+.presentation-content {
+    flex: 2;
+}
+.presentation-images-gallery {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.presentation-images-gallery img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+    .presentation-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    .presentation-images-gallery {
+            flex-direction: row; /* Les deux images côte à côte en bas */
+            justify-content: center;
+    }
+    .presentation-images-gallery img {
+        width: 48%; /* Deux images qui tiennent sur une ligne */
+    }
+}
