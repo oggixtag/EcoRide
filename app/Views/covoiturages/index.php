@@ -30,7 +30,10 @@ echo '</pre>';
         <img src="https://placehold.co/200x200/4CAF50/ffffff?text=Communaute"
             alt="Illustration communauté" class="presentation-image-item">
     </div>
+
 </section>
+
+
 
 <div class="ecoride-trip-container">
 

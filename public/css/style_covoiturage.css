@@ -5,7 +5,7 @@
 .ecoride-trip-container {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     max-width: 1000px;
-    margin: 20px auto;
+    margin: 20px ;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -110,11 +110,15 @@
 /* Section de présentation */
 .presentation-section {
     background-color: white;
-    padding: 40px 20px;
+    padding: 20px 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    margin-top: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin: 20px;
     display: flex;
+    gap: 30px;
+    /* La section entière est en colonne: Contenu texte en haut, grille en bas */
+    display: flex; 
+    flex-direction: column; 
     gap: 30px;
     align-items: flex-start; /* Alignement en haut pour le contenu */
 }
@@ -122,29 +126,40 @@
     flex: 2;
 }
 .presentation-images-gallery {
-    flex: 1;
-    min-width: 250px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    width: 100%;
+    max-width: 800px; /* Limiter la taille de la grille sur les grands écrans */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 colonnes pour le desktop */
+    gap: 20px;
+    margin-top: 5px;
 }
 .presentation-images-gallery img {
+    display: block; /* S'assurer qu'elles se comportent comme des blocs dans la grille */
     width: 100%;
-    height: auto;
+    /* Ajuster la hauteur proportionnellement à la largeur pour un aspect carré/boîte */
+    aspect-ratio: 1 / 1; 
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    /* L'image elle-même (du placeholder) fournit le fond vert et le texte blanc */
 }
 
+/* Responsive : Sur mobile et tablette, passer à une grille 2x2 */
 @media (max-width: 768px) {
     .presentation-section {
         flex-direction: column;
         text-align: center;
     }
     .presentation-images-gallery {
-            flex-direction: row; /* Les deux images côte à côte en bas */
-            justify-content: center;
+        flex-direction: row; /* Les deux images côte à côte en bas */
+        justify-content: center;
     }
     .presentation-images-gallery img {
         width: 48%; /* Deux images qui tiennent sur une ligne */
+    }
+}
+
+/* Sur très petit écran, 1 image par ligne */
+@media (max-width: 480px) {
+    .presentation-images-gallery {
+        grid-template-columns: 1fr; 
     }
 }
