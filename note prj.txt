@@ -10,66 +10,9 @@ MVC (Modèle-Vue-Contrôleur) est excellent pour un projet PHP car il permet de 
 
 Cette structure est plus conventionnelle et rend le cœur du framework (core/) distinct de la logique métier (app/)
 
+BUGS:
+- gérer le cas quand compact est vide
+Warning: compact(): Undefined variable $ in C:\xampp\htdocs\EcoRide\app\Controller\CovoituragesController.php on line 46
+cf CovoituragesController.index
 
-
-    <div class="trip-row trip-header">
-        <div class="trip-cell">Date</div>
-        <div class="trip-cell">Heure</div>
-        <div class="trip-cell">Départ</div>
-        <div class="trip-cell">Statut</div>
-        <div class="trip-cell">Détails</div>
-    </div>
-
-    <?php foreach ($covoiturages as $covoiturage): ?>
-
-        <div class="trip-row">
-            <!-- Chaque cellule a un attribut data-label pour le responsive mobile -->
-            <div class="trip-cell" data-label="Date">
-                <?= htmlspecialchars($covoiturage->date_depart); ?>
-            </div>
-
-            <div class="trip-cell" data-label="Heure">
-                <?= htmlspecialchars($covoiturage->heure_depart); ?>
-            </div>
-
-            <div class="trip-cell" data-label="Départ">
-                <strong><?= htmlspecialchars($covoiturage->lieu_depart); ?></strong>
-            </div>
-
-            <div class="trip-cell" data-label="Statut">
-                <span class="status-badge <?= strtolower($covoiturage->statut); ?>">
-                    <?= htmlspecialchars($covoiturage->statut); ?>
-                </span>
-            </div>
-
-            <div class="trip-cell" data-label="Détails">
-                <?= $covoiturage->getExtrait(); ?>
-            </div>
-        </div>
-    <?php
-    endforeach;
-    ?>
 	
-
-        if (!empty($_POST)) {
-            echo '<pre>';
-            var_dump('CovoituragesController.find().form not empty.');
-            echo '</pre>';
-            var_dump($_POST);
-
-            if (!empty($_POST['departure'])) {
-                echo '<pre>';
-                var_dump('CovoituragesController.find().tt.');
-                echo '</pre>';
-            } else {
-                $errors = true;
-                echo '<pre>';
-                var_dump('CovoituragesController.find().err.');
-                echo '</pre>';
-            }
-        } else {
-            $errors = true;
-            echo '<pre>';
-            var_dump('CovoituragesController.find().form empty.');
-            echo '</pre>';
-        }

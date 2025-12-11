@@ -24,7 +24,6 @@ class CovoituragesController extends AppController
         $this->loadModel('Covoiturage');
     }
 
-    // la page d'acceuil qui liste nos differents articles
     public function index()
     {
         echo '<pre>';
@@ -32,18 +31,13 @@ class CovoituragesController extends AppController
         echo '</pre>';
 
         echo '<pre>';
-        var_dump('CovoituragesController.calling all()..');
+        var_dump('CovoituragesController.index().calling render()..');
         echo '</pre>';
-
-        //['posts'=>$post,'categories'=>$categories]
-        //compact('posts','categories')
-
-        $covoiturages = $this->Covoiturage->all();
 
         // ça appelle la page index (C:\xampp\htdocs\EcoRide\app\Views\covoiturages)
         $this->render(
             'covoiturages.index',
-            compact('covoiturages')
+            compact('')
         );
     }
 
@@ -66,8 +60,35 @@ class CovoituragesController extends AppController
 
         $form = new MyForm($_POST);
 
+        echo '<pre>';
+        var_dump('CovoituragesController.find().calling render()..');
+        echo '</pre>';
+
         // ça appelle la page journey (C:\xampp\htdocs\EcoRide\app\Views\covoiturages)
         $this->render('covoiturages.journey', compact('covoiturage', 'form', 'error_form_empty'));
+    }
+
+    public function all()
+    {
+        echo '<pre>';
+        var_dump('CovoituragesController.all() called.');
+        echo '</pre>';
+
+        //['posts'=>$post,'categories'=>$categories]
+        //compact('posts','categories')
+
+        $covoiturages = $this->Covoiturage->all();
+
+        echo '<pre>';
+        var_dump('CovoituragesController.all().calling render()..');
+        echo '</pre>';
+
+        // ça appelle la page index (C:\xampp\htdocs\EcoRide\app\Views\covoiturages)
+        $this->render(
+            'covoiturages.covoiturages',
+            compact('covoiturages')
+
+        );
     }
 
     // la page category qui permettra d'afficher la category qu'on suite consulté

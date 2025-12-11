@@ -25,7 +25,8 @@ echo '</pre>';
 
 // naming : controller + route
 
-// chargement controller
+// Router to load controller based on page called
+// US1
 if ($page === 'home') {
     echo '<pre>';
     var_dump('page index; $page===home; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
@@ -44,4 +45,24 @@ if ($page === 'home') {
     echo '</pre>';
     $controller = new \NsAppEcoride\Controller\LegalesController();
     $controller->index();
+}
+// US2
+elseif ($page === 'philosophie') {
+    echo '<pre>';
+    var_dump('page index; $page===philosophie; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
+    echo '</pre>';
+    $controller = new \NsAppEcoride\Controller\HtmlController();
+    $controller->philosophie();
+} elseif ($page === 'covoiturages') {
+    echo '<pre>';
+    var_dump('page index; $page===covoiturages; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
+    echo '</pre>';
+    $controller = new \NsAppEcoride\Controller\CovoituragesController();
+    $controller->all();
+} elseif ($page === 'contact') {
+    echo '<pre>';
+    var_dump('page index; $page===contact; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
+    echo '</pre>';
+    $controller = new \NsAppEcoride\Controller\HtmlController();
+    $controller->contact();
 }
