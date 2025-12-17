@@ -1,6 +1,6 @@
 <?php
 echo '<pre>';
-var_dump('page: ecoride\app\Views\covoiturage\index.php');
+var_dump('page: ecoride\app\Views\covoiturages\index.php');
 echo '</pre>';
 ?>
 

@@ -15,4 +15,39 @@ BUGS:
 Warning: compact(): Undefined variable $ in C:\xampp\htdocs\EcoRide\app\Controller\CovoituragesController.php on line 46
 cf CovoituragesController.index
 
+status de la course : 
+- confirmé
+- annullé
+- en pending
+- on bording
+ 
+ 
+     <?php if ($error_form_empty): ?>
+
+        <?php
+        echo '<pre>';
+        var_dump('page(journey): $error_form_empty');
+        echo '</pre>';
+        ?>
+
+        <div class="ecoride-trip-container">
+
+            <h3 class="section-soustitle">Changer les criteres de recherche</h3>
+            <form class="search-form" method="post" action="index.php?p=journey">
+                <input type="text" name="lieu_depart" placeholder="Lieu de départ">
+                <input type="text" name="lieu_arrivee" placeholder="Destination">
+                <input type="date" name="date">
+                <button type="submit">Rechercher</button>
+            </form>
+
+            <h3 class="section-soustitle">Prochains</h3>
+            <div class="alert alert-danger">
+                Le formulaire est vide
+            </div>
+            <p>
+                <a href="index.php">Retour à la page d'accueil</a>
+            </p>
+        </div>
+
+
 	

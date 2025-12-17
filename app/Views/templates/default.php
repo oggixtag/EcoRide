@@ -53,7 +53,7 @@ echo '</pre>';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EcoRide - Covoiturage Écologique</title>
     <!-- Inclure le CSS général de l'application -->
-    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/style_app.css">
     <!-- Inclure le CSS spécifique aux covoiturages -->
     <link rel="stylesheet" href="css/style_covoiturage.css">
     <!-- Inclure le CSS spécifique au menu -->
@@ -62,6 +62,8 @@ echo '</pre>';
     <link rel="stylesheet" href="css/style_contact.css">
     <!-- Inclure le CSS spécifique aux mention légales -->
     <link rel="stylesheet" href="css/style_legal.css">
+    <!-- Inclure le CSS spécifique à la page trajet -->
+    <link rel="stylesheet" href="css/style_trajet.css">
 </head>
 
 

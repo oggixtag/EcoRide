@@ -47,25 +47,34 @@ class CovoituragesController extends AppController
         var_dump('CovoituragesController.find().called on methed ' . $_SERVER['REQUEST_METHOD'] . '.');
         echo '</pre>';
 
-        $error_form_empty = false;
+        /*Pour la recherche d’itinéraire, la recherche se basera sur la ville ainsi que la date. */
+        $error_form_recherche = false;
 
-        if (empty($_POST['lieu_depart']) && empty($_POST['lieu_arrivee']) && empty($_POST['date'])) {
-            $error_form_empty = true;
+        if (empty($_POST['lieu_depart']) || empty($_POST['date'])) {
+            $error_form_recherche = true;
             echo '<pre>';
+            var_dump('CovoituragesController.find().lieu_depart et date valorisés.');
             var_dump($_POST);
             echo '</pre>';
         }
 
-        $covoiturage = $this->Covoiturage->find($_POST['lieu_depart']);
+        echo '<pre>';
+        var_dump('CovoituragesController.find().calling $this->Covoiturage->recherche(lieu et date)..');
+        echo '</pre>';
+        $covoiturages = $this->Covoiturage->recherche($_POST['lieu_depart'], $_POST['date']);
 
+        $covoiturages_lieu_ou_date = $this->Covoiturage->recherche_lieu_ou_date($_POST['lieu_depart'], $_POST['date']);
+
+        echo '<pre>';
+        var_dump('CovoituragesController.find().nouvelle instantation new MyForm($_POST)');
+        echo '</pre>';
         $form = new MyForm($_POST);
 
         echo '<pre>';
         var_dump('CovoituragesController.find().calling render()..');
         echo '</pre>';
-
         // ça appelle la page journey (C:\xampp\htdocs\EcoRide\app\Views\covoiturages)
-        $this->render('covoiturages.journey', compact('covoiturage', 'form', 'error_form_empty'));
+        $this->render('covoiturages.journey', compact('covoiturages', 'covoiturages_lieu_ou_date', 'form', 'error_form_recherche'));
     }
 
     public function all()

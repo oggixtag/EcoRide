@@ -3,6 +3,35 @@
 -- Base de données pour le projet de covoiturage EcoRide
 -- -----------------------------------------------------
 
+-- -----------------------------------------------------
+-- Script de suppression des tables (DROP)
+-- Ordre basé sur les contraintes de clés étrangères (enfants avant parents)
+-- -----------------------------------------------------
+
+-- Désactiver la vérification des clés étrangères pour permettre la suppression
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- 1. Tables d'association (dépendent de deux autres tables)
+DROP TABLE IF EXISTS `participe`;
+
+-- 2. Tables dépendant de `utilisateur`, `voiture`, `configuration` ou `marque`
+DROP TABLE IF EXISTS `covoiturage`;  -- Dépend de voiture et utilisateur
+DROP TABLE IF EXISTS `avis`;         -- Dépend de utilisateur
+DROP TABLE IF EXISTS `parametre`;    -- Dépend de configuration
+
+-- 3. Tables dépendant uniquement d'elles-mêmes ou de petites entités
+DROP TABLE IF EXISTS `voiture`;      -- Dépend de marque
+DROP TABLE IF EXISTS `utilisateur`;  -- Dépend de role
+
+-- 4. Tables principales (qui ne dépendent d'aucune autre table)
+DROP TABLE IF EXISTS `role`;
+DROP TABLE IF EXISTS `marque`;
+DROP TABLE IF EXISTS `configuration`;
+
+-- Rétablir la vérification des clés étrangères
+SET FOREIGN_KEY_CHECKS = 1;
+
+
 -- Create the EcoRide database
 CREATE DATABASE IF NOT EXISTS ecoride_db;
 USE ecoride_db;
@@ -48,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `avis` (
   `avis_id` INT NOT NULL AUTO_INCREMENT,
-  `commentaire` VARCHAR(50) NULL, -- VARCHAR(50) semble court pour un commentaire, TEXT pourrait être mieux.
+  `commentaire` VARCHAR(100) NULL, -- VARCHAR(50) semble court pour un commentaire, TEXT pourrait être mieux.
   `note` VARCHAR(50) NOT NULL, -- Le type INT(1) ou FLOAT serait plus approprié pour une note.
   `statut` VARCHAR(50) NOT NULL,
   `utilisateur_id` INT NOT NULL, -- Clé étrangère vers l'utilisateur qui DÉPOSE l'avis

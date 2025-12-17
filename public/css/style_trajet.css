@@ -1,0 +1,334 @@
+:root {
+
+    --color-status-confirmed: #2ecc71; /* Vert pour Confirmé */
+    --color-status-pending: #e67e22; /* Orange pour En attente */
+    --color-status-cancelled: #e74c3c; /* Rouge pour Annulé */
+    --color-status-onboarding: #3498db; /* Bleu pour En cours d'embarquement */
+    --color-disabled: #bdc3c7; /* Gris pour les boutons désactivés */
+}
+/* Conteneur de la liste de trajets */
+.trip-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 20px auto; /* Ajout d'une marge supérieure pour remplacer le header */
+    padding: 0 20px; /* Ajout d'un padding pour Desktop */
+}    
+/* ----------------------------------------------------
+    STYLE DU HEADER DE LISTE (TITRES DES COLONNES)
+    ---------------------------------------------------- */
+.trip-list-header {
+    display: flex;
+    background-color: var(--color-nightblue);
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    font-size: 0.85em;
+}
+.header-column {
+    padding: 0 15px;
+    text-align: center;
+}
+/* Largeurs ajustées pour 5 colonnes */
+.header-column.driver {
+    width: 20%; 
+    text-align: left;
+}
+.header-column.route {
+    width: 30%; 
+}
+.header-column.price {
+    width: 15%; 
+}
+.header-column.status {
+    width: 15%; /* Nouvelle colonne */
+}
+.header-column.action {
+    width: 20%;
+}
+    
+/* ----------------------------------------------------
+    STYLE DE LA CARTE DE COVOITURAGE (TRIP-CARD)
+    ---------------------------------------------------- */
+.trip-card {
+    display: flex;
+    background-color: var(--color-card-bg);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    align-items: center; 
+    cursor: pointer;
+}
+
+.trip-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Styles des colonnes du corps */
+.trip-driver-info, .trip-times, .trip-pricing, .trip-status, .trip-action {
+    padding: 0 15px;
+    min-height: 100%;
+}
+/* Colonne 1 : Chauffeur & Éco */
+.trip-driver-info {
+    width: 20%; /* Largeur ajustée */
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.driver-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.driver-photo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--color-ecogreen); 
+    margin-bottom: 5px;
+    background-color: #ccc; 
+}
+.driver-name {
+    font-weight: bold;
+    color: var(--color-nightblue);
+    font-size: 0.95em;
+}
+.driver-rating {
+    font-size: 0.9em;
+    color: #777;
+}
+.driver-rating i {
+    color: var(--color-rating); 
+}
+
+/* Style du badge Éco (ovale/très arrondi) */
+.eco-badge {
+    background-color: var(--color-ecogreen);
+    color: white;
+    padding: 4px 12px; /* Augmentation du padding horizontal */
+    border-radius: 50px; /* Rendu ovale/très arrondi */
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-top: 10px;
+    align-self: center;
+    white-space: nowrap;
+}
+.standard-badge {
+    background-color: #999 !important;
+}
+
+/* Colonne 2 : Temps & Trajet */
+.trip-times {
+    width: 30%; /* Largeur ajustée */
+    border-right: 1px solid var(--color-border);
+    /* Utilisation de flex pour centrer verticalement les deux time-blocks */
+    display: flex;
+    align-items: center; 
+    justify-content: space-between;
+}
+.time-block {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    /* Ajout d'une hauteur minimale pour forcer l'alignement */
+    min-height: 80px; 
+    justify-content: center;
+}
+/* Ajustement spécifique pour aligner le texte dans les time-blocks (surtout sur mobile) */
+.trip-times > .time-block {
+    align-items: center;
+}
+.time {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--color-nightblue);
+}
+.city {
+    font-size: 1.1em;
+    font-weight: 500;
+    margin-top: 2px;
+}
+.date {
+    font-size: 0.9em;
+    color: #777;
+    margin-top: 5px;
+}
+.separator {
+    font-size: 2em;
+    color: var(--color-ecogreen); 
+    margin: 0 15px;
+}
+
+/* Colonne 3 : Prix & Places */
+.trip-pricing {
+    width: 15%; /* Largeur ajustée */
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.trip-price {
+    font-size: 2em;
+    font-weight: bold;
+    color: var(--color-price); 
+    margin-bottom: 5px;
+}
+.remaining-seats {
+    font-size: 0.9em;
+    color: var(--color-ecogreen); 
+    font-weight: bold;
+}
+
+/* Colonne 4 : Statut */
+.trip-status {
+    width: 15%; /* Nouvelle largeur */
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+.status-confirmed {
+    color: var(--color-status-confirmed);
+}
+.status-pending {
+    color: var(--color-status-pending);
+}
+.status-cancelled {
+    color: var(--color-status-cancelled);
+}
+.status-onboarding {
+    color: var(--color-status-onboarding);
+}
+
+/* Colonne 5 : Action */
+.trip-action {
+    width: 20%; /* Largeur inchangée */
+    display: flex;
+    justify-content: center;
+}
+.btn-detail {
+    background-color: var(--color-nightblue);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.btn-detail:hover {
+    background-color: #445970; 
+}
+/* Bouton grisé pour le cas désactivé */
+.btn-disabled-complete {
+    background-color: var(--color-disabled);
+    cursor: not-allowed;
+    opacity: 0.8;
+    transition: none;
+}
+
+/* ----------------------------------------------------
+    RESPONSIVE (Mobile : moins de 768px)
+    ---------------------------------------------------- */
+@media (max-width: 768px) {
+    
+    /* Ajustement du corps après suppression du header */
+    body {
+        padding-top: 0; 
+    }
+    
+    .trip-list {
+        margin-top: 15px; /* Moins de marge en haut sur mobile */
+        padding: 0 15px; /* Ajout d'un padding pour Mobile */
+    }
+    
+    /* Masquer l'en-tête de liste sur mobile */
+    .trip-list-header {
+        display: none;
+    }
+    
+    /* Ajustements des cartes (layout en colonne) */
+    .trip-card {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 15px;
+    }
+
+    .trip-driver-info, .trip-times, .trip-pricing, .trip-status, .trip-action {
+        width: 100%;
+        padding: 10px 0;
+        border-right: none;
+        /* La règle générale applique une bordure en bas pour tous les blocs de contenu */
+        border-bottom: 1px solid var(--color-border); 
+    }
+    .trip-action {
+        border-bottom: none; /* Sauf pour le dernier élément, l'action */
+        margin-top: 10px;
+    }
+
+    .driver-profile {
+        flex-direction: row;
+        text-align: left;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 0;
+    }
+
+    .driver-photo {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .driver-details-text { 
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .eco-badge {
+        margin-top: 0;
+        align-self: flex-start; /* Aligne à gauche sur mobile */
+    }
+
+    .trip-times {
+        justify-content: space-around; /* Rendre plus lisible sur mobile */
+    }
+
+    /* Retirer le min-height pour mobile pour éviter l'étirement inutile */
+    .time-block {
+        min-height: auto; 
+    }
+    
+    /* Regrouper prix/places et statut sur mobile */
+    .trip-pricing, .trip-status {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .trip-price {
+        font-size: 1.8em;
+    }
+
+    .btn-detail {
+        width: 100%;
+        padding: 12px 0;
+    }
+}

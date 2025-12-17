@@ -1,0 +1,54 @@
+/* Variables de couleur EcoRide */
+:root {
+    --color-ecogreen: #4CAF50; /* Vert Principal */
+    --color-ecogreen-survol: #45a049; /* Vert légèrement plus foncé au survol  */
+    --color-ecodark: #388E3C; /* Vert Foncé pour hover */
+    --color-nightblue: #2c3e50; /* Bleu Nuit pour titres/bouton */
+    --color-price: #1abc9c; /* Turquoise/Accent pour le prix */
+    --color-rating: #f39c12; /* Jaune pour les étoiles */
+    --color-background: #f4f4f4;
+    --color-text: #333;
+    --color-card-bg: #ffffff;
+    --color-border: #eee;
+    --color-connexion: #2c3e50; /* Bouton Connexion Bleu Nuit */
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0; 
+    padding-top: 0; 
+    background-color: var(--color-background);
+    color: var(--color-text);
+}
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px;
+}
+/* HEADER/NAVIGATION SIMPLE */
+.main-header {
+    background-color: var(--color-background);
+    color: white;
+    padding: 15px 0;
+    text-align: center;
+}
+.main-header h1 {
+    margin: 0;
+    font-size: 1.8em;
+}
+/* FOOTER */
+.main-footer {
+    background-color: var(--color-nightblue);
+    color: white;
+    padding: 20px 0;
+    margin-top: 40px;
+    text-align: center;
+    font-size: 0.9em;
+}
+.main-footer a {
+    background-color: var(--color-ecogreen);
+    text-decoration: none;
+    margin: 0 10px;
+}
+.main-footer a:hover {
+    text-decoration: underline;
+}
