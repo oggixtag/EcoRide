@@ -33,21 +33,31 @@ if ($page === 'home') {
     echo '</pre>';
     $controller = new \NsAppEcoride\Controller\CovoituragesController();
     $controller->index();
-} elseif ($page === 'trajet') {
+}
+// US3 US4
+elseif ($page === 'trajet') {
     echo '<pre>';
     var_dump('page index; $page===trajet; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
     echo '</pre>';
     $controller = new \NsAppEcoride\Controller\CovoituragesController();
     $controller->show();
-} elseif ($page === 'legale') {
+}
+// US5
+elseif ($page === 'trajet-details') {
+    echo '<pre>';
+    var_dump('page index; $page===trajet-details; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
+    echo '</pre>';
+    $controller = new \NsAppEcoride\Controller\CovoituragesController();
+    $controller->details();
+}
+// US2
+elseif ($page === 'legale') {
     echo '<pre>';
     var_dump('page index; $page===legale; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
     echo '</pre>';
     $controller = new \NsAppEcoride\Controller\LegalesController();
     $controller->index();
-}
-// US2
-elseif ($page === 'philosophie') {
+} elseif ($page === 'philosophie') {
     echo '<pre>';
     var_dump('page index; $page===philosophie; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
     echo '</pre>';

@@ -24,6 +24,8 @@ echo '</pre>';
     <link rel="stylesheet" href="/EcoRide/public/css/style_trajet.css">
     <!-- Inclure le script spécifique à la page trajet -->
     <script src="/EcoRide/public/js/script_trajet.js"></script>
+    <!-- Inclure le script spécifique aux détails de trajet (modal) -->
+    <script src="/EcoRide/public/js/trajet_details.js"></script>
 </head>
 
 <body>

@@ -122,7 +122,7 @@ echo '</pre>';
             <!-- En-tête du tableau de cartes -->
             <div class="trip-list-header">
                 <div class="header-column driver">Conducteur</div>
-                <div class="header-column route">Trajet & Heures</div>
+                <div class="header-column route">Itinéraire & Horaires</div>
                 <div class="header-column price">Prix / Places</div>
                 <div class="header-column status">Statut</div>
                 <div class="header-column action">Réserver</div>
@@ -148,70 +148,7 @@ echo '</pre>';
                                     Un voyage est considéré écologique s’il est effectué avec une voiture électrique.
                                 -->
                         <?php
-                        if (!function_exists('remove_accents')) {
-                            function remove_accents($str)
-                            {
-                                $str = (string) $str;
-                                $map = array(
-                                    'à' => 'a',
-                                    'á' => 'a',
-                                    'â' => 'a',
-                                    'ã' => 'a',
-                                    'ä' => 'a',
-                                    'å' => 'a',
-                                    'ç' => 'c',
-                                    'è' => 'e',
-                                    'é' => 'e',
-                                    'ê' => 'e',
-                                    'ë' => 'e',
-                                    'ì' => 'i',
-                                    'í' => 'i',
-                                    'î' => 'i',
-                                    'ï' => 'i',
-                                    'ñ' => 'n',
-                                    'ò' => 'o',
-                                    'ó' => 'o',
-                                    'ô' => 'o',
-                                    'õ' => 'o',
-                                    'ö' => 'o',
-                                    'ù' => 'u',
-                                    'ú' => 'u',
-                                    'û' => 'u',
-                                    'ü' => 'u',
-                                    'ý' => 'y',
-                                    'ÿ' => 'y',
-                                    'À' => 'A',
-                                    'Á' => 'A',
-                                    'Â' => 'A',
-                                    'Ã' => 'A',
-                                    'Ä' => 'A',
-                                    'Å' => 'A',
-                                    'Ç' => 'C',
-                                    'È' => 'E',
-                                    'É' => 'E',
-                                    'Ê' => 'E',
-                                    'Ë' => 'E',
-                                    'Ì' => 'I',
-                                    'Í' => 'I',
-                                    'Î' => 'I',
-                                    'Ï' => 'I',
-                                    'Ñ' => 'N',
-                                    'Ò' => 'O',
-                                    'Ó' => 'O',
-                                    'Ô' => 'O',
-                                    'Õ' => 'O',
-                                    'Ö' => 'O',
-                                    'Ù' => 'U',
-                                    'Ú' => 'U',
-                                    'Û' => 'U',
-                                    'Ü' => 'U',
-                                    'Ý' => 'Y'
-                                );
-                                return strtr($str, $map);
-                            }
-                        }
-                        //echo '<p>After remove_accents: ' . strtolower(remove_accents($covoiturage->energie)) . '</p>';
-                        $energie_normalized = strtolower(remove_accents($covoiturage->energie));
+                        $energie_normalized = $energie_normalized_map[$covoiturage->covoiturage_id] ?? 'standard';
                         if ($energie_normalized === 'electrique') { ?>
                             <span class="eco-badge"><i class="fa-solid fa-leaf"></i> Écologique</span>
                         <?php } else { ?>
@@ -222,7 +159,7 @@ echo '</pre>';
                     <!-- Colonne 2 : Temps & Trajet -->
                     <div class="trip-times">
                         <div class="time-block">
-                            <span class="time"><?= htmlspecialchars($covoiturage->heure_depart); ?></span>
+                            <span class="time"><?= htmlspecialchars(substr($covoiturage->heure_depart, 0, 5)); ?></span>
                             <span class="city"><?= htmlspecialchars($covoiturage->lieu_depart); ?></span>
                             <span class="date"><?= htmlspecialchars($covoiturage->date_depart); ?></span>
                         </div>
@@ -230,7 +167,7 @@ echo '</pre>';
                         <span class="separator">→</span>
 
                         <div class="time-block arrival">
-                            <span class="time"><?= htmlspecialchars($covoiturage->heure_arrivee); ?></span>
+                            <span class="time"><?= htmlspecialchars(substr($covoiturage->heure_arrivee, 0, 5)); ?></span>
                             <span class="city"><?= htmlspecialchars($covoiturage->lieu_arrivee); ?></span>
                             <span class="date" style="visibility: hidden;">Placeholder</span>
                         </div>
@@ -253,7 +190,7 @@ echo '</pre>';
                         if ($covoiturage->nb_place === 0) { ?>
                             <button class="btn-detail btn-disabled-complete" disabled>Complet</button>
                         <?php } else { ?>
-                            <button class="btn-detail" onclick="alert('Détail du trajet <?= htmlspecialchars($covoiturage->lieu_depart, ENT_QUOTES); ?> → <?= htmlspecialchars($covoiturage->lieu_arrivee, ENT_QUOTES); ?>')">Détail</button>
+                            <button class="btn-detail" data-covoiturage-id="<?= htmlspecialchars($covoiturage->covoiturage_id); ?>">Détail</button>
                         <?php };
                         ?>
                     </div>
@@ -299,70 +236,7 @@ echo '</pre>';
                                     Un voyage est considéré écologique s’il est effectué avec une voiture électrique.
                                 -->
                             <?php
-                            if (!function_exists('remove_accents')) {
-                                function remove_accents($str)
-                                {
-                                    $str = (string) $str;
-                                    $map = array(
-                                        'à' => 'a',
-                                        'á' => 'a',
-                                        'â' => 'a',
-                                        'ã' => 'a',
-                                        'ä' => 'a',
-                                        'å' => 'a',
-                                        'ç' => 'c',
-                                        'è' => 'e',
-                                        'é' => 'e',
-                                        'ê' => 'e',
-                                        'ë' => 'e',
-                                        'ì' => 'i',
-                                        'í' => 'i',
-                                        'î' => 'i',
-                                        'ï' => 'i',
-                                        'ñ' => 'n',
-                                        'ò' => 'o',
-                                        'ó' => 'o',
-                                        'ô' => 'o',
-                                        'õ' => 'o',
-                                        'ö' => 'o',
-                                        'ù' => 'u',
-                                        'ú' => 'u',
-                                        'û' => 'u',
-                                        'ü' => 'u',
-                                        'ý' => 'y',
-                                        'ÿ' => 'y',
-                                        'À' => 'A',
-                                        'Á' => 'A',
-                                        'Â' => 'A',
-                                        'Ã' => 'A',
-                                        'Ä' => 'A',
-                                        'Å' => 'A',
-                                        'Ç' => 'C',
-                                        'È' => 'E',
-                                        'É' => 'E',
-                                        'Ê' => 'E',
-                                        'Ë' => 'E',
-                                        'Ì' => 'I',
-                                        'Í' => 'I',
-                                        'Î' => 'I',
-                                        'Ï' => 'I',
-                                        'Ñ' => 'N',
-                                        'Ò' => 'O',
-                                        'Ó' => 'O',
-                                        'Ô' => 'O',
-                                        'Õ' => 'O',
-                                        'Ö' => 'O',
-                                        'Ù' => 'U',
-                                        'Ú' => 'U',
-                                        'Û' => 'U',
-                                        'Ü' => 'U',
-                                        'Ý' => 'Y'
-                                    );
-                                    return strtr($str, $map);
-                                }
-                            }
-                            //echo '<p>After remove_accents: ' . strtolower(remove_accents($covoiturage->energie)) . '</p>';
-                            $energie_normalized = strtolower(remove_accents($covoiturage->energie));
+                            $energie_normalized = $energie_normalized_map[$covoiturage->covoiturage_id] ?? 'standard';
                             if ($energie_normalized === 'electrique') { ?>
                                 <span class="eco-badge"><i class="fa-solid fa-leaf"></i> Écologique</span>
                             <?php } else { ?>
@@ -373,7 +247,7 @@ echo '</pre>';
                         <!-- Colonne 2 : Temps & Trajet -->
                         <div class="trip-times">
                             <div class="time-block">
-                                <span class="time"><?= htmlspecialchars($covoiturage->heure_depart); ?></span>
+                                <span class="time"><?= htmlspecialchars(substr($covoiturage->heure_depart, 0, 5)); ?></span>
                                 <span class="city"><?= htmlspecialchars($covoiturage->lieu_depart); ?></span>
                                 <span class="date"><?= htmlspecialchars($covoiturage->date_depart); ?></span>
                             </div>
@@ -381,7 +255,7 @@ echo '</pre>';
                             <span class="separator">→</span>
 
                             <div class="time-block arrival">
-                                <span class="time"><?= htmlspecialchars($covoiturage->heure_arrivee); ?></span>
+                                <span class="time"><?= htmlspecialchars(substr($covoiturage->heure_arrivee, 0, 5)); ?></span>
                                 <span class="city"><?= htmlspecialchars($covoiturage->lieu_arrivee); ?></span>
                                 <span class="date" style="visibility: hidden;">Placeholder</span>
                             </div>
@@ -404,7 +278,7 @@ echo '</pre>';
                             if ($covoiturage->nb_place === 0) { ?>
                                 <button class="btn-detail btn-disabled-complete" disabled>Complet</button>
                             <?php } else { ?>
-                                <button class="btn-detail" onclick="alert('Détail du trajet <?= htmlspecialchars($covoiturage->lieu_depart, ENT_QUOTES); ?> → <?= htmlspecialchars($covoiturage->lieu_arrivee, ENT_QUOTES); ?>')">Détail</button>
+                                <button class="btn-detail" data-covoiturage-id="<?= htmlspecialchars($covoiturage->covoiturage_id); ?>">Détail</button>
                             <?php };
                             ?>
                         </div>

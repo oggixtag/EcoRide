@@ -93,8 +93,15 @@ class CovoituragesController extends AppController
         echo '<pre>';
         var_dump('CovoituragesController.find().calling render()..');
         echo '</pre>';
+
+        // Normaliser l'énergie pour chaque covoiturage
+        $energie_normalized_map = array();
+        foreach (array_merge($covoiturages, $covoiturages_lieu_ou_date) as $covoiturage) {
+            $energie_normalized_map[$covoiturage->covoiturage_id] = strtolower($this->removeAccents($covoiturage->energie ?? ''));
+        }
+
         // ça appelle la page trajet (C:\xampp\htdocs\EcoRide\app\Views\covoiturages)
-        $this->render('covoiturages.trajet', compact('covoiturages', 'covoiturages_lieu_ou_date', 'form', 'error_form_recherche', 'filters'));
+        $this->render('covoiturages.trajet', compact('covoiturages', 'covoiturages_lieu_ou_date', 'form', 'error_form_recherche', 'filters', 'energie_normalized_map'));
     }
 
     /**
@@ -271,19 +278,23 @@ class CovoituragesController extends AppController
         );
     }
 
-    // pour présenter à l'utilisateur un article spécifique 
-    /*public function show()
+    public function details()
     {
-        echo '<pre>';
-        var_dump('CovoituragesController.show().called.');
-        echo '</pre>';
-
-        $article = $this->Post->find($_GET['id']);
-
-        if ($article === false) {
-            $this->notFound();
+        // Vérifier si l'ID du covoiturage est fourni
+        if (empty($_GET['id'])) {
+            $this->render_modal('covoiturages.trajet_details', compact('covoiturage'));
+            return;
         }
 
-        $this->render('posts.article', compact('article',));
-    }*/
+        $covoiturage_id = intval($_GET['id']);
+
+        // Récupérer les détails complets du covoiturage
+        $covoiturage = $this->Covoiturage->findWithDetails($covoiturage_id);
+
+        // Normaliser l'énergie pour la comparaison
+        $energie_normalized = strtolower($this->removeAccents($covoiturage->energie ?? ''));
+
+        // Rendu du template modal avec les détails
+        $this->render_modal('covoiturages.trajet_details', compact('covoiturage', 'energie_normalized'));
+    }
 }

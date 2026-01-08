@@ -11,7 +11,7 @@ class Controller
     protected $template;
 
     /**pour l'affichage de view
-     * @param $view view to charge
+     * @param $view view à charger
      * @param array $variables pour le transfer des variables 
      */
     protected function render($view, $variables = [])
@@ -34,7 +34,7 @@ class Controller
 
         ob_start();
         extract($variables);
-        //le require est au meme niveau du coup il a accès aux deux variables: $posts et $categories.
+
         require($this->viewPath . str_replace('.', '/', $view) . '.php');
         $content = ob_get_clean();
         require($this->viewPath . 'templates/' . $this->template . '.php');
@@ -68,6 +68,28 @@ class Controller
         //header('Location:index.php?p=404');
 
         die('Page not found');
+    }
+
+    /**Rendu de vue modale (sans header/footer)
+     * @param $view vue à charger
+     * @param array $variables pour le transfer des variables 
+     */
+    protected function render_modal($view, $variables = [])
+    {
+        echo '<pre>';
+        var_dump('Controller(NsCoreEcoride).render_modal().called.');
+        echo '</pre>';
+
+        echo '<pre>';
+        var_dump('Controller(NsCoreEcoride).render_modal().$view:' . $view . '.');
+        echo '</pre>';
+
+        ob_start();
+        extract($variables);
+
+        require($this->viewPath . str_replace('.', '/', $view) . '.php');
+        $content = ob_get_clean();
+        require($this->viewPath . 'templates/modal.php');
     }
 
     /*public static function getTitleSite(): string
