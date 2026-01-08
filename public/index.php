@@ -33,9 +33,9 @@ if ($page === 'home') {
     echo '</pre>';
     $controller = new \NsAppEcoride\Controller\CovoituragesController();
     $controller->index();
-} elseif ($page === 'journey') {
+} elseif ($page === 'trajet') {
     echo '<pre>';
-    var_dump('page index; $page===journey; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
+    var_dump('page index; $page===trajet; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
     echo '</pre>';
     $controller = new \NsAppEcoride\Controller\CovoituragesController();
     $controller->show();

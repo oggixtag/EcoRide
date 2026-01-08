@@ -22,7 +22,7 @@ class CovoiturageModel extends Model
 
         echo '<pre>';
         var_dump('CovoiturageModel.recherche().$lieu_depart:' . $lieu_depart . '.');
-        var_dump('CovoiturageModel.recherche().$lieu_depart:' . $date_depart . '.');
+        var_dump('CovoiturageModel.recherche().$date_depart:' . $date_depart . '.');
         echo '</pre>';
 
         return $this->query(
@@ -56,7 +56,7 @@ class CovoiturageModel extends Model
 
         echo '<pre>';
         var_dump('CovoiturageModel.recherche_lieu_ou_date().$lieu_depart:' . $lieu_depart . '.');
-        var_dump('CovoiturageModel.recherche_lieu_ou_date().$lieu_depart:' . $date_depart . '.');
+        var_dump('CovoiturageModel.recherche_lieu_ou_date().$date_depart:' . $date_depart . '.');
         echo '</pre>';
 
         return $this->query(
@@ -119,35 +119,5 @@ class CovoiturageModel extends Model
             join utilisateur u on (u.utilisateur_id = c.utilisateur_id)
             join voiture v on (v.voiture_id = c.voiture_id)
             where  c.lieu_depart = ?", [$id], true);
-    }
-
-    /**
-     * Récupèr les derniers artcicles de la category selectionnée
-     * @param $category_id int
-     * @return array
-     */
-    public function lastByCategory($category_id)
-    {
-        echo '<pre>';
-        var_dump('CovoiturageModel.lastByCategory() called.');
-        echo '</pre>';
-
-        echo '<pre>';
-        var_dump('CovoiturageModel.lastByCategory().$category_id:' . $category_id . '.');
-        /*var_dump('CovoiturageModel.lastByCategory().$category_id..');
-        foreach ($category_id as $key => $value) {
-            var_dump(' ..' . '[' . $key . '] => ' . $value . '.');
-        }*/
-        echo '</pre>';
-
-        echo '<pre>';
-        var_dump('CovoiturageModel.lastByCategory().calling query()..');
-        echo '</pre>';
-
-        return $this->query("select a.title ,a.content
-        from articles a 
-        left join categories c on a.category_id = c.id 
-        where a.category_id = ?
-        order by a.id DESC", [$category_id]);
     }
 }

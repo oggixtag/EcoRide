@@ -125,9 +125,9 @@ class MysqlDatabase extends Database
         var_dump('MysqlDatabase.prepare().called.');
         echo '</pre>';
 
-        echo '<pre>';
+        /*echo '<pre>';
         var_dump('MysqlDatabase.prepare().$statement:' . $statement . '.');
-        echo '</pre>';
+        echo '</pre>';*/
 
         echo '<pre>';
         var_dump('MysqlDatabase.prepare().calling $this->getPdo()->prepare($statement).');

@@ -40,7 +40,7 @@ echo '</pre>';
     <h2 class="section-title">Section voyages</h2>
 
     <h3 class="section-soustitle">Recherche</h3>
-    <form class="search-form" method="post" action="index.php?p=journey">
+    <form class="search-form" method="post" action="index.php?p=trajet">
         <input type="text" name="lieu_depart" placeholder="Lieu de départ">
         <input type="text" name="lieu_arrivee" placeholder="Destination">
         <input type="date" name="date">

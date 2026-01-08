@@ -6,6 +6,26 @@ echo '</pre>';
 <!DOCTYPE html>
 <html lang="fr">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoRide - Covoiturage Écologique</title>
+    <!-- Inclure le CSS général de l'application -->
+    <link rel="stylesheet" href="/EcoRide/public/css/style_app.css">
+    <!-- Inclure le CSS spécifique aux covoiturages -->
+    <link rel="stylesheet" href="/EcoRide/public/css/style_covoiturage.css">
+    <!-- Inclure le CSS spécifique au menu -->
+    <link rel="stylesheet" href="/EcoRide/public/css/style_menu.css">
+    <!-- Inclure le CSS spécifique au contact -->
+    <link rel="stylesheet" href="/EcoRide/public/css/style_contact.css">
+    <!-- Inclure le CSS spécifique aux mention légales -->
+    <link rel="stylesheet" href="/EcoRide/public/css/style_legale.css">
+    <!-- Inclure le CSS spécifique à la page trajet -->
+    <link rel="stylesheet" href="/EcoRide/public/css/style_trajet.css">
+    <!-- Inclure le script spécifique à la page trajet -->
+    <script src="/EcoRide/public/js/script_trajet.js"></script>
+</head>
+
 <body>
 
     <header class="main-header">
@@ -46,25 +66,7 @@ echo '</pre>';
             <p>&copy; <?= date('Y'); ?> EcoRide. Tous droits réservés.</p>
         </div>
     </footer>
+
 </body>
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoRide - Covoiturage Écologique</title>
-    <!-- Inclure le CSS général de l'application -->
-    <link rel="stylesheet" href="css/style_app.css">
-    <!-- Inclure le CSS spécifique aux covoiturages -->
-    <link rel="stylesheet" href="css/style_covoiturage.css">
-    <!-- Inclure le CSS spécifique au menu -->
-    <link rel="stylesheet" href="css/style_menu.css">
-    <!-- Inclure le CSS spécifique au contact -->
-    <link rel="stylesheet" href="css/style_contact.css">
-    <!-- Inclure le CSS spécifique aux mention légales -->
-    <link rel="stylesheet" href="css/style_legal.css">
-    <!-- Inclure le CSS spécifique à la page trajet -->
-    <link rel="stylesheet" href="css/style_trajet.css">
-</head>
-
 
 </html>
