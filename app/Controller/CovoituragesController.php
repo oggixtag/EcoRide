@@ -9,90 +9,98 @@ class CovoituragesController extends AppController
 
     public function __construct()
     {
-        echo '<pre>';
-        var_dump('CovoituragesController.__construct()');
-        echo '</pre>';
-
-        echo '<pre>';
-        var_dump('CovoituragesController.__construct().calling parent::__construct()');
-        echo '</pre>';
         parent::__construct();
 
-        echo '<pre>';
-        var_dump('CovoituragesController.__construct().calling $this->loadModel for Covoiturage');
-        echo '</pre>';
         $this->loadModel('Covoiturage');
     }
 
     public function index()
     {
-        echo '<pre>';
-        var_dump('CovoituragesController.index().called.');
-        echo '</pre>';
-
-        echo '<pre>';
-        var_dump('CovoituragesController.index().calling render()..');
-        echo '</pre>';
-
         // ça appelle la page index (C:\xampp\htdocs\EcoRide\app\Views\covoiturages)
         $this->render(
             'covoiturages.index',
-            compact('')
+            []
         );
     }
 
     public function show()
     {
-        echo '<pre>';
-        var_dump('CovoituragesController.find().called on methed ' . $_SERVER['REQUEST_METHOD'] . '.');
-        echo '</pre>';
-
-        /*Pour la recherche d’itinéraire, la recherche se basera sur la ville ainsi que la date. */
+        /*Pour la recherche d'itinéraire, la recherche se basera sur la ville ainsi que la date. */
         $error_form_recherche = false;
 
-        if (empty($_POST['lieu_depart']) || empty($_POST['date'])) {
+        // Vérifier si c'est une recherche POST
+        $is_post_search = !empty($_POST['lieu_depart']) && !empty($_POST['date']);
+
+        if ($is_post_search) {
+            // **NOUVEAU SEARCH POST** : Stocker les critères dans la session
+            $_SESSION['search_criteria'] = array(
+                'lieu_depart' => $_POST['lieu_depart'],
+                'date' => $_POST['date'],
+                'filters' => array(
+                    'energie' => isset($_POST['energie']) && is_array($_POST['energie']) ? $_POST['energie'] : array(),
+                    'prix_min' => isset($_POST['prix_min']) ? $_POST['prix_min'] : '',
+                    'prix_max' => isset($_POST['prix_max']) ? $_POST['prix_max'] : '',
+                    'duree_max' => isset($_POST['duree_max']) ? $_POST['duree_max'] : '',
+                    'score_min' => isset($_POST['score_min']) ? $_POST['score_min'] : ''
+                )
+            );
+
+            $lieu_depart = $_POST['lieu_depart'];
+            $date = $_POST['date'];
+            $filters = $_SESSION['search_criteria']['filters'];
+        } elseif (isset($_SESSION['search_criteria'])) {
+            // **RETOUR SANS POST** : Récupérer les critères depuis la session
+            $lieu_depart = $_SESSION['search_criteria']['lieu_depart'];
+            $date = $_SESSION['search_criteria']['date'];
+            $filters = $_SESSION['search_criteria']['filters'];
+        } else {
+            // **PREMIER ACCÈS** : Pas de critères, afficher formulaire vide
             $error_form_recherche = true;
-            echo '<pre>';
-            var_dump('CovoituragesController.find().lieu_depart et date valorisés.');
-            var_dump($_POST);
-            echo '</pre>';
+            $lieu_depart = '';
+            $date = '';
+            $filters = array(
+                'energie' => array(),
+                'prix_min' => '',
+                'prix_max' => '',
+                'duree_max' => '',
+                'score_min' => ''
+            );
         }
 
-        echo '<pre>';
-        var_dump('CovoituragesController.find().calling $this->Covoiturage->recherche(lieu et date)..');
-        echo '</pre>';
-        $covoiturages = $this->Covoiturage->recherche($_POST['lieu_depart'], $_POST['date']);
+        // Récupérer les données si on a les critères
+        if (!$error_form_recherche) {
+            $covoiturages = $this->Covoiturage->recherche($lieu_depart, $date);
+            $covoiturages_lieu_ou_date = $this->Covoiturage->recherche_lieu_ou_date($lieu_depart, $date);
 
-        $covoiturages_lieu_ou_date = $this->Covoiturage->recherche_lieu_ou_date($_POST['lieu_depart'], $_POST['date']);
-
-        // Récupération et application des filtres
-        $filters = array(
-            'energie' => isset($_POST['energie']) && is_array($_POST['energie']) ? $_POST['energie'] : array(),
-            'prix_min' => isset($_POST['prix_min']) ? $_POST['prix_min'] : '',
-            'prix_max' => isset($_POST['prix_max']) ? $_POST['prix_max'] : '',
-            'duree_max' => isset($_POST['duree_max']) ? $_POST['duree_max'] : '',
-            'score_min' => isset($_POST['score_min']) ? $_POST['score_min'] : ''
-        );
-
-        // Application des filtres aux résultats UNIQUEMENT si l'utilisateur a cliqué sur "Appliquer"
-        // Le flag apply_filters est set dans le formulaire de filtres
-        //if (isset($_POST['apply_filters']) && !empty(array_filter($filters))) {
-        if (!empty(array_filter($filters))) {
-            echo '<pre>';
-            var_dump('CovoituragesController.find().applying filters to covoiturages..');
-            echo '</pre>';
-            $covoiturages = $this->applyFilters($covoiturages, $filters);
-            $covoiturages_lieu_ou_date = $this->applyFilters($covoiturages_lieu_ou_date, $filters);
+            // Application des filtres
+            if (!empty(array_filter($filters))) {
+                $covoiturages = $this->applyFilters($covoiturages, $filters);
+                $covoiturages_lieu_ou_date = $this->applyFilters($covoiturages_lieu_ou_date, $filters);
+            }
+        } else {
+            $covoiturages = array();
+            $covoiturages_lieu_ou_date = array();
         }
 
-        echo '<pre>';
-        var_dump('CovoituragesController.find().nouvelle instantation new MyForm($_POST)');
-        echo '</pre>';
         $form = new MyForm($_POST);
 
-        echo '<pre>';
-        var_dump('CovoituragesController.find().calling render()..');
-        echo '</pre>';
+        // Charger les informations de l'utilisateur courant si connecté
+        $utilisateur_courant = null;
+        if (!empty($_SESSION['auth'])) {
+            $this->loadModel('Utilisateur');
+            $utilisateur_courant = $this->Utilisateur->find($_SESSION['auth']);
+        }
+
+        // Récupérer les participations de l'utilisateur connecté
+        $participations_utilisateur = array();
+        if (!empty($_SESSION['auth'])) {
+            $participations = $this->Covoiturage->getParticipationsForUser($_SESSION['auth']);
+            if ($participations) {
+                foreach ($participations as $participation) {
+                    $participations_utilisateur[$participation->covoiturage_id] = true;
+                }
+            }
+        }
 
         // Normaliser l'énergie pour chaque covoiturage
         $energie_normalized_map = array();
@@ -101,7 +109,7 @@ class CovoituragesController extends AppController
         }
 
         // ça appelle la page trajet (C:\xampp\htdocs\EcoRide\app\Views\covoiturages)
-        $this->render('covoiturages.trajet', compact('covoiturages', 'covoiturages_lieu_ou_date', 'form', 'error_form_recherche', 'filters', 'energie_normalized_map'));
+        $this->render('covoiturages.trajet', compact('covoiturages', 'covoiturages_lieu_ou_date', 'form', 'error_form_recherche', 'filters', 'energie_normalized_map', 'utilisateur_courant', 'participations_utilisateur'));
     }
 
     /**
@@ -112,11 +120,6 @@ class CovoituragesController extends AppController
      */
     private function applyFilters($covoiturages, $filters)
     {
-        echo '<pre>';
-        var_dump('CovoiturageModel.applyFilters() called with filters:');
-        var_dump($filters);
-        echo '</pre>';
-
         if (empty($covoiturages)) {
             return $covoiturages;
         }
@@ -257,33 +260,25 @@ class CovoituragesController extends AppController
 
     public function all()
     {
-        echo '<pre>';
-        var_dump('CovoituragesController.all() called.');
-        echo '</pre>';
-
-        //['posts'=>$post,'categories'=>$categories]
-        //compact('posts','categories')
-
         $covoiturages = $this->Covoiturage->all();
 
-        echo '<pre>';
-        var_dump('CovoituragesController.all().calling render()..');
-        echo '</pre>';
-
         // ça appelle la page index (C:\xampp\htdocs\EcoRide\app\Views\covoiturages)
-        $this->render(
-            'covoiturages.covoiturages',
+        $this->render( 
+            'covoiturages.covoiturage',
             compact('covoiturages')
 
         );
     }
 
-    public function details()
+
+
+    public function detail()
     {
         // Vérifier si l'ID du covoiturage est fourni
         if (empty($_GET['id'])) {
-            $this->render_modal('covoiturages.trajet_details', compact('covoiturage'));
-            return;
+            // Rediriger vers la liste des trajets si pas d'ID
+            header('Location: index.php?p=trajet');
+            exit;
         }
 
         $covoiturage_id = intval($_GET['id']);
@@ -291,10 +286,120 @@ class CovoituragesController extends AppController
         // Récupérer les détails complets du covoiturage
         $covoiturage = $this->Covoiturage->findWithDetails($covoiturage_id);
 
+        // Vérifier que le covoiturage existe
+        if (!$covoiturage) {
+            // Rediriger si non trouvé
+            header('Location: index.php?p=trajet');
+            exit;
+        }
+
         // Normaliser l'énergie pour la comparaison
         $energie_normalized = strtolower($this->removeAccents($covoiturage->energie ?? ''));
 
-        // Rendu du template modal avec les détails
-        $this->render_modal('covoiturages.trajet_details', compact('covoiturage', 'energie_normalized'));
+        // Rendu du template complet (pas modal) avec les détails
+        $this->render('covoiturages.trajet_detail', compact('covoiturage', 'energie_normalized'));
+    }
+
+    /**
+     * Action pour participer à un covoiturage
+     * Gère la déduction de crédits et l'enregistrement de la participation
+     */
+    public function participer()
+    {
+        // Vérifier que c'est une requête POST
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->jsonResponse(['success' => false, 'message' => 'Méthode non autorisée']);
+            return;
+        }
+
+        // Récupérer l'ID du covoiturage
+        $covoiturage_id = isset($_POST['covoiturage_id']) ? intval($_POST['covoiturage_id']) : 0;
+
+        if (empty($covoiturage_id)) {
+            $this->jsonResponse(['success' => false, 'message' => 'Covoiturage non trouvé']);
+            return;
+        }
+
+        // Vérifier si l'utilisateur est connecté
+        if (empty($_SESSION['auth'])) {
+            // Stocker l'ID du covoiturage et rediriger vers la connexion
+            $_SESSION['covoiturage_reserve_id'] = $covoiturage_id;
+            $this->jsonResponse(['success' => false, 'redirect' => 'index.php?p=utilisateurs.login', 'message' => 'Vous devez être connecté pour réserver']);
+            return;
+        }
+
+        $utilisateur_id = $_SESSION['auth'];
+
+        // Charger le modèle Utilisateur
+        $this->loadModel('Utilisateur');
+
+        // Récupérer les informations de l'utilisateur
+        $utilisateur = $this->Utilisateur->find($utilisateur_id);
+
+        if (!$utilisateur) {
+            $this->jsonResponse(['success' => false, 'message' => 'Utilisateur non trouvé']);
+            return;
+        }
+
+        // Vérifier que l'utilisateur a assez de crédits (minimum 2)
+        if ($utilisateur->credit < 2) {
+            $this->jsonResponse(['success' => false, 'message' => 'Crédits insuffisants. Vous avez besoin de 2 crédits pour participer']);
+            return;
+        }
+
+        // Vérifier que le covoiturage existe et a des places disponibles
+        $covoiturage = $this->Covoiturage->find($covoiturage_id);
+        if (!$covoiturage) {
+            $this->jsonResponse(['success' => false, 'message' => 'Covoiturage non trouvé']);
+            return;
+        }
+
+        // Commencer la transaction pour garantir la cohérence des données
+        try {
+            // 1. Déduire les crédits de l'utilisateur (2 crédits)
+            $credit_deduit = $this->Utilisateur->deduireCredit($utilisateur_id, 2);
+
+            if (!$credit_deduit) {
+                $this->jsonResponse(['success' => false, 'message' => 'Erreur lors de la déduction des crédits']);
+                return;
+            }
+
+            // 2. Enregistrer la participation dans la table participe
+            $participation_enregistree = $this->Covoiturage->enregistrerParticipation($utilisateur_id, $covoiturage_id);
+
+            if (!$participation_enregistree) {
+                // Si l'enregistrement échoue, on affiche un message approprié
+                // (vérifier que l'utilisateur n'est pas déjà inscrit)
+                $this->jsonResponse(['success' => false, 'message' => 'Vous êtes déjà inscrit à ce covoiturage']);
+                return;
+            }
+
+            // 3. Déduire une place du covoiturage
+            $place_deduite = $this->Covoiturage->deduirePlace($covoiturage_id);
+
+            if (!$place_deduite) {
+                $this->jsonResponse(['success' => false, 'message' => 'Erreur lors de la mise à jour du nombre de places']);
+                return;
+            }
+
+            // 4. Réponse positive
+            $this->jsonResponse([
+                'success' => true,
+                'message' => 'Vous avez réservé votre place avec succès ! 2 crédits ont été déduits de votre compte'
+            ]);
+        } catch (\Exception $e) {
+            $this->jsonResponse(['success' => false, 'message' => 'Erreur lors de la réservation : ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Envoie une réponse JSON
+     * @param array $data Données à envoyer
+     */
+    private function jsonResponse($data)
+    {
+        header('Content-Type: application/json');
+        echo json_encode($data);
+        exit;
     }
 }

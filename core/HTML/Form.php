@@ -38,9 +38,6 @@ class Form
      */
     protected function getValue($index)
     {
-        echo '<pre>';
-        var_dump('Form.getValue().');
-        echo '</pre>';
         // Cannot use object of type App\Entity\PostEntity as array
         // C'est necessaire car depuis edit.php je recupère les données depuis Entity (qui rappresent l'enregistrement).
         // du coup $this->data ce n'est pas un tableau mais une entité 
@@ -58,9 +55,6 @@ class Form
      */
     public function input($name, $label, $options = [])
     {
-        echo '<pre>';
-        var_dump('Form.input().');
-        echo '</pre>';
         // si on passe le type en paramètre ça sera type sinon text par default.
         $type = isset($options['type']) ? $options['type'] : 'text';
         return $this->surround(

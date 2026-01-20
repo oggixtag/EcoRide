@@ -7,6 +7,7 @@ use NsCoreEcoride\Model\Model;
 class CovoiturageModel extends Model
 {
     protected $table = 'covoiturage';
+    protected $column = 'covoiturage_id';
 
     /**
      * Rècupere un article en lian la categorie associée 
@@ -16,15 +17,6 @@ class CovoiturageModel extends Model
      */
     public function recherche($lieu_depart, $date_depart)
     {
-        echo '<pre>';
-        var_dump('CovoiturageModel.recherche() called.');
-        echo '</pre>';
-
-        echo '<pre>';
-        var_dump('CovoiturageModel.recherche().$lieu_depart:' . $lieu_depart . '.');
-        var_dump('CovoiturageModel.recherche().$date_depart:' . $date_depart . '.');
-        echo '</pre>';
-
         return $this->query(
             "select 
                 c.covoiturage_id ,
@@ -34,14 +26,15 @@ class CovoiturageModel extends Model
                 c.date_arrivee	 ,
                 c.heure_arrivee	 ,
                 c.lieu_arrivee	 ,
-                c.statut		 ,
+                s.libelle as statut,
                 c.nb_place		 ,
                 c.prix_personne	 ,
                 u.pseudo		 ,
                 v.energie
             from covoiturage c
-            join utilisateur u on (u.utilisateur_id = c.utilisateur_id)
             join voiture v on (v.voiture_id = c.voiture_id)
+            join utilisateur u on (u.utilisateur_id = v.utilisateur_id)
+            join statut_covoiturage s on (c.statut_covoiturage_id = s.statut_covoiturage_id)
             where   c.lieu_depart = ?
                 and c.date_depart = ?",
             [$lieu_depart, $date_depart]
@@ -50,15 +43,6 @@ class CovoiturageModel extends Model
 
     public function recherche_lieu_ou_date($lieu_depart, $date_depart)
     {
-        echo '<pre>';
-        var_dump('CovoiturageModel.rechrecherche_lieu_ou_dateerche() called.');
-        echo '</pre>';
-
-        echo '<pre>';
-        var_dump('CovoiturageModel.recherche_lieu_ou_date().$lieu_depart:' . $lieu_depart . '.');
-        var_dump('CovoiturageModel.recherche_lieu_ou_date().$date_depart:' . $date_depart . '.');
-        echo '</pre>';
-
         return $this->query(
             "select 
                 c.covoiturage_id ,
@@ -68,39 +52,54 @@ class CovoiturageModel extends Model
                 c.date_arrivee	 ,
                 c.heure_arrivee	 ,
                 c.lieu_arrivee	 ,
-                c.statut		 ,
+                s.libelle as statut,
                 c.nb_place		 ,
                 c.prix_personne	 ,
                 u.pseudo		 ,
                 v.energie
             from covoiturage c
-            join utilisateur u on (u.utilisateur_id = c.utilisateur_id)
             join voiture v on (v.voiture_id = c.voiture_id)
+            join utilisateur u on (u.utilisateur_id = v.utilisateur_id)
+            join statut_covoiturage s on (c.statut_covoiturage_id = s.statut_covoiturage_id)
             where   c.lieu_depart = ?
                 or c.date_depart = ?",
             [$lieu_depart, $date_depart]
         );
     }
 
+    public function all()
+    {
+        return $this->query(
+            "select 
+                c.covoiturage_id ,
+                c.date_depart	 ,
+                c.heure_depart	 ,
+                c.lieu_depart	 ,
+                c.date_arrivee	 ,
+                c.heure_arrivee	 ,
+                c.lieu_arrivee	 ,
+                s.libelle as statut,
+                c.nb_place		 ,
+                c.prix_personne	 ,
+                u.pseudo		 ,
+                v.energie
+            from covoiturage c
+            join voiture v on (v.voiture_id = c.voiture_id)
+            join utilisateur u on (u.utilisateur_id = v.utilisateur_id)
+            join statut_covoiturage s on (c.statut_covoiturage_id = s.statut_covoiturage_id)
+            order by c.date_depart desc, c.lieu_depart asc",
+            false
+        );
+    }
+    
+    
     /**
-     * Rècupere un article en lian la categorie associée 
-     * @param $id string
+     * Récupère un covoiturage par son ID
+     * @param $id int ID du covoiturage
      * @return \App\Entity\CovoiturageEntity
      */
     public function find($id)
     {
-        echo '<pre>';
-        var_dump('CovoiturageModel.find() called.');
-        echo '</pre>';
-
-        echo '<pre>';
-        var_dump('CovoiturageModel.find().$lieu_depart:' . $id . '.');
-        /*var_dump('Table.find().$id..');
-        foreach ($id as $key => $value) {
-            var_dump(' ..' . '[' . $key . '] => ' . $value . '.');
-        }*/
-        echo '</pre>';
-
         return $this->query("
             select 
                 c.covoiturage_id ,
@@ -110,15 +109,16 @@ class CovoiturageModel extends Model
                 c.date_arrivee	 ,
                 c.heure_arrivee	 ,
                 c.lieu_arrivee	 ,
-                c.statut		 ,
+                s.libelle as statut,
                 c.nb_place		 ,
                 c.prix_personne	 ,
                 u.pseudo		 ,
                 v.energie
             from covoiturage c
-            join utilisateur u on (u.utilisateur_id = c.utilisateur_id)
             join voiture v on (v.voiture_id = c.voiture_id)
-            where  c.lieu_depart = ?", [$id], true);
+            join utilisateur u on (u.utilisateur_id = v.utilisateur_id)
+            join statut_covoiturage s on (c.statut_covoiturage_id = s.statut_covoiturage_id)
+            where  c.covoiturage_id = ?", [$id], true);
     }
 
     /**
@@ -138,7 +138,7 @@ class CovoiturageModel extends Model
                 c.date_arrivee,
                 c.heure_arrivee,
                 c.lieu_arrivee,
-                c.statut,
+                s.libelle as statut,
                 c.nb_place,
                 c.prix_personne,
                 u.pseudo,
@@ -148,9 +148,10 @@ class CovoiturageModel extends Model
                 v.couleur,
                 m.libelle as marque
             from covoiturage c
-            join utilisateur u on (u.utilisateur_id = c.utilisateur_id)
             join voiture v on (v.voiture_id = c.voiture_id)
+            join utilisateur u on (u.utilisateur_id = v.utilisateur_id)
             join marque m on (m.marque_id = v.marque_id)
+            join statut_covoiturage s on (c.statut_covoiturage_id = s.statut_covoiturage_id)
             where c.covoiturage_id = ?",
             [$covoiturage_id],
             true
@@ -164,11 +165,13 @@ class CovoiturageModel extends Model
         $avis = $this->query(
             "select 
                 a.avis_id,
-                a.note,
+                n.libelle as note,
                 a.commentaire,
-                a.statut
+                sa.libelle as statut
             from avis a
             join utilisateur u on (u.utilisateur_id = a.utilisateur_id)
+            join statut_avis sa on (a.statut_avis_id = sa.statut_avis_id)
+            join note n on (a.note_id = n.note_id)
             where a.utilisateur_id = ?
             order by a.avis_id desc
             limit 10",
@@ -179,5 +182,82 @@ class CovoiturageModel extends Model
         $covoiturage->avis = $avis ?? [];
 
         return $covoiturage;
+    }
+
+    /**
+     * Enregistre la participation d'un utilisateur à un covoiturage
+     * @param $utilisateur_id int ID de l'utilisateur
+     * @param $covoiturage_id int ID du covoiturage
+     * @return bool true si l'enregistrement a réussi, false sinon
+     */
+    public function enregistrerParticipation($utilisateur_id, $covoiturage_id)
+    {
+        // Vérifier que l'utilisateur n'est pas déjà inscrit
+        $exists = $this->query(
+            "SELECT COUNT(*) as count FROM participe 
+            WHERE utilisateur_id = ? AND covoiturage_id = ?",
+            [$utilisateur_id, $covoiturage_id],
+            true
+        );
+
+        if ($exists && $exists->count > 0) {
+            return false; // L'utilisateur est déjà inscrit
+        }
+
+        // Enregistrer la participation
+        $result = $this->query(
+            "INSERT INTO participe (utilisateur_id, covoiturage_id) 
+            VALUES (?, ?)",
+            [$utilisateur_id, $covoiturage_id]
+        );
+
+        return $result > 0;
+    }
+
+    /**
+     * Vérifie si un utilisateur a déjà réservé un covoiturage
+     * @param int $covoiturage_id
+     * @param int $utilisateur_id
+     * @return bool
+     */
+    public function hasUserReserved($covoiturage_id, $utilisateur_id)
+    {
+        $result = $this->query(
+            "SELECT COUNT(*) as count FROM participe 
+            WHERE covoiturage_id = ? AND utilisateur_id = ?",
+            [$covoiturage_id, $utilisateur_id],
+            true
+        );
+        return $result && $result->count > 0;
+    }
+
+    /**
+     * Récupère les participations d'un utilisateur
+     * @param int $utilisateur_id
+     * @return array
+     */
+    public function getParticipationsForUser($utilisateur_id)
+    {
+        return $this->query(
+            "SELECT covoiturage_id FROM participe 
+            WHERE utilisateur_id = ?",
+            [$utilisateur_id]
+        );
+    }
+
+    /**
+     * Déduit une place du covoiturage
+     * @param int $covoiturage_id
+     * @return bool
+     */
+    public function deduirePlace($covoiturage_id)
+    {
+        $result = $this->query(
+            "UPDATE covoiturage 
+            SET nb_place = nb_place - 1 
+            WHERE covoiturage_id = ? AND nb_place > 0",
+            [$covoiturage_id]
+        );
+        return $result > 0;
     }
 }

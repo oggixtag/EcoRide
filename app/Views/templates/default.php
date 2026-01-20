@@ -1,7 +1,5 @@
 <?php
-echo '<pre>';
-var_dump('page default: ecoride\app\Views\templates\default.php');
-echo '</pre>';
+// Template pour tous les pages - layout par défaut
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -12,6 +10,8 @@ echo '</pre>';
     <title>EcoRide - Covoiturage Écologique</title>
     <!-- Inclure le CSS général de l'application -->
     <link rel="stylesheet" href="/EcoRide/public/css/style_app.css">
+    <!-- Inclure le CSS spécifique aux utilisateurs (authentification & dashboard) -->
+    <link rel="stylesheet" href="/EcoRide/public/css/style_utilisateur.css">
     <!-- Inclure le CSS spécifique aux covoiturages -->
     <link rel="stylesheet" href="/EcoRide/public/css/style_covoiturage.css">
     <!-- Inclure le CSS spécifique au menu -->
@@ -22,10 +22,10 @@ echo '</pre>';
     <link rel="stylesheet" href="/EcoRide/public/css/style_legale.css">
     <!-- Inclure le CSS spécifique à la page trajet -->
     <link rel="stylesheet" href="/EcoRide/public/css/style_trajet.css">
+    <!-- Inclure le CSS spécifique à la page détail du trajet -->
+    <link rel="stylesheet" href="/EcoRide/public/css/style_trajet_detail.css">
     <!-- Inclure le script spécifique à la page trajet -->
     <script src="/EcoRide/public/js/script_trajet.js"></script>
-    <!-- Inclure le script spécifique aux détails de trajet (modal) -->
-    <script src="/EcoRide/public/js/trajet_details.js"></script>
 </head>
 
 <body>
@@ -39,20 +39,28 @@ echo '</pre>';
             <nav class="main-nav">
                 <ul>
                     <!-- Retour vers la page d’accueil (toujours présent) -->
-                    <li><a href="index.php?p=philosophie" class="active">Philosophie</a></li>
+                    <li><a href="index.php?p=philosophie" class="<?= (isset($_GET['p']) && $_GET['p'] === 'philosophie') ? 'active' : '' ?>">Philosophie</a></li>
 
                     <!-- Accès aux covoiturages (affichage des voyage dans la base de donné) -->
-                    <li><a href="index.php?p=covoiturage">Covoiturages</a></li>
+                    <li><a href="index.php?p=covoiturage" class="<?= (isset($_GET['p']) && $_GET['p'] === 'covoiturage') ? 'active' : '' ?>">Covoiturages</a></li>
 
                     <!-- Contact -->
-                    <li><a href="index.php?p=contact">Contact</a></li>
+                    <li><a href="index.php?p=contact" class="<?= (isset($_GET['p']) && $_GET['p'] === 'contact') ? 'active' : '' ?>">Contact</a></li>
                 </ul>
             </nav>
 
-            <!-- Connexion -->
+            <!-- Bouton d'authentification dynamique -->
             <div class="auth-button">
-                <a href="/connexion">Connexion</a>
+                <?php if (isset($_SESSION['auth']) && !empty($_SESSION['auth'])): ?>
+                    <!-- Utilisateur authentifié -->
+                    <a href="index.php?p=utilisateurs.index" class="btn-dashboard">Mon Dashboard</a>
+                    <a href="index.php?p=logout" class="btn-logout">Déconnexion</a>
+                <?php else: ?>
+                    <!-- Utilisateur non authentifié -->
+                    <a href="index.php?p=utilisateurs.login" class="btn-login">Connexion</a>
+                <?php endif; ?>
             </div>
+
         </div>
     </header>
 

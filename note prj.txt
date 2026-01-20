@@ -10,11 +10,6 @@ MVC (Modèle-Vue-Contrôleur) est excellent pour un projet PHP car il permet de 
 
 Cette structure est plus conventionnelle et rend le cœur du framework (core/) distinct de la logique métier (app/)
 
-BUGS:
-- gérer le cas quand compact est vide
-Warning: compact(): Undefined variable $ in C:\xampp\htdocs\EcoRide\app\Controller\CovoituragesController.php on line 46
-cf CovoituragesController.index
-
 status de la course : 
 - confirmé
 - annullé

@@ -1,16 +1,5 @@
 <?php
-echo '<pre>';
-var_dump('page index: ecoride/public/index.php');
-echo '</pre>';
-
 define('ROOT', dirname(__DIR__));
-echo '<pre>';
-var_dump('page index.define ROOT:' . ROOT);
-echo '</pre>';
-
-echo '<pre>';
-var_dump('page index.calling:' . ROOT . '/app/App.php');
-echo '</pre>';
 require(ROOT . '/app/App.php');
 App::load();
 
@@ -19,60 +8,53 @@ if (isset($_GET['p'])) {
 } else {
     $page = 'home';
 }
-echo '<pre>';
-var_dump('page index.printing $page:' . $page);
-echo '</pre>';
 
 // naming : controller + route
 
 // Router to load controller based on page called
 // US1
 if ($page === 'home') {
-    echo '<pre>';
-    var_dump('page index; $page===home; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
-    echo '</pre>';
     $controller = new \NsAppEcoride\Controller\CovoituragesController();
     $controller->index();
-}
-// US3 US4
-elseif ($page === 'trajet') {
-    echo '<pre>';
-    var_dump('page index; $page===trajet; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
-    echo '</pre>';
-    $controller = new \NsAppEcoride\Controller\CovoituragesController();
-    $controller->show();
-}
-// US5
-elseif ($page === 'trajet-details') {
-    echo '<pre>';
-    var_dump('page index; $page===trajet-details; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
-    echo '</pre>';
-    $controller = new \NsAppEcoride\Controller\CovoituragesController();
-    $controller->details();
 }
 // US2
 elseif ($page === 'legale') {
-    echo '<pre>';
-    var_dump('page index; $page===legale; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
-    echo '</pre>';
     $controller = new \NsAppEcoride\Controller\LegalesController();
     $controller->index();
 } elseif ($page === 'philosophie') {
-    echo '<pre>';
-    var_dump('page index; $page===philosophie; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
-    echo '</pre>';
     $controller = new \NsAppEcoride\Controller\HtmlController();
     $controller->philosophie();
-} elseif ($page === 'covoiturages') {
-    echo '<pre>';
-    var_dump('page index; $page===covoiturages; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
-    echo '</pre>';
+} elseif ($page === 'covoiturage') {
     $controller = new \NsAppEcoride\Controller\CovoituragesController();
     $controller->all();
 } elseif ($page === 'contact') {
-    echo '<pre>';
-    var_dump('page index; $page===contact; nouvelle instantiation new \NsAppEcoride\Controller\CovoiturageController().');
-    echo '</pre>';
     $controller = new \NsAppEcoride\Controller\HtmlController();
     $controller->contact();
+}
+// US3 US4
+elseif ($page === 'trajet') {
+    $controller = new \NsAppEcoride\Controller\CovoituragesController();
+    $controller->show();
+}
+// US5 - Page complète
+elseif ($page === 'trajet-detail') {
+    $controller = new \NsAppEcoride\Controller\CovoituragesController();
+    $controller->detail();
+}
+// US6
+elseif ($page === 'utilisateurs.login') {
+    $controller = new \NsAppEcoride\Controller\UtilisateursController();
+    $controller->login();
+} elseif ($page === 'utilisateurs.index') {
+    $controller = new \NsAppEcoride\Controller\UtilisateursController();
+    $controller->index();
+} elseif ($page === 'logout') {
+    $controller = new \NsAppEcoride\Controller\UtilisateursController();
+    $controller->logout();
+} elseif ($page === 'covoiturages.participer') {
+    $controller = new \NsAppEcoride\Controller\CovoituragesController();
+    $controller->participer();
+} elseif ($page === 'utilisateurs.recupererPassword') {
+    $controller = new \NsAppEcoride\Controller\UtilisateursController();
+    $controller->recupererPassword();
 }

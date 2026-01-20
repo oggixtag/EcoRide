@@ -7,16 +7,11 @@ use NsCoreEcoride\Entity\Entity;
 class CovoiturageEntity extends Entity
 {
 
-    public function __construct()
-    {
-        echo '<pre>';
-        var_dump('CovoiturageEntity.__construct().');
-        echo '</pre>';
-    }
+    public function __construct() {}
 
     public function getUrl()
     {
-        return 'index.php?p=trajet&id=' . $this->covoiturage_id;
+        return 'index.php?p=trajet-detail&id=' . $this->covoiturage_id;
     }
 
     public function getExtrait()
@@ -27,10 +22,6 @@ class CovoiturageEntity extends Entity
 
     public function getTitle()
     {
-        echo '<pre>';
-        var_dump('CovoiturageEntity.getTitle().');
-        echo '</pre>';
-
         return htmlspecialchars($this->title);
     }
 
@@ -40,11 +31,6 @@ class CovoiturageEntity extends Entity
      */
     public function __toString()
     {
-
-        echo '<pre>';
-        var_dump('CovoiturageEntity.__toString() calling getTitle()..');
-        echo '</pre>';
-
         // to show the title of the article in the select on lastByCategory method.
         return $this->getTitle();
     }

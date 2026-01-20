@@ -1,9 +1,3 @@
-<?php
-echo '<pre>';
-var_dump('page: ecoride\app\Views\covoiturages\index.php');
-echo '</pre>';
-?>
-
 <section class="presentation-section">
     <!-- Contenu Textuel -->
     <div class="presentation-content">
@@ -35,11 +29,10 @@ echo '</pre>';
 
 
 
-<div class="ecoride-trip-container">
+<section class="presentation-section">
 
     <h2 class="section-title">Section voyages</h2>
-
-    <h3 class="section-soustitle">Recherche</h3>
+    
     <form class="search-form" method="post" action="index.php?p=trajet">
         <input type="text" name="lieu_depart" placeholder="Lieu de départ">
         <input type="text" name="lieu_arrivee" placeholder="Destination">
@@ -47,4 +40,4 @@ echo '</pre>';
         <button type="submit">Rechercher</button>
     </form>
 
-</div>
+</section>

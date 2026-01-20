@@ -7,6 +7,7 @@ use NsCoreEcoride\Database\Database;
 class Model
 {
     protected $table;
+    protected $column;
     protected $db;
 
     /**
@@ -16,16 +17,8 @@ class Model
     // 
     public function __construct(Database $db)
     {
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).__construct().');
-        echo '</pre>';
-
         $this->db = $db;
         // db permet d'arriver à la classe MysqlDatabase
-
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).if (is_null($this->table)):' . ($this->table) . '.');
-        echo '</pre>';
 
         // si la proprieté a été definée dans le sous-classes
         // ça sera cella-là qu'il sera prise en compte, sinon
@@ -39,56 +32,23 @@ class Model
             $class_name = strtolower(str_replace('Model', '', $class_name));
             // on valorise la proprieté $table avec $class_name
             $this->table = $class_name;
+            // on valorise la proprieté $column avec $table.'_id'
+            $this->column = $this->table . '_id';
         }
     }
 
     public function all()
     {
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).all().called for table: ' . $this->table . ' . ');
-        echo '</pre>';
-
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).all().calling query()..');
-        echo '</pre>';
-
         return $this->query("SELECT * FROM " . $this->table);
     }
 
     public function find($id)
     {
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).find() called for id:' . $id . '.');
-        echo '</pre>';
-
-        /*echo '<pre>';
-        var_dump('Model(NsCoreEcoride).find().$id..');
-        foreach ($id as $key => $value) {
-            var_dump(' ..' . '[' . $key . '] => ' . $value . '.');
-        }
-        echo '</pre>';*/
-
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).find().$this->table:' . $this->table);
-        echo '</pre>';
-
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).find().calling query()..');
-        echo '</pre>';
-
-        return $this->query("SELECT * FROM {$this->table} WHERE id=?", [$id], true);
+        return $this->query("SELECT * FROM {$this->table} WHERE {$this->column} = ?", [$id], true);
     }
 
     public function update($id, $fields)
     {
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).update() called for id:' . $id . '.');
-        echo '</pre>';
-
-        /*echo '<pre>';
-        var_dump('Model(NsCoreEcoride).update().$fields:' . $fields . '.');
-        echo '</pre>';*/
-
         // composition clé valeur pour update
         $sql_part = [];
         $attributes = [];
@@ -120,14 +80,7 @@ class Model
 
         // chaine de carachetteres 
         $sqlSet = implode(',', $sql_part);
-        echo '<pre>';
-        echo 'Printing fields following by ?:';
-        var_dump($sqlSet);
-        echo '</pre>';
-        echo '<pre>';
-        echo 'Printing values that replace ?:';
-        var_dump($attributes);
-        echo '</pre>';
+
         /**Printing fields following by ?:string(31) "title=?,content=?,category_id=?"
         Printing values that replace ?:array(4) {
         [0]=>
@@ -139,11 +92,7 @@ class Model
         [3]=>
         string(1) "1" => cela corresponde à l'id , il a été ajouté , car dans la requête d'update l'id est en dernière positionne .
         } */
-        //die();
 
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).update().calling query()..');
-        echo '</pre>';
         //die();
 
         return $this->query("UPDATE {$this->table} SET $sqlSet WHERE id=?", $attributes, true);
@@ -151,24 +100,11 @@ class Model
 
     public function delete($id)
     {
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).delete() called for id:' . $id . '.');
-        echo '</pre>';
-
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).delete().calling query()..');
-        echo '</pre>';
-        //die();
-
         return $this->query("DELETE FROM {$this->table} WHERE id=?", [$id], true);
     }
 
     public function insert($fields)
     {
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).insert().called.');
-        echo '</pre>';
-
         /*echo '<pre>';
         echo 'Printing $fields:';
         var_dump($fields);
@@ -224,13 +160,6 @@ string(1) "1" */
   [2]=>
   string(1) "1"
 } */
-
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).insert().calling query()..');
-        echo '</pre>';
-        /*var_dump('Model(NsCoreEcoride).insert().statement:' . "INSERT INTO {$this->table} VALUES $sqlSet ");
-        //string(85) "Model(NsCoreEcoride).insert().statement:INSERT INTO articles VALUES title=?,content=?,category_id=? " string(21) "Model(NsCoreEcoride).insert().die()."
-        var_dump('Model(NsCoreEcoride).insert().die().');*/
         //die();
 
         return $this->query("INSERT INTO {$this->table} SET $sqlSet ", $attributes, true);
@@ -238,22 +167,12 @@ string(1) "1" */
 
     public function extratList($key, $value)
     {
-
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).extratList().called.');
-        echo '</pre>';
-
         // on recupere tous les enregistrements 
         $records = $this->all();
         $return = [];
         foreach ($records as $k => $v) {
             // on renpli le tableas $return avec la clé à estraire et la valeur avec la valeur à extraire.
             $return[$v->$key] = $v->$value;
-
-            echo '<pre>';
-            var_dump('Model(NsCoreEcoride).extratList().printing $return[]');
-            var_dump($return);
-            echo '</pre>';
         }
         return $return;
     }
@@ -268,43 +187,13 @@ string(1) "1" */
      */
     public function query($statement, $attributes = null, $one = false)
     {
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).query().called.');
-        echo '</pre>';
-
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).query().statement:' . $statement . '.');
-        echo '</pre>';
-
-        echo '<pre>';
-        if ($attributes) {
-            var_dump('Model(NsCoreEcoride).query().attributes passed..');
-            foreach ($attributes as $key => $value) {
-                var_dump(' ..' . '[' . $key . '] => ' . $value . '.');
-            }
-        } else {
-            var_dump('Model(NsCoreEcoride).query().attributes not passed.');
-        }
-        echo '</pre>';
-
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).query().get_class($this):' . get_class($this) . '.');
-        echo '</pre>';
-
         $classe_name = str_replace('Model', 'Entity', get_class($this));
-
-        echo '<pre>';
-        var_dump('Model(NsCoreEcoride).query().$classe_name:' . $classe_name . '.');
-        echo '</pre>';
 
         //die();
 
         // on a déjà la base des données dans l'objet.
         // s'il y a les attributes
         if ($attributes) {
-            echo '<pre>';
-            var_dump('Model(NsCoreEcoride).query().calling MysqlDatabase.prepare()..');
-            echo '</pre>';
             return $this->db->prepare(
                 $statement,
                 $attributes,
@@ -312,9 +201,6 @@ string(1) "1" */
                 $one
             );
         } else {
-            echo '<pre>';
-            var_dump('Model(NsCoreEcoride).query().calling MysqlDatabase.query()..');
-            echo '</pre>';
             return $this->db->query(
                 $statement,
                 $classe_name,

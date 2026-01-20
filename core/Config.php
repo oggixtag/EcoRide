@@ -23,19 +23,9 @@ class Config
     // Methode pour rendre la classe Config en singleton.
     public static function getInstance($file)
     {
-
-        echo '<pre>';
-        var_dump('Config.getInstance().');
-        echo '</pre>';
-
         if (is_null(self::$_instance)) {
             self::$_instance = new Config($file);
         }
-
-        echo '<pre>';
-        var_dump('Config.getInstance().return.');
-        echo '</pre>';
-
         return self::$_instance;
     }
 

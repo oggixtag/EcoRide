@@ -14,15 +14,6 @@ class Autoloader
      */
     static function register()
     {
-
-        echo '<pre>';
-        var_dump('Autoloader(NsAppEcoride).register().called.');
-        echo '</pre>';
-
-        echo '<pre>';
-        var_dump('Autoloader(NsAppEcoride).register().calling spl_autoload_register for:' . __CLASS__ . ' et la méthode fautoload.');
-        echo '</pre>';
-
         /**
          * On enregistre la méthode autoload avec la fonction spl_autoload_register
          *    __CLASS__ : nom de la classe courante (ici Autoloader)
@@ -37,11 +28,6 @@ class Autoloader
      */
     static function fautoload($class)
     {
-
-        echo '<pre>';
-        var_dump('Autoloader(NsAppEcoride).fautoload().called for class:' . $class);
-        echo '</pre>';
-
         // La classe est dans le bon namespace
         if (strpos($class, __NAMESPACE__) === 0) {
 

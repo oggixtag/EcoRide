@@ -55,10 +55,35 @@
     text-decoration: none;
     transition: background-color 0.3s;
     font-weight: bold;
+    margin-left: 5px;
 }
 
 .auth-button a:hover {
     background-color: #34495e;
+}
+
+.auth-button .btn-login {
+    background-color: var(--color-ecogreen);
+}
+
+.auth-button .btn-login:hover {
+    background-color: var(--color-ecodark);
+}
+
+.auth-button .btn-dashboard {
+    background-color: var(--color-price);
+}
+
+.auth-button .btn-dashboard:hover {
+    background-color: #16a39d;
+}
+
+.auth-button .btn-logout {
+    background-color: #d32f2f;
+}
+
+.auth-button .btn-logout:hover {
+    background-color: #b71c1c;
 }
 
 /* Responsive : Masquer le menu sur mobile et afficher le bouton de Connexion */

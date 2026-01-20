@@ -28,10 +28,6 @@ class MysqlDatabase extends Database
      */
     public function __construct($dbname = '', $dbusername = 'root', $dbpassword = '', $dbhost = 'localhost')
     {
-        echo '<pre>';
-        var_dump('MysqlDatabase.__construct().');
-        echo '</pre>';
-
         $this->dbname = $dbname;
         $this->dbusername = $dbusername;
         $this->dbpassword = $dbpassword;
@@ -46,19 +42,10 @@ class MysqlDatabase extends Database
      */
     private function getPdo()
     {
-        echo '<pre>';
-        var_dump('MysqlDatabase.getPdo called.');
-        echo '</pre>';
-
         /* On vérifie si l'instance de PDO n'existe pas déjà
          * Si elle n'existe pas, on la crée
          */
         if ($this->pdo === null) {
-
-            echo '<pre>';
-            var_dump('MysqlDatabase.getPdo.$this->pdo === null.');
-            echo '</pre>';
-
             $dns = 'mysql:host=' . $this->dbhost . ';dbname=' . $this->dbname;
             $pdo = new PDO($dns, $this->dbusername, $this->dbpassword);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -75,10 +62,6 @@ class MysqlDatabase extends Database
      */
     public function query($statement, $class_name = null, $one = false)
     {
-        echo '<pre>';
-        var_dump('MysqlDatabase.query().');
-        echo '</pre>';
-
         $req = $this->getPdo()->query($statement);
 
         if (
@@ -86,10 +69,6 @@ class MysqlDatabase extends Database
             strpos($statement, 'INSERT') === 0 ||
             strpos($statement, 'DELETE') === 0
         ) {
-            echo '<pre>';
-            var_dump('MysqlDatabase.query().UPDATEorINSERTorDELETE.');
-            echo '</pre>';
-
             return $req;
         }
 
@@ -105,10 +84,6 @@ class MysqlDatabase extends Database
             $datas = $req->fetchAll();
         }
 
-        echo '<pre>';
-        var_dump('MysqlDatabase.query().return');
-        echo '</pre>';
-
         return $datas;
     }
 
@@ -121,18 +96,6 @@ class MysqlDatabase extends Database
      */
     public function prepare($statement, $attributes, $class_name = null, $one = false)
     {
-        echo '<pre>';
-        var_dump('MysqlDatabase.prepare().called.');
-        echo '</pre>';
-
-        /*echo '<pre>';
-        var_dump('MysqlDatabase.prepare().$statement:' . $statement . '.');
-        echo '</pre>';*/
-
-        echo '<pre>';
-        var_dump('MysqlDatabase.prepare().calling $this->getPdo()->prepare($statement).');
-        echo '</pre>';
-
         $req = $this->getPdo()->prepare($statement);
 
         $res = $req->execute($attributes); //<=> tableau des paramètres
@@ -142,44 +105,20 @@ class MysqlDatabase extends Database
             strpos($statement, 'INSERT') === 0 ||
             strpos($statement, 'DELETE') === 0
         ) {
-            echo '<pre>';
-            var_dump('MysqlDatabase.prepare().UPDATEorINSERTorDELETE.');
-            echo '</pre>';
-
             return $res;
         }
 
-        echo '<pre>';
-        var_dump('MysqlDatabase.prepare().$class_name:' . $class_name . '.');
-        echo '</pre>';
-
         if ($class_name === null) {
-            echo '<pre>';
-            var_dump('MysqlDatabase.prepare().setFetchMode.FETCH_OBJ.');
-            echo '</pre>';
             $req->setFetchMode(PDO::FETCH_OBJ);
         } else {
-            echo '<pre>';
-            var_dump('MysqlDatabase.prepare().setFetchMode.FETCH_CLASS.');
-            echo '</pre>';
             $req->setFetchMode(PDO::FETCH_CLASS, $class_name);
         }
 
         if ($one) {
-            echo '<pre>';
-            var_dump('MysqlDatabase.prepare().un seul enregistrement.');
-            echo '</pre>';
             $datas = $req->fetch();
         } else {
-            echo '<pre>';
-            var_dump('MysqlDatabase.prepare().plusieur enregistrements.');
-            echo '</pre>';
             $datas = $req->fetchAll();
         }
-
-        echo '<pre>';
-        var_dump('MysqlDatabase.prepare().return.');
-        echo '</pre>';
 
         return $datas;
     }
@@ -190,10 +129,6 @@ class MysqlDatabase extends Database
      */
     public function getLastInsertId()
     {
-        echo '<pre>';
-        var_dump('MysqlDatabase.getLastInsertId().called.');
-        echo '</pre>';
-
         return $this->getPdo()->lastInsertId();
     }
 }
