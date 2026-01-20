@@ -14,15 +14,16 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- 1. Tables d'association (dépendent de deux autres tables)
 DROP TABLE IF EXISTS `participe`;
 
--- 2. Tables dépendant de `utilisateur`, `voiture`, `configuration` ou `marque`
-DROP TABLE IF EXISTS `covoiturage`;  -- Dépend de voiture et utilisateur
-DROP TABLE IF EXISTS `avis`;         -- Dépend de utilisateur
+-- 2. Tables dépendant de `utilisateur`, `voiture`, `marque`
+DROP TABLE IF EXISTS `covoiturage`;   
+DROP TABLE IF EXISTS `avis`;          
+DROP TABLE IF EXISTS `visiteur_utilisateur`;
 
--- 3. Tables dépendant uniquement d'elles-mêmes ou de petites entités
-DROP TABLE IF EXISTS `voiture`;      -- Dépend de marque
-DROP TABLE IF EXISTS `utilisateur`;  -- Dépend de role
+-- 3. Tables dépendant uniquement d'elles-mêmes
+DROP TABLE IF EXISTS `voiture`;      
+DROP TABLE IF EXISTS `utilisateur`;  
 
--- 4. Tables principales (qui ne dépendent d'aucune autre table)
+-- 4. Tables qui ne dépendent d'aucune autre table
 DROP TABLE IF EXISTS `role`;
 DROP TABLE IF EXISTS `marque`;
 DROP TABLE IF EXISTS `statut_covoiturage`;
@@ -56,6 +57,15 @@ CREATE TABLE IF NOT EXISTS `role` (
 ) ;
 
 -- -----------------------------------------------------
+-- Table `statut_mail`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `statut_mail` (
+  `statut_mail_id` INT NOT NULL AUTO_INCREMENT,
+  `libelle` VARCHAR(50) NOT NULL UNIQUE,
+  PRIMARY KEY (`statut_mail_id`)
+) ;
+
+-- -----------------------------------------------------
 -- Table `utilisateur`
 -- Relation 'possede' (1,1) vers role
 -- -----------------------------------------------------
@@ -71,12 +81,36 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
   `photo` BLOB NULL,
   `pseudo` VARCHAR(50) NOT NULL UNIQUE,
   `role_id` INT NOT NULL, -- Clé étrangère vers `role`
-  `credit` INT NOT NULL,
+  `credit` INT NOT NULL DEFAULT 20,
   PRIMARY KEY (`utilisateur_id`),
   INDEX `fk_utilisateur_role_idx` (`role_id` ASC),
   CONSTRAINT `fk_utilisateur_role`
     FOREIGN KEY (`role_id`)
     REFERENCES `role` (`role_id`)
+);
+
+-- -----------------------------------------------------
+-- Table `visiteur_utilisateur`
+-- Relation (1,1) vers utilisateur
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `visiteur_utilisateur` (
+  `visiteur_utilisateur_id` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(50) NOT NULL UNIQUE,
+  `password` VARCHAR(50) NOT NULL,
+  `pseudo` VARCHAR(50) NOT NULL UNIQUE,
+  `statut_mail_id` INT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`visiteur_utilisateur_id`),
+  INDEX `fk_visiteur_utilisateur_email_idx` (`email` ASC),
+  INDEX `fk_pseudo_idx` (`pseudo` ASC),
+  INDEX `fk_statut_mail_idx` (`statut_mail_id` ASC),
+  `statut_mail_id` INT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`visiteur_utilisateur_id`),
+  INDEX `fk_visiteur_utilisateur_email_idx` (`email` ASC),
+  INDEX `fk_pseudo_idx` (`pseudo` ASC),
+  INDEX `fk_statut_mail_idx` (`statut_mail_id` ASC),
+  CONSTRAINT `fk_statut_mail_id`
+    FOREIGN KEY (`statut_mail_id`)
+    REFERENCES `statut_mail` (`statut_mail_id`)
 );
 
 -- -----------------------------------------------------
@@ -105,6 +139,7 @@ CREATE TABLE IF NOT EXISTS `statut_avis` (
   `libelle` VARCHAR(50) NOT NULL UNIQUE,
   PRIMARY KEY (`statut_avis_id`)
 ) ;
+
 
 -- -----------------------------------------------------
 -- Table `note`

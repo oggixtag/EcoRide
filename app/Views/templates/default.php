@@ -57,7 +57,7 @@
                     <a href="index.php?p=logout" class="btn-logout">Déconnexion</a>
                 <?php else: ?>
                     <!-- Utilisateur non authentifié -->
-                    <a href="index.php?p=utilisateurs.login" class="btn-login">Connexion</a>
+                    <a href="index.php?p=utilisateurs.inscrir" class="btn-login">S'inscrir</a> | <a href="index.php?p=utilisateurs.login" class="btn-login">Se connecter</a>
                 <?php endif; ?>
             </div>
 

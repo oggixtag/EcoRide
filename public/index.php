@@ -58,3 +58,14 @@ elseif ($page === 'utilisateurs.login') {
     $controller = new \NsAppEcoride\Controller\UtilisateursController();
     $controller->recupererPassword();
 }
+// US7
+elseif ($page === 'utilisateurs.inscrir') {
+    $controller = new \NsAppEcoride\Controller\UtilisateursController();
+    $controller->inscrir();
+} elseif ($page === 'utilisateurs.validerEmail') {
+    $controller = new \NsAppEcoride\Controller\UtilisateursController();
+    $controller->validerEmail();
+} elseif ($page === 'utilisateurs.finaliserInscription') {
+    $controller = new \NsAppEcoride\Controller\UtilisateursController();
+    $controller->finaliserInscription();
+}

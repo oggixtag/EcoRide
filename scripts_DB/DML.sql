@@ -12,16 +12,13 @@ DELETE FROM `marque`;
 DELETE FROM `utilisateur`;
 DELETE FROM `statut_covoiturage`;
 DELETE FROM `statut_avis`;
+DELETE FROM `statut_mail`;
 DELETE FROM `note`;
-/*DELETE FROM `parametre`;
-DELETE FROM `configuration`;*/
 DELETE FROM `role`;
 DELETE FROM `employe`;
 DELETE FROM `poste`;
 DELETE FROM `departement`;
 ALTER TABLE `role` AUTO_INCREMENT = 1; -- Réinitialisation des compteurs PK
-/*ALTER TABLE `configuration` AUTO_INCREMENT = 1;
-ALTER TABLE `parametre` AUTO_INCREMENT = 1;*/
 ALTER TABLE `utilisateur` AUTO_INCREMENT = 1;
 ALTER TABLE `marque` AUTO_INCREMENT = 1;
 ALTER TABLE `voiture` AUTO_INCREMENT = 1;
@@ -30,6 +27,7 @@ ALTER TABLE `participe` AUTO_INCREMENT = 1;
 ALTER TABLE `avis` AUTO_INCREMENT = 1;
 ALTER TABLE `statut_covoiturage` AUTO_INCREMENT = 1;
 ALTER TABLE `statut_avis` AUTO_INCREMENT = 1;
+ALTER TABLE `statut_mail` AUTO_INCREMENT = 1;
 ALTER TABLE `note` AUTO_INCREMENT = 1;
 ALTER TABLE `departement` AUTO_INCREMENT = 1;
 ALTER TABLE `poste` AUTO_INCREMENT = 1;
@@ -95,6 +93,11 @@ INSERT INTO `statut_covoiturage` (`libelle`) VALUES
 INSERT INTO `statut_avis` (`libelle`) VALUES
 ('publié'),
 ('modération');
+
+-- 5.c. Insertion initiale dans la table `statut_mail`
+INSERT INTO `statut_mail` (`libelle`) VALUES
+('non_confirmmé'),
+('confirmmé');
 
 -- 5.c. Insertion initiale dans la table `note`
 INSERT INTO `note` (`libelle`) VALUES

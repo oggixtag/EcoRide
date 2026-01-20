@@ -1,8 +1,7 @@
 <section class="presentation-section">
     <div class="presentation-content">
         <div class="login-box">
-            <h1 id="loginTitle">Connexion</h1>
-
+            <h1>Connexion</h1>
             <?php if ($errors): ?>
                 <div class="alert alert-error">
                     <p>Identifiants invalides. Veuillez réessayer.</p>
@@ -42,6 +41,10 @@
                 <div class="form-buttons">
                     <button type="submit" class="btn btn-primary">Se connecter</button>
                     <button type="button" id="toggleRecoveryBtn" class="btn btn-secondary" onclick="toggleForms(); return false;">Mot de passe oublié ?</button>
+                </div>
+                
+                <div class="auth-links" style="margin-top: 15px; text-align: center;">
+                    <a href="index.php?p=utilisateurs.inscrir">Inscris-toi avec ton adresse e-mail</a>
                 </div>
             </form>
 

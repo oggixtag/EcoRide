@@ -23,12 +23,24 @@ class DbAuth
      * */
     public function login($username, $password)
     {
+        // 1. Essayer de se connecter en tant qu'utilisateur complet
         $user = $this->db->prepare("SELECT * FROM utilisateur WHERE pseudo = ? and password=?", [$username, $password], null, true);
 
         if ($user) {
             $_SESSION['auth'] = $user->utilisateur_id;
+            $_SESSION['auth_type'] = 'utilisateur';
             return true;
         }
+
+        // 2. Essayer de se connecter en tant que visiteur (inscription en cours)
+        $visiteur = $this->db->prepare("SELECT * FROM visiteur_utilisateur WHERE pseudo = ? and password=?", [$username, $password], null, true);
+
+        if ($visiteur) {
+            $_SESSION['auth'] = $visiteur->visiteur_utilisateur_id;
+            $_SESSION['auth_type'] = 'visiteur';
+            return true;
+        }
+
         return false;
     }
 
@@ -48,5 +60,14 @@ class DbAuth
     public function getConnectedUserId()
     {
         return $_SESSION['auth'] ?? null;
+    }
+
+    /**
+     * Récupère le type d'utilisateur connecté ('utilisateur' ou 'visiteur')
+     * @return string|null
+     */
+    public function getAuthType()
+    {
+        return $_SESSION['auth_type'] ?? null;
     }
 }

@@ -32,6 +32,8 @@ class App
 
         require ROOT . '/core/Autoloader.php';
         NsCoreEcoride\Autoloader::register();
+
+        require ROOT . '/vendor/autoload.php';
     }
 
     /**

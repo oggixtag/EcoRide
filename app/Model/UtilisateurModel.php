@@ -181,4 +181,118 @@ class UtilisateurModel extends Model
             [$utilisateur_id]
         );
     }
+    /**
+     * Crée un nouveau visiteur (pré-inscription)
+     * @param string $pseudo
+     * @param string $email
+     * @param string $password
+     * @return bool
+     */
+    public function createVisiteur($pseudo, $email, $password)
+    {
+        return $this->query(
+            "INSERT INTO visiteur_utilisateur (pseudo, email, password, statut_mail_id) VALUES (?, ?, ?, 1)",
+            [$pseudo, $email, $password]
+        );
+    }
+
+    /**
+     * Vérifie si un pseudo est unique (dans utilisateur et visiteur_utilisateur)
+     * @param string $pseudo
+     * @return bool
+     */
+    public function isPseudoUnique($pseudo)
+    {
+        // Vérifier dans la table utilisateur
+        $user = $this->query("SELECT COUNT(*) as count FROM utilisateur WHERE pseudo = ?", [$pseudo], true);
+        if ($user && $user->count > 0) return false;
+
+        // Vérifier dans la table visiteur_utilisateur
+        $visiteur = $this->query("SELECT COUNT(*) as count FROM visiteur_utilisateur WHERE pseudo = ?", [$pseudo], true);
+        if ($visiteur && $visiteur->count > 0) return false;
+
+        return true;
+    }
+
+    /**
+     * Vérifie si un email est unique (dans utilisateur et visiteur_utilisateur)
+     * @param string $email
+     * @return bool
+     */
+    public function isEmailUnique($email)
+    {
+        // Vérifier dans la table utilisateur
+        $user = $this->query("SELECT COUNT(*) as count FROM utilisateur WHERE email = ?", [$email], true);
+        if ($user && $user->count > 0) return false;
+
+        // Vérifier dans la table visiteur_utilisateur
+        $visiteur = $this->query("SELECT COUNT(*) as count FROM visiteur_utilisateur WHERE email = ?", [$email], true);
+        if ($visiteur && $visiteur->count > 0) return false;
+
+        return true;
+    }
+
+    /**
+     * Récupère un visiteur par ID
+     * @param int $id
+     * @return object|null
+     */
+    public function getVisiteur($id)
+    {
+        return $this->query(
+            "SELECT * FROM visiteur_utilisateur WHERE visiteur_utilisateur_id = ?",
+            [$id],
+            true
+        );
+    }
+    
+    /**
+    * Met à jour le statut mail d'un visiteur
+    * @param int $id
+    * @param int $statut_id
+    */
+    public function updateVisiteurStatut($id, $statut_id) {
+         return $this->query(
+            "UPDATE visiteur_utilisateur SET statut_mail_id = ? WHERE visiteur_utilisateur_id = ?",
+            [$statut_id, $id]
+        );
+    }
+    
+    /**
+     * Transforme un visiteur en utilisateur
+     * @param int $visiteur_id
+     * @param array $data Données complémentaires (nom, prenom, etc.)
+     * @return bool
+     */
+    public function upgradeVisiteurToUser($visiteur_id, $data) {
+        $visiteur = $this->getVisiteur($visiteur_id);
+        if (!$visiteur) return false;
+        
+        // 1. Insérer dans utilisateur
+        // Note: credit a une valeur par défaut de 20 dans la DB
+        $res = $this->query(
+            "INSERT INTO utilisateur (
+                nom, prenom, email, password, telephone, adresse, date_naissance, photo, pseudo, role_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                $data['nom'],
+                $data['prenom'],
+                $visiteur->email,
+                $visiteur->password,
+                $data['telephone'],
+                $data['adresse'],
+                $data['date_naissance'],
+                $data['photo'] ?? null,
+                $visiteur->pseudo,
+                $data['role_id'] ?? 2 // Rôle par défaut (ex: Passager/User standard - à confirmer selon la table role)
+            ]
+        );
+        
+        if ($res) {
+            // 2. Supprimer de visiteur_utilisateur
+            $this->query("DELETE FROM visiteur_utilisateur WHERE visiteur_utilisateur_id = ?", [$visiteur_id]);
+            return true;
+        }
+        return false;
+    }
 }
