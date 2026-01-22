@@ -1,5 +1,11 @@
 {
     "require": {
         "phpmailer/phpmailer": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "NsAppEcoride\\": "app/",
+            "NsCoreEcoride\\": "core/"
+        }
     }
 }

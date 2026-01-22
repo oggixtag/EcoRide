@@ -485,3 +485,88 @@
 #backToLogin a:hover {
     color: var(--color-ecodark);
 }
+
+/* Helpers for Buttons inside headers and lists */
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.float-right-btn {
+    float: right;
+    font-size: 0.8em;
+}
+
+.voiture-actions {
+    margin-top: 10px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+/* Alert styles within dashboard */
+.alert-warning {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Compact section for US8 */
+.compact-section {
+    padding: 15px;
+    /* Reduced from 20px/30px */
+}
+
+.compact-section h2 {
+    margin-bottom: 10px;
+    font-size: 1.3em;
+    padding-bottom: 5px;
+}
+
+.compact-section .info-grid {
+    gap: 10px;
+    /* Reduced from 20px */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    /* Allow smaller columns */
+}
+
+.compact-section .info-item {
+    padding: 10px;
+    /* Reduced from 15px */
+    border-left-width: 3px;
+}
+
+.compact-section .info-item label {
+    margin-bottom: 4px;
+    font-size: 0.85em;
+}
+
+.compact-section .info-item p {
+    font-size: 0.95em;
+}
+
+.compact-section .form-group {
+    margin-bottom: 10px;
+    /* Reduced from 15px/20px */
+}
+
+.compact-section .form-buttons {
+    margin-top: 10px;
+}
+
+.compact-section .voiture-item {
+    padding: 10px;
+}
+
+.compact-section .voiture-item h3 {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.compact-section .voiture-item p {
+    margin: 4px 0;
+    font-size: 0.9em;
+}

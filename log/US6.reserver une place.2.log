@@ -1,0 +1,24 @@
+Error parsing JSON: SyntaxError: JSON.parse: unexpected character at line 1 column 1 of the JSON data
+    onload https://localhost/EcoRide/public/js/trajet_details.js:237
+    handleReserveClick https://localhost/EcoRide/public/js/trajet_details.js:231
+    setupActionButtons https://localhost/EcoRide/public/js/trajet_details.js:203
+    onload https://localhost/EcoRide/public/js/trajet_details.js:129
+    loadAndOpenModal https://localhost/EcoRide/public/js/trajet_details.js:122
+    handleDetailButtonClick https://localhost/EcoRide/public/js/trajet_details.js:89
+    init https://localhost/EcoRide/public/js/trajet_details.js:21
+    EventListener.handleEvent* https://localhost/EcoRide/public/js/trajet_details.js:311
+    <anonymous> https://localhost/EcoRide/public/js/trajet_details.js:315
+    onload https://localhost/EcoRide/public/js/trajet_details.js:251
+    (Asinc.: EventHandlerNonNull)
+    handleReserveClick https://localhost/EcoRide/public/js/trajet_details.js:231
+    (Asinc.: EventListener.handleEvent)
+    setupActionButtons https://localhost/EcoRide/public/js/trajet_details.js:203
+    onload https://localhost/EcoRide/public/js/trajet_details.js:129
+    (Asinc.: EventHandlerNonNull)
+    loadAndOpenModal https://localhost/EcoRide/public/js/trajet_details.js:122
+    handleDetailButtonClick https://localhost/EcoRide/public/js/trajet_details.js:89
+    (Asinc.: EventListener.handleEvent)
+    init https://localhost/EcoRide/public/js/trajet_details.js:21
+    (Asinc.: EventListener.handleEvent)
+    <anonima> https://localhost/EcoRide/public/js/trajet_details.js:311
+    <anonima> https://localhost/EcoRide/public/js/trajet_details.js:315

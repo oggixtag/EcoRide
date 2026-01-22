@@ -36,7 +36,7 @@ class UtilisateursController extends AppController
             $visiteur = $this->Utilisateur->getVisiteur($utilisateur_id);
             $statut_mail_id = $visiteur->statut_mail_id;
             
-            $this->render('utilisateurs.index', compact('visiteur', 'auth_type', 'statut_mail_id'));
+            $this->render('utilisateurs.profile.index', compact('visiteur', 'auth_type', 'statut_mail_id'));
         } else {
             // Logique existante pour un utilisateur complet
             $utilisateur = $this->Utilisateur->find($utilisateur_id);
@@ -46,7 +46,7 @@ class UtilisateursController extends AppController
             $covoiturages = $this->Utilisateur->getCovoituragesForUser($utilisateur_id);
             $reservations = $this->Utilisateur->findParticipations($utilisateur_id);
 
-            $this->render('utilisateurs.index', compact('utilisateur', 'role', 'avis', 'voitures', 'covoiturages', 'reservations', 'auth_type'));
+            $this->render('utilisateurs.profile.index', compact('utilisateur', 'role', 'avis', 'voitures', 'covoiturages', 'reservations', 'auth_type'));
         }
     }
 
@@ -361,5 +361,108 @@ class UtilisateursController extends AppController
             file_put_contents(ROOT . '/log/email_debug.txt', "MAIL ERROR: " . $e->getMessage() . "\n" . $mail->ErrorInfo . "\n", FILE_APPEND);
             return false;
         }
+    }
+    /**
+     * Modifie les informations du profil utilisateur
+     */
+    public function edit()
+    {
+        $auth = new DbAuth(App::getInstance()->getDb());
+        $id = $auth->getConnectedUserId();
+
+        if (!$id) {
+            $this->forbidden();
+        }
+
+        $utilisateur = $this->Utilisateur->find($id);
+        $message = '';
+        $message_type = '';
+
+        if (!empty($_POST)) {
+            // Validation et Update
+            // Determine Role ID from checkboxes
+            // Passager (role_passager) = 2
+            // Chauffeur (role_chauffeur) = 1
+            // Both checked = 3 (Chauffeur-Passager)
+            
+            $is_passager = isset($_POST['role_passager']); // Checked box sends value
+            $is_chauffeur = isset($_POST['role_chauffeur']);
+
+            $role_id = 2; // Default fallback
+            
+            if ($is_passager && $is_chauffeur) {
+                $role_id = 3;
+            } elseif ($is_chauffeur) {
+                $role_id = 1; // Unlikely if Passager is unchecked but possible via UI manipulation, or strictly Chauffeur role
+            } elseif ($is_passager) {
+                $role_id = 2;
+            } else {
+                // If nothing checked, default to Passager (2) or keep existing?
+                // Logic dicts at least one role. Default 2.
+                $role_id = 2; 
+            }
+
+            $data = [
+                'nom' => htmlspecialchars($_POST['nom']),
+                'prenom' => htmlspecialchars($_POST['prenom']),
+                'telephone' => htmlspecialchars($_POST['telephone']),
+                'adresse' => htmlspecialchars($_POST['adresse']),
+                'date_naissance' => htmlspecialchars($_POST['date_naissance']),
+                'role_id' => $role_id 
+            ];
+
+            // Update User info
+            if ($this->Utilisateur->update($id, $data)) {
+                $message = "Profil mis à jour avec succès.";
+                $message_type = "success";
+                
+                // Update Preferences
+                $this->Utilisateur->clearPreferences($id);
+                
+                // Handle standard checkboxes (fumeur, animaux)
+                if (isset($_POST['pref_fumeur'])) {
+                    $this->Utilisateur->addPreference($id, 'Fumeur');
+                } else {
+                     $this->Utilisateur->addPreference($id, 'Non Fumeur');
+                }
+
+                if (isset($_POST['pref_animaux'])) {
+                    $this->Utilisateur->addPreference($id, 'Accepte les animaux');
+                } else {
+                    $this->Utilisateur->addPreference($id, 'Pas d\'animaux');
+                }
+                
+                // Handle custom preferences
+                if (!empty($_POST['custom_prefs'])) {
+                    $customs = explode(',', $_POST['custom_prefs']);
+                    foreach ($customs as $pref) {
+                        $pref = trim($pref);
+                        if (!empty($pref)) {
+                            $this->Utilisateur->addPreference($id, $pref);
+                        }
+                    }
+                }
+                
+                // Refresh data
+                $utilisateur = $this->Utilisateur->find($id);
+
+            } else {
+                $message = "Erreur lors de la mise à jour.";
+                $message_type = "error";
+            }
+        }
+
+        $preferences = $this->Utilisateur->getPreferences($id);
+        
+        // Prepare preferences for view (simple array of labels)
+        $user_prefs = [];
+        foreach ($preferences as $p) {
+            $user_prefs[] = $p->libelle;
+        }
+
+        $voitures = $this->Utilisateur->getVoituresForUser($id);
+        $has_cars = !empty($voitures);
+
+        $this->render('utilisateurs.profile.edit', compact('utilisateur', 'user_prefs', 'message', 'message_type', 'has_cars'));
     }
 }

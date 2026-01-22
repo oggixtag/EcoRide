@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="/EcoRide/public/css/style_trajet_detail.css">
     <!-- Inclure le script spécifique à la page trajet -->
     <script src="/EcoRide/public/js/script_trajet.js"></script>
+    <script src="/EcoRide/public/js/script_voiture.js"></script> <!-- Added for US8 -->
 </head>
 
 <body>

@@ -18,8 +18,7 @@ DROP TABLE IF EXISTS `participe`;
 DROP TABLE IF EXISTS `covoiturage`;   
 DROP TABLE IF EXISTS `avis`;          
 DROP TABLE IF EXISTS `visiteur_utilisateur`;
-
--- 3. Tables dépendant uniquement d'elles-mêmes
+DROP TABLE IF EXISTS `preference`;
 DROP TABLE IF EXISTS `voiture`;      
 DROP TABLE IF EXISTS `utilisateur`;  
 
@@ -98,11 +97,6 @@ CREATE TABLE IF NOT EXISTS `visiteur_utilisateur` (
   `email` VARCHAR(50) NOT NULL UNIQUE,
   `password` VARCHAR(50) NOT NULL,
   `pseudo` VARCHAR(50) NOT NULL UNIQUE,
-  `statut_mail_id` INT NOT NULL DEFAULT 1,
-  PRIMARY KEY (`visiteur_utilisateur_id`),
-  INDEX `fk_visiteur_utilisateur_email_idx` (`email` ASC),
-  INDEX `fk_pseudo_idx` (`pseudo` ASC),
-  INDEX `fk_statut_mail_idx` (`statut_mail_id` ASC),
   `statut_mail_id` INT NOT NULL DEFAULT 1,
   PRIMARY KEY (`visiteur_utilisateur_id`),
   INDEX `fk_visiteur_utilisateur_email_idx` (`email` ASC),
@@ -245,6 +239,21 @@ CREATE TABLE IF NOT EXISTS `avis` (
     REFERENCES `note` (`note_id`)
 
 ) ;
+
+-- -----------------------------------------------------
+-- Table `preference`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `preference` (
+  `preference_id` INT NOT NULL AUTO_INCREMENT,
+  `libelle` VARCHAR(100) NOT NULL,
+  `utilisateur_id` INT NOT NULL,
+  PRIMARY KEY (`preference_id`),
+  INDEX `fk_preference_utilisateur_idx` (`utilisateur_id` ASC),
+  CONSTRAINT `fk_preference_utilisateur`
+    FOREIGN KEY (`utilisateur_id`)
+    REFERENCES `utilisateur` (`utilisateur_id`)
+    ON DELETE CASCADE
+) ENGINE=InnoDB;
 
 
 

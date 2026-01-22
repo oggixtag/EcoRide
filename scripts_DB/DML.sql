@@ -4,6 +4,7 @@
 
 
 -- Nettoyage 
+DELETE FROM `preference`;
 DELETE FROM `avis`;
 DELETE FROM `participe`;
 DELETE FROM `covoiturage`;
@@ -24,6 +25,7 @@ ALTER TABLE `marque` AUTO_INCREMENT = 1;
 ALTER TABLE `voiture` AUTO_INCREMENT = 1;
 ALTER TABLE `covoiturage` AUTO_INCREMENT = 1;
 ALTER TABLE `participe` AUTO_INCREMENT = 1;
+ALTER TABLE `preference` AUTO_INCREMENT = 1;
 ALTER TABLE `avis` AUTO_INCREMENT = 1;
 ALTER TABLE `statut_covoiturage` AUTO_INCREMENT = 1;
 ALTER TABLE `statut_avis` AUTO_INCREMENT = 1;
@@ -35,9 +37,9 @@ ALTER TABLE `employe` AUTO_INCREMENT = 1;
 
 -- 1. Insertion dans la table `role`
 INSERT INTO `role` (`libelle`) VALUES
-('Administrateur'),
-('Conducteur'),
-('Passager');
+('Chauffeur'),
+('Passager'),
+('Chauffeur-Passager');
 
 -- 2. Insertion dans la table `configuration`
 
@@ -45,31 +47,31 @@ INSERT INTO `role` (`libelle`) VALUES
 
 -- 4. Insertion initiale dans la table `utilisateur` 
 INSERT INTO `utilisateur` (`nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `photo`, `pseudo`, `role_id`,`credit`) VALUES
-('Dupont', 'Alice', 'alice.dupont@mail.com', 'password123', '0612345678', '10 Rue de Paris, 75001 Paris', '1990-05-15', NULL, 'AliceCovoit', 2,20), -- Conducteur
-('Bernard', 'Bob', 'bob.bernard@mail.com', 'password123', '0798765432', '25 Avenue de Lyon, 69002 Lyon', '1985-11-20', NULL, 'BobTheRider', 3,20),   -- Passager
-('Charles', 'Cécile', 'cecile.charles@mail.com', 'password123', '0660606060', '5 Bd des Plages, 06600 Antibes', '1995-03-01', NULL, 'Cece06', 2,20),        -- Conducteur
-('David', 'Diana', 'diana.david@mail.com', 'password123', '0711223344', '8 Rue de Marseille, 13008 Marseille', '2000-08-22', NULL, 'DianaTravel', 3,20), -- Passager
-('Emmanuel', 'Eva', 'eva.emmanuel@mail.com', 'password123', '0655443322', '3 Place de Bordeaux, 33000 Bordeaux', '1978-01-10', NULL, 'EcoEva', 2,20),      -- Conducteur
-('Fournier', 'François', 'francois.fournier@mail.com', 'pass456', '0699887766', '1 Rue de Lille, 59000 Lille', '1992-07-25', NULL, 'F-Ride', 3,20),
-('Garnier', 'Gina', 'gina.garnier@mail.com', 'pass789', '0710203040', '12 Av. des Fleurs, 44000 Nantes', '1988-02-14', NULL, 'GinaG', 2,20),
-('Henry', 'Hugo', 'hugo.henry@mail.com', 'pass101', '0633445566', '33 Pl. de Bretagne, 35000 Rennes', '1997-12-05', NULL, 'Huguito', 3,20),
-('Ibanez', 'Ingrid', 'ingrid.ibanez@mail.com', 'pass202', '0755667788', '45 Rue de l''Est, 67000 Strasbourg', '1980-06-30', NULL, 'StrasRide', 2,20),
-('Joly', 'Jules', 'jules.joly@mail.com', 'pass303', '0677889900', '19 Bd du Midi, 83000 Toulon', '2002-04-18', NULL, 'JulesJ', 3,20),
-('Klein', 'Karine', 'karine.klein@mail.com', 'pass404', '0700112233', '2 Rue du Lac, 74000 Annecy', '1993-09-01', NULL, 'Kiki74', 2,20),
-('Lambert', 'Louis', 'louis.lambert@mail.com', 'pass505', '0622334455', '8 Av. du Nord, 59000 Lille', '1987-11-29', NULL, 'LuluCar', 3,20),
-('Martin', 'Manon', 'manon.martin@mail.com', 'pass606', '0744556677', '14 Rue de l''Opéra, 69001 Lyon', '1999-01-20', NULL, 'ManonM', 2,20),
-('Noël', 'Nicolas', 'nicolas.noel@mail.com', 'pass707', '0688990011', '7 Av. du Sud, 13008 Marseille', '1975-03-12', NULL, 'NicoTravel', 3,20),
-('Olivier', 'Ophélie', 'ophelie.olivier@mail.com', 'pass808', '0799001122', '22 Rue des Vignes, 33000 Bordeaux', '1991-10-08', NULL, 'OphélieO', 2,20),
-('Petit', 'Paul', 'paul.petit@mail.com', 'pass909', '0611223344', '3 Pl. de la Liberté, 44000 Nantes', '1984-05-23', NULL, 'Polo44', 3,20),
-('Quentin', 'Quitterie', 'quitterie.quentin@mail.com', 'pass110', '0733445566', '5 Rue du Château, 35000 Rennes', '1996-02-17', NULL, 'QuittR', 2,20),
-('Robert', 'Romain', 'romain.robert@mail.com', 'pass111', '0655667788', '17 Av. de l''Europe, 67000 Strasbourg', '1982-08-03', NULL, 'RoroStr', 3,20),
-('Simon', 'Sarah', 'sarah.simon@mail.com', 'pass112', '0777889900', '9 Bd des Palmiers, 83000 Toulon', '1994-11-11', NULL, 'SarahS', 2,20),
-('Thomas', 'Théo', 'theo.thomas@mail.com', 'pass113', '0699001122', '24 Rue du Rhône, 69002 Lyon', '2001-01-01', NULL, 'Theo69', 3,20),
-('Vincent', 'Valérie', 'valerie.vincent@mail.com', 'pass114', '0710111213', '1 Bd de la Loire, 44000 Nantes', '1989-07-07', NULL, 'ValV', 2,20),
-('Weber', 'William', 'william.weber@mail.com', 'pass115', '0620212223', '30 Rue des Arts, 33000 Bordeaux', '1998-10-19', NULL, 'WillBdx', 3,20),
-('Xavier', 'Xenia', 'xenia.xavier@mail.com', 'pass116', '0740414243', '15 Rue des Etoiles, 75001 Paris', '1976-04-28', NULL, 'XeniaX', 2,20),
-('Yann', 'Yasmine', 'yasmine.yann@mail.com', 'pass117', '0660616263', '21 Av. du Soleil, 13008 Marseille', '1990-12-01', NULL, 'YasmineY', 3,20),
-('Zimmer', 'Zachary', 'zachary.zimmer@mail.com', 'pass118', '0780818283', '4 Rue de la Paix, 67000 Strasbourg', '1983-03-09', NULL, 'ZackZ', 2,20);
+('Dupont', 'Alice', 'alice.dupont@mail.com', 'password123', '0612345678', '10 Rue de Paris, 75001 Paris', '1990-05-15', NULL, 'AliceCovoit', 1,20), -- Conducteur
+('Bernard', 'Bob', 'bob.bernard@mail.com', 'password123', '0798765432', '25 Avenue de Lyon, 69002 Lyon', '1985-11-20', NULL, 'BobTheRider', 2,20),   -- Passager
+('Charles', 'Cécile', 'cecile.charles@mail.com', 'password123', '0660606060', '5 Bd des Plages, 06600 Antibes', '1995-03-01', NULL, 'Cece06', 1,20),        -- Conducteur
+('David', 'Diana', 'diana.david@mail.com', 'password123', '0711223344', '8 Rue de Marseille, 13008 Marseille', '2000-08-22', NULL, 'DianaTravel', 2,20), -- Passager
+('Emmanuel', 'Eva', 'eva.emmanuel@mail.com', 'password123', '0655443322', '3 Place de Bordeaux, 33000 Bordeaux', '1978-01-10', NULL, 'EcoEva', 1,20),      -- Conducteur
+('Fournier', 'François', 'francois.fournier@mail.com', 'pass456', '0699887766', '1 Rue de Lille, 59000 Lille', '1992-07-25', NULL, 'F-Ride', 2,20),
+('Garnier', 'Gina', 'gina.garnier@mail.com', 'pass789', '0710203040', '12 Av. des Fleurs, 44000 Nantes', '1988-02-14', NULL, 'GinaG', 1,20),
+('Henry', 'Hugo', 'hugo.henry@mail.com', 'pass101', '0633445566', '33 Pl. de Bretagne, 35000 Rennes', '1997-12-05', NULL, 'Huguito', 2,20),
+('Ibanez', 'Ingrid', 'ingrid.ibanez@mail.com', 'pass202', '0755667788', '45 Rue de l''Est, 67000 Strasbourg', '1980-06-30', NULL, 'StrasRide', 1,20),
+('Joly', 'Jules', 'jules.joly@mail.com', 'pass303', '0677889900', '19 Bd du Midi, 83000 Toulon', '2002-04-18', NULL, 'JulesJ', 2,20),
+('Klein', 'Karine', 'karine.klein@mail.com', 'pass404', '0700112233', '2 Rue du Lac, 74000 Annecy', '1993-09-01', NULL, 'Kiki74', 1,20),
+('Lambert', 'Louis', 'louis.lambert@mail.com', 'pass505', '0622334455', '8 Av. du Nord, 59000 Lille', '1987-11-29', NULL, 'LuluCar', 2,20),
+('Martin', 'Manon', 'manon.martin@mail.com', 'pass606', '0744556677', '14 Rue de l''Opéra, 69001 Lyon', '1999-01-20', NULL, 'ManonM', 1,20),
+('Noël', 'Nicolas', 'nicolas.noel@mail.com', 'pass707', '0688990011', '7 Av. du Sud, 13008 Marseille', '1975-03-12', NULL, 'NicoTravel', 2,20),
+('Olivier', 'Ophélie', 'ophelie.olivier@mail.com', 'pass808', '0799001122', '22 Rue des Vignes, 33000 Bordeaux', '1991-10-08', NULL, 'OphélieO', 1,20),
+('Petit', 'Paul', 'paul.petit@mail.com', 'pass909', '0611223344', '3 Pl. de la Liberté, 44000 Nantes', '1984-05-23', NULL, 'Polo44', 2,20),
+('Quentin', 'Quitterie', 'quitterie.quentin@mail.com', 'pass110', '0733445566', '5 Rue du Château, 35000 Rennes', '1996-02-17', NULL, 'QuittR', 1,20),
+('Robert', 'Romain', 'romain.robert@mail.com', 'pass111', '0655667788', '17 Av. de l''Europe, 67000 Strasbourg', '1982-08-03', NULL, 'RoroStr', 2,20),
+('Simon', 'Sarah', 'sarah.simon@mail.com', 'pass112', '0777889900', '9 Bd des Palmiers, 83000 Toulon', '1994-11-11', NULL, 'SarahS', 1,20),
+('Thomas', 'Théo', 'theo.thomas@mail.com', 'pass113', '0699001122', '24 Rue du Rhône, 69002 Lyon', '2001-01-01', NULL, 'Theo69', 2,20),
+('Vincent', 'Valérie', 'valerie.vincent@mail.com', 'pass114', '0710111213', '1 Bd de la Loire, 44000 Nantes', '1989-07-07', NULL, 'ValV', 1,20),
+('Weber', 'William', 'william.weber@mail.com', 'pass115', '0620212223', '30 Rue des Arts, 33000 Bordeaux', '1998-10-19', NULL, 'WillBdx', 2,20),
+('Xavier', 'Xenia', 'xenia.xavier@mail.com', 'pass116', '0740414243', '15 Rue des Etoiles, 75001 Paris', '1976-04-28', NULL, 'XeniaX', 1,20),
+('Yann', 'Yasmine', 'yasmine.yann@mail.com', 'pass117', '0660616263', '21 Av. du Soleil, 13008 Marseille', '1990-12-01', NULL, 'YasmineY', 2,20),
+('Zimmer', 'Zachary', 'zachary.zimmer@mail.com', 'pass118', '0780818283', '4 Rue de la Paix, 67000 Strasbourg', '1983-03-09', NULL, 'ZackZ', 1,20);
 
 
 -- 5. Insertion initiale dans la table `marque`

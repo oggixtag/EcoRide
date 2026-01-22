@@ -295,4 +295,68 @@ class UtilisateurModel extends Model
         }
         return false;
     }
+    /**
+     * Récupère les préférences d'un utilisateur
+     * @param int $utilisateur_id
+     * @return array
+     */
+    public function getPreferences($utilisateur_id)
+    {
+        return $this->query(
+            "SELECT * FROM preference WHERE utilisateur_id = ?",
+            [$utilisateur_id]
+        );
+    }
+
+    /**
+     * Ajoute une préférence pour un utilisateur
+     * @param int $utilisateur_id
+     * @param string $libelle
+     * @return bool
+     */
+    public function addPreference($utilisateur_id, $libelle)
+    {
+        return $this->query(
+            "INSERT INTO preference (libelle, utilisateur_id) VALUES (?, ?)",
+            [$libelle, $utilisateur_id]
+        );
+    }
+
+    /**
+     * Supprime toutes les préférences d'un utilisateur (pour mise à jour)
+     * @param int $utilisateur_id
+     * @return bool
+     */
+    public function clearPreferences($utilisateur_id)
+    {
+        return $this->query(
+            "DELETE FROM preference WHERE utilisateur_id = ?",
+            [$utilisateur_id]
+        );
+    }
+
+    /**
+     * Met à jour les informations d'un utilisateur
+     * @param int $id
+     * @param array $data
+     * @return bool
+     */
+    public function update($id, $fields)
+    {
+        $sql_parts = [];
+        $attributes = [];
+
+        foreach ($fields as $k => $v) {
+            $sql_parts[] = "$k = ?";
+            $attributes[] = $v;
+        }
+
+        $attributes[] = $id;
+        $sql_part = implode(', ', $sql_parts);
+
+        return $this->query(
+            "UPDATE {$this->table} SET $sql_part WHERE {$this->column} = ?",
+            $attributes
+        );
+    }
 }

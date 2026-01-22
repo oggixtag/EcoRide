@@ -69,3 +69,24 @@ elseif ($page === 'utilisateurs.inscrir') {
     $controller = new \NsAppEcoride\Controller\UtilisateursController();
     $controller->finaliserInscription();
 }
+// US8
+elseif ($page === 'utilisateurs.edit' || $page === 'utilisateurs.profile.edit') {
+    $controller = new \NsAppEcoride\Controller\UtilisateursController();
+    $controller->edit();
+} elseif ($page === 'utilisateurs.voitures.index') {
+    $controller = new \NsAppEcoride\Controller\VoituresController();
+    $controller->index();
+} elseif ($page === 'utilisateurs.voitures.add') {
+    $controller = new \NsAppEcoride\Controller\VoituresController();
+    $controller->add();
+} elseif ($page === 'utilisateurs.voitures.edit') {
+    $controller = new \NsAppEcoride\Controller\VoituresController();
+    $controller->edit();
+} elseif ($page === 'utilisateurs.voitures.delete') {
+    $controller = new \NsAppEcoride\Controller\VoituresController();
+    $controller->delete();
+} elseif ($page === 'utilisateurs.profile.index') {
+    $controller = new \NsAppEcoride\Controller\UtilisateursController();
+    $controller->index();
+}
+
