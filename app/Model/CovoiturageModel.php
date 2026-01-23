@@ -141,6 +141,7 @@ class CovoiturageModel extends Model
                 s.libelle as statut,
                 c.nb_place,
                 c.prix_personne,
+                c.voiture_id,
                 u.pseudo,
                 u.utilisateur_id,
                 v.energie,
@@ -259,5 +260,10 @@ class CovoiturageModel extends Model
             [$covoiturage_id]
         );
         return $result > 0;
+    }
+
+    public function getListStatuts()
+    {
+        return $this->query("SELECT * FROM statut_covoiturage");
     }
 }

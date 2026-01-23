@@ -77,7 +77,17 @@
             <div class="info-grid" style="text-align: left;">
                 <div class="info-item">
                     <label>Mon Rôle</label>
-                    <p class="role-badge"><?php echo $utilisateur->role_id == 1 ? 'Chauffeur' : 'Passager'; ?></p>
+                    <p class="role-badge">
+                        <?php 
+                        if ($utilisateur->role_id == 1) {
+                            echo 'Chauffeur';
+                        } elseif ($utilisateur->role_id == 3) {
+                            echo 'Chauffeur-Passager';
+                        } else {
+                            echo 'Passager';
+                        }
+                        ?>
+                    </p>
                 </div>
                 <div class="info-item">
                     <label>Nom</label>
@@ -168,16 +178,16 @@
     <?php if (!empty($covoiturages)): ?>
         <section class="presentation-section">
             <div class="presentation-content">
-                <h2>Mes Trajets en Covoiturage (en tant que chauffeur )</h2>
+                <h2>Mes Trajets en Covoiturage (en tant que chauffeur) <a href="index.php?p=trajets.nouveau" class="btn btn-sm btn-secondary float-right-btn">Ajouter trajet</a></h2>
                 <div class="covoiturages-list" style="text-align: left;">
                     <?php foreach ($covoiturages as $covoiturage): ?>
-                        <div class="covoiturage-item">
+                        <a href="index.php?p=trajets.edit&id=<?php echo $covoiturage->covoiturage_id; ?>" class="covoiturage-item" style="display:block; text-decoration:none; color:inherit; border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
                             <h3><?php echo htmlspecialchars($covoiturage->lieu_depart ?? ''); ?> → <?php echo htmlspecialchars($covoiturage->lieu_arrivee ?? ''); ?></h3>
                             <p><strong>Date:</strong> <?php echo htmlspecialchars($covoiturage->date_depart ?? ''); ?></p>
                             <p><strong>Heure:</strong> <?php echo htmlspecialchars(substr($covoiturage->heure_depart ?? '', 0, 5)); ?></p>
                             <p><strong>Places disponibles:</strong> <?php echo htmlspecialchars($covoiturage->nb_place ?? ''); ?></p>
                             <p><strong>Prix:</strong> <?php echo htmlspecialchars($covoiturage->prix_personne ?? ''); ?> €</p>
-                        </div>
+                        </a>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -185,7 +195,7 @@
     <?php else: ?>
         <section class="presentation-section">
             <div class="presentation-content">
-                <h2>Mes Trajets en Covoiturage (en tant que conducteur)</h2>
+                <h2>Mes Trajets en Covoiturage (en tant que chauffeur) <a href="index.php?p=trajets.nouveau" class="btn btn-sm btn-secondary float-right-btn">Ajouter trajet</a></h2>
                 <p class="empty-message">Aucun trajet créé pour le moment.</p>
             </div>
         </section>

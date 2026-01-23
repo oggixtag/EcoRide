@@ -34,7 +34,7 @@
                 <button type="submit">Rechercher</button>
             </form>
 
-            <?php if (empty($covoiturages)) { ?>
+            <?php if (empty($trajets)) { ?>
 
 
 
@@ -112,7 +112,7 @@
                     <div class="header-column action">Réserver</div>
                 </div>
                 <?php
-                foreach ($covoiturages_lieu_ou_date as $covoiturage):
+                foreach ($trajet_lieu_ou_date as $covoiturage):
                 ?>
 
                     <!-- Seuls les itinéraires avec au minimum une place disponible sont proposées -->
@@ -231,7 +231,7 @@
                         <div class="header-column action">Réserver</div>
                     </div>
                     <?php
-                    foreach ($covoiturages as $covoiturage):
+                    foreach ($trajets as $covoiturage):
                     ?>
 
                         <!-- Seuls les itinéraires avec au minimum une place disponible sont proposées -->

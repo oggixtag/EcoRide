@@ -1,46 +1,20 @@
 -- -----------------------------------------------------
--- Schéma : ecoride_db
+-- Schéma : abcrdv_ecoride_db
 -- Base de données pour le projet de covoiturage EcoRide
 -- -----------------------------------------------------
+
 
 -- -----------------------------------------------------
 -- Script de suppression des tables (DROP)
 -- Ordre basé sur les contraintes de clés étrangères (enfants avant parents)
 -- -----------------------------------------------------
 
--- Désactiver la vérification des clés étrangères pour permettre la suppression
-SET FOREIGN_KEY_CHECKS = 0;
-
--- 1. Tables d'association (dépendent de deux autres tables)
-DROP TABLE IF EXISTS `participe`;
-
--- 2. Tables dépendant de `utilisateur`, `voiture`, `marque`
-DROP TABLE IF EXISTS `covoiturage`;   
-DROP TABLE IF EXISTS `avis`;          
-DROP TABLE IF EXISTS `visiteur_utilisateur`;
-DROP TABLE IF EXISTS `preference`;
-DROP TABLE IF EXISTS `voiture`;      
-DROP TABLE IF EXISTS `utilisateur`;  
-
--- 4. Tables qui ne dépendent d'aucune autre table
-DROP TABLE IF EXISTS `role`;
-DROP TABLE IF EXISTS `marque`;
-DROP TABLE IF EXISTS `statut_covoiturage`;
-DROP TABLE IF EXISTS `statut_avis`;
-DROP TABLE IF EXISTS `note`;
-
--- 5. Partie admin
-DROP TABLE IF EXISTS `employe` ;
-DROP TABLE IF EXISTS `departement`  ;
-DROP TABLE IF EXISTS `poste`   ;
-
--- Rétablir la vérification des clés étrangères
-SET FOREIGN_KEY_CHECKS = 1;
+DROP DATABASE IF EXISTS `abcrdv_ecoride_db`;
 
 
 -- Create the EcoRide database
-CREATE DATABASE IF NOT EXISTS ecoride_db;
-USE ecoride_db;
+CREATE DATABASE IF NOT EXISTS abcrdv_ecoride_db;
+USE abcrdv_ecoride_db;
 
 -- -----------------------------------------------------
 -- PARTIE UTILISATEUR
@@ -176,10 +150,10 @@ CREATE TABLE IF NOT EXISTS `voiture` (
 CREATE TABLE IF NOT EXISTS `covoiturage` (
   `covoiturage_id` INT NOT NULL AUTO_INCREMENT,
   `date_depart` DATE NOT NULL,
-  `heure_depart` TIME NOT NULL, -- Utilisation du type TIME pour l'heure
+  `heure_depart` TIME NOT NULL, -- Stocke HH:MM:SS, mais on insère et affiche HH:MM
   `lieu_depart` VARCHAR(50) NOT NULL,
   `date_arrivee` DATE NULL,
-  `heure_arrivee` TIME NULL,
+  `heure_arrivee` TIME NULL,	-- Stocke HH:MM:SS, mais on insère et affiche HH:MM
   `lieu_arrivee` VARCHAR(50) NOT NULL,
   `statut_covoiturage_id` INT NOT NULL, -- Clé étrangère 
   `nb_place` INT NOT NULL,
@@ -261,20 +235,11 @@ CREATE TABLE IF NOT EXISTS `preference` (
 -- PARTIE ADMINISTRATEUR
 -- -----------------------------------------------------
 
--- -----------------------------------------------------
--- Table `departement`
--- -----------------------------------------------------
-CREATE TABLE `departement` (
-    id_dept      INT AUTO_INCREMENT,
-    nom_dept     VARCHAR(100) NOT NULL,
-    lieu         VARCHAR(100),
-	PRIMARY KEY (`id_dept`)
-);
 
 -- -----------------------------------------------------
 -- Table `poste`
 -- -----------------------------------------------------
-CREATE TABLE `poste` (
+CREATE TABLE IF NOT EXISTS `poste` (
     id_poste     INT     AUTO_INCREMENT,
     intitule     VARCHAR(100) NOT NULL,
     salaire_min  DECIMAL(10,2),
@@ -283,9 +248,19 @@ CREATE TABLE `poste` (
 );
 
 -- -----------------------------------------------------
+-- Table `departement`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `departement` (
+    id_dept      INT AUTO_INCREMENT,
+    nom_dept     VARCHAR(100) NOT NULL,
+    lieu         VARCHAR(100),
+	PRIMARY KEY (`id_dept`)
+);
+
+-- -----------------------------------------------------
 -- Table `employe`
 -- -----------------------------------------------------
-CREATE TABLE `employe` (
+CREATE TABLE IF NOT EXISTS `employe` (
     id_emp       INT     AUTO_INCREMENT,
     nom          VARCHAR(50)  NOT NULL,
     prenom       VARCHAR(50)  NOT NULL,
@@ -295,19 +270,19 @@ CREATE TABLE `employe` (
     salaire      DECIMAL(10,2) NOT NULL,
     id_poste     INT NOT NULL,
     id_dept      INT NOT NULL,
-    id_manager   INT NULL,
+    id_manager   INT NULL,	-- Doit être NULL pour ON DELETE SET NULL
 	PRIMARY KEY (`id_emp`),
 	INDEX `fk_poste_idx` (`id_poste` ASC),
 	INDEX `fk_dept_idx` (`id_dept` ASC),
 	INDEX `fk_manqger_idx` (`id_manager` ASC),
     CONSTRAINT fk_emp_poste
 		FOREIGN KEY (`id_poste`)
-		REFERENCES POSTE(`id_poste`),
+		REFERENCES `poste` (`id_poste`),
     CONSTRAINT fk_emp_dept
 		FOREIGN KEY (`id_dept`) 
-		REFERENCES DEPARTEMENT(`id_dept`),
+		REFERENCES `departement` (`id_dept`),
     CONSTRAINT fk_emp_mgr
 		FOREIGN KEY (`id_manager`)
-		REFERENCES EMPLOYE(`id_emp`)
-		ON DELETE SET NULL -- Si le manager est supprimé, id_manager devient NULL
+		REFERENCES `employe` (`id_emp`)
+		ON DELETE SET NULL	-- Solution pour l'auto-relation
 );

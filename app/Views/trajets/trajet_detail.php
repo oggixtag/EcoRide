@@ -1,16 +1,16 @@
 <section class="presentation-section">
     <div class="presentation-content">
 
-    <?php if (isset($covoiturage)): ?>
+    <?php if (isset($trajet)): ?>
 
         <!-- Section Itinéraire -->
         <section class="details-section itinerary-section">
             <h2 class="section-title"><i class="fa-solid fa-map"></i> Itinéraire & Horaires</h2>
             <div class="itinerary-container">
                 <div class="journey-point departure">
-                    <div class="time"><?= htmlspecialchars(substr($covoiturage->heure_depart, 0, 5)); ?></div>
-                    <div class="city"><?= htmlspecialchars($covoiturage->lieu_depart); ?></div>
-                    <div class="date"><?= htmlspecialchars($covoiturage->date_depart); ?></div>
+                    <div class="time"><?= htmlspecialchars(substr($trajet->heure_depart, 0, 5)); ?></div>
+                    <div class="city"><?= htmlspecialchars($trajet->lieu_depart); ?></div>
+                    <div class="date"><?= htmlspecialchars($trajet->date_depart); ?></div>
                 </div>
 
                 <div class="journey-arrow">
@@ -19,9 +19,9 @@
                 </div>
 
                 <div class="journey-point arrival">
-                    <div class="time"><?= htmlspecialchars(substr($covoiturage->heure_arrivee, 0, 5)); ?></div>
-                    <div class="city"><?= htmlspecialchars($covoiturage->lieu_arrivee); ?></div>
-                    <div class="date"><?= htmlspecialchars($covoiturage->date_arrivee); ?></div>
+                    <div class="time"><?= htmlspecialchars(substr($trajet->heure_arrivee, 0, 5)); ?></div>
+                    <div class="city"><?= htmlspecialchars($trajet->lieu_arrivee); ?></div>
+                    <div class="date"><?= htmlspecialchars($trajet->date_arrivee); ?></div>
                 </div>
             </div>
         </section>
@@ -32,16 +32,16 @@
 
             <div class="driver-card">
                 <div class="driver-header">
-                    <img class="driver-avatar" src="https://placehold.co/80x80/4CAF50/ffffff?text=<?= htmlspecialchars(substr($covoiturage->pseudo, 0, 2)); ?>" alt="<?= htmlspecialchars($covoiturage->pseudo); ?>">
+                    <img class="driver-avatar" src="https://placehold.co/80x80/4CAF50/ffffff?text=<?= htmlspecialchars(substr($trajet->pseudo, 0, 2)); ?>" alt="<?= htmlspecialchars($trajet->pseudo); ?>">
                     <div class="driver-info">
-                        <h3 class="driver-name"><?= htmlspecialchars($covoiturage->pseudo); ?></h3>
+                        <h3 class="driver-name"><?= htmlspecialchars($trajet->pseudo); ?></h3>
                         <div class="driver-rating">
                             <span class="stars">
                                 <?php
-                                $rating = isset($covoiturage->avis) && !empty($covoiturage->avis)
+                                $rating = isset($trajet->avis) && !empty($trajet->avis)
                                     ? array_sum(array_map(function ($a) {
                                         return floatval($a->note);
-                                    }, $covoiturage->avis)) / count($covoiturage->avis)
+                                    }, $trajet->avis)) / count($trajet->avis)
                                     : 0;
                                 $rating = round($rating, 1);
                                 for ($i = 0; $i < 5; $i++) {
@@ -63,10 +63,10 @@
 
                 <!-- Avis du conducteur -->
                 <div class="reviews-container">
-                    <h3 class="subsection-title">Avis (<?= isset($covoiturage->avis) ? count($covoiturage->avis) : 0; ?>)</h3>
-                    <?php if (isset($covoiturage->avis) && !empty($covoiturage->avis)): ?>
+                    <h3 class="subsection-title">Avis (<?= isset($trajet->avis) ? count($trajet->avis) : 0; ?>)</h3>
+                    <?php if (isset($trajet->avis) && !empty($trajet->avis)): ?>
                         <div class="reviews-list">
-                            <?php foreach ($covoiturage->avis as $avis): ?>
+                            <?php foreach ($trajet->avis as $avis): ?>
                                 <div class="review-item">
                                     <div class="review-header">
                                         <div class="review-rating">
@@ -104,11 +104,11 @@
                 <div class="vehicle-info-grid">
                     <div class="vehicle-info-item">
                         <span class="label">Marque</span>
-                        <span class="value"><?= htmlspecialchars($covoiturage->marque); ?></span>
+                        <span class="value"><?= htmlspecialchars($trajet->marque); ?></span>
                     </div>
                     <div class="vehicle-info-item">
                         <span class="label">Modèle</span>
-                        <span class="value"><?= htmlspecialchars($covoiturage->modele); ?></span>
+                        <span class="value"><?= htmlspecialchars($trajet->modele); ?></span>
                     </div>
                     <div class="vehicle-info-item">
                         <span class="label">Énergie</span>
@@ -124,7 +124,7 @@
                     </div>
                     <div class="vehicle-info-item">
                         <span class="label">Couleur</span>
-                        <span class="value"><?= htmlspecialchars($covoiturage->couleur ?? 'Non spécifiée'); ?></span>
+                        <span class="value"><?= htmlspecialchars($trajet->couleur ?? 'Non spécifiée'); ?></span>
                     </div>
                 </div>
             </div>
@@ -137,13 +137,13 @@
             <div class="pricing-grid">
                 <div class="pricing-item">
                     <span class="label">Prix par personne</span>
-                    <span class="price-value"><?= htmlspecialchars($covoiturage->prix_personne); ?> €</span>
+                    <span class="price-value"><?= htmlspecialchars($trajet->prix_personne); ?> €</span>
                 </div>
                 <div class="pricing-item">
                     <span class="label">Places disponibles</span>
                     <span class="value">
                         <?php
-                        $nb_place = intval($covoiturage->nb_place);
+                        $nb_place = intval($trajet->nb_place);
                         if ($nb_place > 0) {
                             echo '<span class="seats-available"><i class="fa-solid fa-chair"></i> ' . htmlspecialchars($nb_place) . ' place' . ($nb_place > 1 ? 's' : '') . '</span>';
                         } else {
@@ -154,7 +154,7 @@
                 </div>
                 <div class="pricing-item">
                     <span class="label">Statut</span>
-                    <span class="value"><?= htmlspecialchars($covoiturage->statut); ?></span>
+                    <span class="value"><?= htmlspecialchars($trajet->statut); ?></span>
                 </div>
             </div>
         </section>
@@ -164,12 +164,12 @@
             <h2 class="section-title"><i class="fa-solid fa-calendar-check"></i> Actions</h2>
             <div class="action-buttons">
                 <?php
-                $nb_place = intval($covoiturage->nb_place);
+                $nb_place = intval($trajet->nb_place);
                 if ($nb_place > 0) {
                     // Formulaire pour participer au covoiturage
                 ?>
                     <form method="POST" id="formParticiper">
-                        <input type="hidden" name="covoiturage_id" value="<?= htmlspecialchars($covoiturage->covoiturage_id) ?>">
+                        <input type="hidden" name="covoiturage_id" value="<?= htmlspecialchars($trajet->covoiturage_id) ?>">
                         <button type="submit" class="btn-action btn-reserve">
                             <i class="fa-solid fa-check"></i> Participer / Réserver une place
                         </button>
@@ -259,9 +259,9 @@
             form.addEventListener('submit', confirmerParticipation);
         }
 
-        <?php if (isset($covoiturage)): ?>
-            const departStr = '<?= htmlspecialchars($covoiturage->date_depart . ' ' . $covoiturage->heure_depart); ?>';
-            const arriveeStr = '<?= htmlspecialchars($covoiturage->date_arrivee . ' ' . $covoiturage->heure_arrivee); ?>';
+        <?php if (isset($trajet)): ?>
+            const departStr = '<?= htmlspecialchars($trajet->date_depart . ' ' . $trajet->heure_depart); ?>';
+            const arriveeStr = '<?= htmlspecialchars($trajet->date_arrivee . ' ' . $trajet->heure_arrivee); ?>';
 
             const depart = new Date(departStr);
             const arrivee = new Date(arriveeStr);

@@ -390,15 +390,12 @@ class UtilisateursController extends AppController
 
             $role_id = 2; // Default fallback
             
-            if ($is_passager && $is_chauffeur) {
-                $role_id = 3;
-            } elseif ($is_chauffeur) {
-                $role_id = 1; // Unlikely if Passager is unchecked but possible via UI manipulation, or strictly Chauffeur role
+            if ($is_chauffeur) {
+                $role_id = 3; // Si Chauffeur est coché, on passe en "Chauffeur-Passager" (3)
             } elseif ($is_passager) {
-                $role_id = 2;
+                $role_id = 2; // Passager uniquement
             } else {
-                // If nothing checked, default to Passager (2) or keep existing?
-                // Logic dicts at least one role. Default 2.
+                // If nothing checked, default to Passager (2)
                 $role_id = 2; 
             }
 

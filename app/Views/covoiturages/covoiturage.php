@@ -4,8 +4,10 @@
 
         <div class="trip-row trip-header">
             <div class="trip-cell">Date</div>
-            <div class="trip-cell">Heure</div>
             <div class="trip-cell">Départ</div>
+            <div class="trip-cell">Heure</div>
+            <div class="trip-cell">Destination</div>
+            <div class="trip-cell">Arrivée</div>
             <div class="trip-cell">Statut</div>
             <div class="trip-cell">Détails</div>
         </div>
@@ -18,12 +20,20 @@
                     <?= htmlspecialchars($covoiturage->date_depart); ?>
                 </div>
 
+                <div class="trip-cell" data-label="Départ">
+                    <strong><?= htmlspecialchars($covoiturage->lieu_depart); ?></strong>
+                </div>
+
                 <div class="trip-cell" data-label="Heure">
                     <?= htmlspecialchars(substr($covoiturage->heure_depart, 0, 5)); ?>
                 </div>
 
-                <div class="trip-cell" data-label="Départ">
-                    <strong><?= htmlspecialchars($covoiturage->lieu_depart); ?></strong>
+                <div class="trip-cell" data-label="Destination">
+                    <strong><?= htmlspecialchars($covoiturage->lieu_arrivee); ?></strong>
+                </div>
+
+                <div class="trip-cell" data-label="Arrivée">
+                    <?= htmlspecialchars(substr($covoiturage->heure_arrivee, 0, 5)); ?>
                 </div>
 
                 <div class="trip-cell" data-label="Statut">

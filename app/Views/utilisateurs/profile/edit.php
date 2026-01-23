@@ -64,7 +64,7 @@
                 </div>
             </div>
 
-            <div id="chauffeur-info" style="display: <?= $check_chauffeur ? 'block' : 'none' ?>; margin-top: 20px; padding: 15px; background-color: #e8f5e9; border-radius: 4px;">
+            <div id="chauffeur-info" style="display: <?= !$check_chauffeur ? 'block' : 'none' ?>; margin-top: 20px; padding: 15px; background-color: #e8f5e9; border-radius: 4px;">
                 <p><strong>Information Chauffeur :</strong></p>
                 <p>Pour être chauffeur il faut impérativement ajouter un véhicule dans la section <a href="index.php?p=utilisateurs.voitures.index">Mes Voitures</a>.</p>
             </div>
@@ -102,9 +102,9 @@
 function toggleChauffeurInfo(checkbox) {
     var infoDiv = document.getElementById('chauffeur-info');
     if (checkbox.checked) {
-        infoDiv.style.display = 'block';
-    } else {
         infoDiv.style.display = 'none';
+    } else {
+        infoDiv.style.display = 'block';
     }
 }
 </script>

@@ -32,14 +32,32 @@ elseif ($page === 'legale') {
     $controller->contact();
 }
 // US3 US4
+// US3 US4
 elseif ($page === 'trajet') {
-    $controller = new \NsAppEcoride\Controller\CovoituragesController();
+    $controller = new \NsAppEcoride\Controller\TrajetsController();
     $controller->show();
 }
 // US5 - Page complète
 elseif ($page === 'trajet-detail') {
-    $controller = new \NsAppEcoride\Controller\CovoituragesController();
+    $controller = new \NsAppEcoride\Controller\TrajetsController();
     $controller->detail();
+}
+// US9
+elseif ($page === 'trajets.nouveau') {
+    $controller = new \NsAppEcoride\Controller\TrajetsController();
+    $controller->nouveau();
+} elseif ($page === 'trajets.sauvegarder') {
+    $controller = new \NsAppEcoride\Controller\TrajetsController();
+    $controller->sauvegarder();
+} elseif ($page === 'trajets.edit') {
+    $controller = new \NsAppEcoride\Controller\TrajetsController();
+    $controller->edit();
+} elseif ($page === 'trajets.update') {
+    $controller = new \NsAppEcoride\Controller\TrajetsController();
+    $controller->update();
+} elseif ($page === 'trajets.delete') {
+    $controller = new \NsAppEcoride\Controller\TrajetsController();
+    $controller->delete();
 }
 // US6
 elseif ($page === 'utilisateurs.login') {
