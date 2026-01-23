@@ -58,6 +58,9 @@ elseif ($page === 'trajets.nouveau') {
 } elseif ($page === 'trajets.delete') {
     $controller = new \NsAppEcoride\Controller\TrajetsController();
     $controller->delete();
+} elseif ($page === 'trajets.annuler') {
+    $controller = new \NsAppEcoride\Controller\TrajetsController();
+    $controller->annuler();
 }
 // US6
 elseif ($page === 'utilisateurs.login') {
@@ -106,5 +109,8 @@ elseif ($page === 'utilisateurs.edit' || $page === 'utilisateurs.profile.edit') 
 } elseif ($page === 'utilisateurs.profile.index') {
     $controller = new \NsAppEcoride\Controller\UtilisateursController();
     $controller->index();
+} elseif ($page === 'utilisateurs.historique') {
+    $controller = new \NsAppEcoride\Controller\UtilisateursController();
+    $controller->historique();
 }
 

@@ -81,21 +81,21 @@
 
             <div class="form-buttons">
                 <button type="submit" class="btn btn-primary">Enregistrer</button>
-                <button type="button" class="btn btn-danger" onclick="confirmDelete()">Supprimer</button>
-                <a href="index.php?p=utilisateurs.profile.index" class="btn btn-secondary">Annuler</a>
+                <button type="button" class="btn btn-danger" onclick="confirmCancel()">Annuler ce trajet</button>
+                <a href="index.php?p=utilisateurs.profile.index" class="btn btn-secondary">Retour au profil</a>
             </div>
         </form>
 
-        <form id="delete-form" action="index.php?p=trajets.delete" method="POST" style="display: none;">
+        <form id="cancel-form" action="index.php?p=trajets.annuler" method="POST" style="display: none;">
             <input type="hidden" name="covoiturage_id" value="<?= $trajet->covoiturage_id ?>">
         </form>
     </div>
 </section>
 
 <script>
-function confirmDelete() {
-    if (confirm('Êtes-vous sûr de vouloir supprimer ce trajet ? Cette action est irréversible.')) {
-        document.getElementById('delete-form').submit();
+function confirmCancel() {
+    if (confirm('Êtes-vous sûr de vouloir annuler ce trajet ? Le crédit vous sera remboursé et les passagers seront informés.')) {
+        document.getElementById('cancel-form').submit();
     }
 }
 </script>

@@ -359,4 +359,85 @@ class UtilisateurModel extends Model
             $attributes
         );
     }
+    /**
+     * Récupère l'historique des covoiturages (en tant que chauffeur)
+     * Strictement réservé aux chauffeurs ou chauffeurs-passagers
+     * @param int $utilisateur_id
+     * @return array
+     */
+    public function getHistoriqueCovoiturages($utilisateur_id)
+    {
+        // Vérification du rôle
+        $role = $this->getRoleForUser($utilisateur_id);
+        if ($role !== 'Chauffeur' && $role !== 'Chauffeur-Passager') {
+             return [];
+        }
+
+        return $this->query(
+            "SELECT c.*, s.libelle as statut
+            FROM covoiturage c
+            JOIN voiture v ON c.voiture_id = v.voiture_id
+            JOIN statut_covoiturage s ON c.statut_covoiturage_id = s.statut_covoiturage_id
+            WHERE v.utilisateur_id = ? 
+            AND c.date_depart < CURRENT_DATE()
+            ORDER BY c.date_depart DESC, c.heure_depart DESC",
+            [$utilisateur_id]
+        );
+    }
+
+    /**
+     * Récupère l'historique des participations (en tant que passager)
+     * Strictement réservé aux passagers (ou Chauffeur-Passagers ? Non, consigne US: "considérer son statut 'passager'")
+     * Mais un "Chauffeur-Passager" EST un passager aussi.
+     * Pour la consigne stricte:
+     * "1.2 pour la section `Mes Réservations ...` Il faut aussi considérer son statut « passager »"
+     * Dans l'esprit US, si je suis Chauffeur-Passager, je peux avoir des réservations ? Oui.
+     * Mais si je suis JUSTE 'Chauffeur', j'ai pas accès à cette section ?
+     * Code existant profile/index.php (L84): $utilisateur->role_id == 3 => 'Chauffeur-Passager'.
+     * Block résas (L205) s'affiche pour tout le monde si !empty($reservations).
+     * Mais le bouton historique doit être conditionné.
+     * Je vais inclure 'Passager' et 'Chauffeur-Passager' pour cette méthode, car techniquement ils sont passagers.
+     * UPDATE: L'utilisateur a dit: "It is also necessary to consider their status as « passager »."
+     * Je vais vérifier si le role est 'Passager' ou 'Chauffeur-Passager'. S'il est juste 'Chauffeur', il ne devrait pas avoir de réservations théoriquement (sauf s'il a changé de rôle).
+     */
+    public function getHistoriqueParticipations($utilisateur_id)
+    {
+        // Vérification du rôle
+        $role = $this->getRoleForUser($utilisateur_id);
+        // Si le rôle n'est ni Passager ni Chauffeur-Passager, on ne retourne rien (ex: Chauffeur pur, Admin...)
+        // Note: La chaine exacte retournée par getRoleForUser dépend de la DB.
+        // D'après profile/index.php, on affiche 'Passager', 'Chauffeur', 'Chauffeur-Passager'.
+        // Mais checkons la table `role` dans DDL.sql... on n'a que la structure.
+        // Supposons que les libellés soient 'Passager', 'Chauffeur', 'Chauffeur-Passager'.
+        
+        $allowed_roles = ['Passager', 'Chauffeur-Passager'];
+        // Si c'est juste 'Chauffeur', on refuse ? 
+        // US Logique: "Considérer son statut Passager". Un pur chauffeur n'est pas passager.
+        
+        if (!in_array($role, $allowed_roles)) {
+             return [];
+        }
+
+        return $this->query(
+            "SELECT 
+                p.utilisateur_id,
+                p.covoiturage_id,
+                c.date_depart,
+                c.heure_depart,
+                c.lieu_depart,
+                c.lieu_arrivee,
+                c.prix_personne,
+                s.libelle as statut,
+                u.pseudo
+            FROM participe p
+            JOIN covoiturage c ON p.covoiturage_id = c.covoiturage_id
+            JOIN voiture v ON c.voiture_id = v.voiture_id
+            JOIN utilisateur u ON v.utilisateur_id = u.utilisateur_id
+            JOIN statut_covoiturage s ON c.statut_covoiturage_id = s.statut_covoiturage_id
+            WHERE p.utilisateur_id = ?
+            AND c.date_depart < CURRENT_DATE()
+            ORDER BY c.date_depart DESC",
+            [$utilisateur_id]
+        );
+    }
 }

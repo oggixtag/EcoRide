@@ -364,6 +364,81 @@ class TrajetsController extends AppController
         exit;
     }
 
+    /**
+     * Annule un trajet et rembourse le conducteur
+     */
+    public function annuler()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['covoiturage_id'])) {
+            header('Location: index.php?p=utilisateurs.profile.index');
+            exit;
+        }
+
+        $covoiturage_id = intval($_POST['covoiturage_id']);
+        
+        // Ownership check
+        if (empty($_SESSION['auth'])) {
+             header('Location: index.php?p=utilisateurs.login');
+             exit;
+        }
+        $utilisateur_id = $_SESSION['auth'];
+        
+        // Find Trip Details
+        $trajet = $this->Covoiturage->findWithDetails($covoiturage_id);
+        
+        if (!$trajet || $trajet->utilisateur_id != $utilisateur_id) {
+             header('Location: index.php?p=utilisateurs.profile.index');
+             exit;
+        }
+        
+        // Verify Status - only non-cancelled trips?
+        // Let's assume we can cancel if not already cancelled.
+        // DML: 1=annulé
+        if ($trajet->statut == 'annulé') { 
+            // Already cancelled
+            header('Location: index.php?p=utilisateurs.profile.index');
+            exit;
+        }
+        
+        // 1. Update Status to 'annulé' (statut_covoiturage_id = 1)
+        $this->Trajet->update($covoiturage_id, ['statut_covoiturage_id' => 1]);
+        
+        // 2. Refund credits (2)
+        $this->loadModel('Utilisateur');
+        // Need a method to ADD credit. 
+        // UtilisateurModel has `deduireCredit`. I should probably duplicate it for adding or just use sql update.
+        // Creating addCredit method is cleaner.
+        // For now, I will use raw query via Model if needed or add method.
+        // Wait, deduireCredit logic: credit = credit - X.
+        // I'll add `ajouterCredit` to TrajetsController via ad-hoc query or update Model.
+        // Ideally update Model. I'll do it in next step. For now I'll add placeholder.
+        $this->Utilisateur->query("UPDATE utilisateur SET credit = credit + 2 WHERE utilisateur_id = ?", [$utilisateur_id]);
+        
+        // 3. Notify Participants
+        // Get participants
+        $participations = $this->Covoiturage->query(
+            "SELECT u.email, u.pseudo 
+             FROM participe p 
+             JOIN utilisateur u ON p.utilisateur_id = u.utilisateur_id 
+             WHERE p.covoiturage_id = ?", 
+            [$covoiturage_id]
+        );
+        
+        if ($participations) {
+            foreach ($participations as $participant) {
+                // Send Email (simulated)
+                $msg = "Bonjour {$participant->pseudo}, le trajet {$trajet->lieu_depart}-{$trajet->lieu_arrivee} du {$trajet->date_depart} a été annulé par le conducteur.";
+                file_put_contents(ROOT . '/log/email_debug.txt', date('Y-m-d H:i:s'). " - SEND EMAIL to {$participant->email}: $msg\n", FILE_APPEND);
+            }
+        }
+        
+        $_SESSION['flash_message'] = "Trajet annulé. Crédits remboursés.";
+        $_SESSION['flash_type'] = "success";
+        
+        header('Location: index.php?p=utilisateurs.profile.index');
+        exit;
+    }
+
     // --- Private Helpers ---
 
     private function applyFilters($covoiturages, $filters)

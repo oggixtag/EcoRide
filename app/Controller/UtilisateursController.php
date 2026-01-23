@@ -38,15 +38,33 @@ class UtilisateursController extends AppController
             
             $this->render('utilisateurs.profile.index', compact('visiteur', 'auth_type', 'statut_mail_id'));
         } else {
-            // Logique existante pour un utilisateur complet
             $utilisateur = $this->Utilisateur->find($utilisateur_id);
             $role = $this->Utilisateur->getRoleForUser($utilisateur_id);
             $avis = $this->Utilisateur->getAvisForUser($utilisateur_id);
             $voitures = $this->Utilisateur->getVoituresForUser($utilisateur_id);
             $covoiturages = $this->Utilisateur->getCovoituragesForUser($utilisateur_id);
             $reservations = $this->Utilisateur->findParticipations($utilisateur_id);
+            
+            // FILTRE: Ne garder que les trajets futurs (>= Aujoud'hui) pour la vue principale
+            // Les passés vont dans l'historique.
+            $today = date('Y-m-d');
+            
+            $covoiturages = array_filter($covoiturages, function($c) use ($today) {
+                return $c->date_depart >= $today; // Ou > ? Généralement on garde ceux du jour.
+            });
+            
+            $reservations = array_filter($reservations, function($r) use ($today) {
+                return $r->date_depart >= $today;
+            });
+            
+            // Check History flags (Keep logic: check if ANY past exists)
+            $hist_ch = $this->Utilisateur->getHistoriqueCovoiturages($utilisateur_id);
+            $has_history_chauffeur = !empty($hist_ch);
+            
+            $hist_pa = $this->Utilisateur->getHistoriqueParticipations($utilisateur_id);
+            $has_history_passager = !empty($hist_pa);
 
-            $this->render('utilisateurs.profile.index', compact('utilisateur', 'role', 'avis', 'voitures', 'covoiturages', 'reservations', 'auth_type'));
+            $this->render('utilisateurs.profile.index', compact('utilisateur', 'role', 'avis', 'voitures', 'covoiturages', 'reservations', 'auth_type', 'has_history_chauffeur', 'has_history_passager'));
         }
     }
 
@@ -461,5 +479,25 @@ class UtilisateursController extends AppController
         $has_cars = !empty($voitures);
 
         $this->render('utilisateurs.profile.edit', compact('utilisateur', 'user_prefs', 'message', 'message_type', 'has_cars'));
+    }
+    /**
+     * Affiche l'historique des covoiturages et participations
+     */
+    public function historique()
+    {
+         $auth = new DbAuth(App::getInstance()->getDb());
+         $utilisateur_id = $auth->getConnectedUserId();
+         
+         if (!$utilisateur_id) {
+             $this->forbidden();
+         }
+         
+         $utilisateur = $this->Utilisateur->find($utilisateur_id);
+         
+         // Fetch Data
+         $historique_chauffeur = $this->Utilisateur->getHistoriqueCovoiturages($utilisateur_id);
+         $historique_passager = $this->Utilisateur->getHistoriqueParticipations($utilisateur_id);
+         
+         $this->render('utilisateurs.profile.historique', compact('utilisateur', 'historique_chauffeur', 'historique_passager'));
     }
 }

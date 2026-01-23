@@ -211,7 +211,6 @@ CREATE TABLE IF NOT EXISTS `avis` (
   CONSTRAINT `fk_note_id`
     FOREIGN KEY (`note_id`)
     REFERENCES `note` (`note_id`)
-
 ) ;
 
 -- -----------------------------------------------------
@@ -227,7 +226,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
     FOREIGN KEY (`utilisateur_id`)
     REFERENCES `utilisateur` (`utilisateur_id`)
     ON DELETE CASCADE
-) ENGINE=InnoDB;
+)
 
 
 

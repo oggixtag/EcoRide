@@ -73,7 +73,13 @@
     <!-- Section Informations Personnelles -->
     <section class="presentation-section">
         <div class="presentation-content">
-            <h2>Mes Informations Personnelles <a href="index.php?p=utilisateurs.profile.edit" class="btn btn-sm btn-secondary float-right-btn">Modifier</a></h2>
+            <h2 style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
+                <div style="text-align: left;">
+                    <a href="index.php?p=utilisateurs.profile.edit" class="btn btn-secondary">Modifier</a>
+                </div>
+                <span style="text-align: center;">Mes Informations Personnelles</span>
+                <div></div>
+            </h2>
             <div class="info-grid" style="text-align: left;">
                 <div class="info-item">
                     <label>Mon Rôle</label>
@@ -125,7 +131,13 @@
     <?php if (!empty($voitures)): ?>
         <section class="presentation-section">
             <div class="presentation-content">
-                <h2>Mes Voitures <a href="index.php?p=utilisateurs.voitures.index" class="btn btn-sm btn-secondary float-right-btn">Gérer</a></h2>
+                <h2 style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
+                    <div style="text-align: left;">
+                        <a href="index.php?p=utilisateurs.voitures.index" class="btn btn-secondary">Gérer</a>
+                    </div>
+                    <span style="text-align: center;">Mes Voitures</span>
+                    <div></div>
+                </h2>
                 <div class="voitures-list" style="text-align: left;">
                     <?php foreach ($voitures as $voiture): ?>
                         <div class="voiture-item">
@@ -178,7 +190,17 @@
     <?php if (!empty($covoiturages)): ?>
         <section class="presentation-section">
             <div class="presentation-content">
-                <h2>Mes Trajets en Covoiturage (en tant que chauffeur) <a href="index.php?p=trajets.nouveau" class="btn btn-sm btn-secondary float-right-btn">Ajouter trajet</a></h2>
+                <h2 style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
+                    <div style="text-align: left;">
+                        <a href="index.php?p=trajets.nouveau" class="btn btn-secondary">Ajouter trajet</a>
+                    </div>
+                    <span style="text-align: center;">Mes Trajets en Covoiturage (en tant que chauffeur)</span>
+                    <div style="text-align: right;">
+                        <?php if (isset($has_history_chauffeur) && $has_history_chauffeur): ?>
+                            <a href="index.php?p=utilisateurs.historique" class="btn btn-outline-info">Historique (Passé)</a>
+                        <?php endif; ?>
+                    </div>
+                </h2>
                 <div class="covoiturages-list" style="text-align: left;">
                     <?php foreach ($covoiturages as $covoiturage): ?>
                         <a href="index.php?p=trajets.edit&id=<?php echo $covoiturage->covoiturage_id; ?>" class="covoiturage-item" style="display:block; text-decoration:none; color:inherit; border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
@@ -195,7 +217,13 @@
     <?php else: ?>
         <section class="presentation-section">
             <div class="presentation-content">
-                <h2>Mes Trajets en Covoiturage (en tant que chauffeur) <a href="index.php?p=trajets.nouveau" class="btn btn-sm btn-secondary float-right-btn">Ajouter trajet</a></h2>
+                <h2 style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
+                    <div style="text-align: left;">
+                        <a href="index.php?p=trajets.nouveau" class="btn btn-secondary">Ajouter trajet</a>
+                    </div>
+                    <span style="text-align: center;">Mes Trajets en Covoiturage (en tant que chauffeur)</span>
+                    <div></div>
+                </h2>
                 <p class="empty-message">Aucun trajet créé pour le moment.</p>
             </div>
         </section>
@@ -205,7 +233,15 @@
     <?php if (!empty($reservations)): ?>
         <section class="presentation-section">
             <div class="presentation-content">
-                <h2>Mes Réservations (en tant que passager)</h2>
+                <h2 style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
+                    <div></div>
+                    <span style="text-align: center;">Mes Réservations (en tant que passager)</span>
+                    <div style="text-align: right;">
+                        <?php if (isset($has_history_passager) && $has_history_passager): ?>
+                            <a href="index.php?p=utilisateurs.historique" class="btn btn-outline-info">Historique (Passé)</a>
+                        <?php endif; ?>
+                    </div>
+                </h2>
                 <div class="reservations-list" style="text-align: left;">
                     <?php foreach ($reservations as $reservation): ?>
                         <div class="reservation-item">

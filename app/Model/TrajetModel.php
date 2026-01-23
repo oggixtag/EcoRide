@@ -49,28 +49,16 @@ class TrajetModel extends Model
      */
     public function update($id, $data)
     {
-        return $this->query("UPDATE {$this->table} SET 
-            date_depart = ?, 
-            heure_depart = ?, 
-            lieu_depart = ?, 
-            date_arrivee = ?, 
-            heure_arrivee = ?, 
-            lieu_arrivee = ?, 
-            nb_place = ?, 
-            prix_personne = ?, 
-            voiture_id = ?
-            WHERE covoiturage_id = ?", [
-            $data['date_depart'],
-            $data['heure_depart'],
-            $data['lieu_depart'],
-            $data['date_arrivee'],
-            $data['heure_arrivee'],
-            $data['lieu_arrivee'],
-            $data['nb_place'],
-            $data['prix_personne'],
-            $data['voiture_id'],
-            $id
-        ]);
+        $fields = [];
+        $values = [];
+        foreach ($data as $key => $value) {
+            $fields[] = "$key = ?";
+            $values[] = $value;
+        }
+        $values[] = $id;
+
+        $sql_parts = implode(', ', $fields);
+        return $this->query("UPDATE {$this->table} SET $sql_parts WHERE {$this->column} = ?", $values);
     }
 
     /**
