@@ -126,6 +126,79 @@ class CovoituragesController extends AppController
     }
 
     /**
+     * Démarre un covoiturage (passage au statut 4: en_cours)
+     */
+    public function start()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('index.php?p=utilisateurs.profile.index');
+        }
+
+        $covoiturage_id = isset($_POST['covoiturage_id']) ? intval($_POST['covoiturage_id']) : 0;
+        
+        // TODO: Vérifier que l'utilisateur est bien le conducteur du trajet (sécurité)
+
+        if ($covoiturage_id > 0) {
+            $this->Covoiturage->updateStatut($covoiturage_id, 4); // 4 = en_cours
+        }
+
+        // Redirection vers l'édition du trajet
+        $this->redirect('index.php?p=trajets.edit&id=' . $covoiturage_id);
+    }
+
+    /**
+     * Termine un covoiturage (passage au statut 5: terminé)
+     */
+    public function stop()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('index.php?p=utilisateurs.profile.index');
+        }
+
+        $covoiturage_id = isset($_POST['covoiturage_id']) ? intval($_POST['covoiturage_id']) : 0;
+
+        // TODO: Vérifier que l'utilisateur est bien le conducteur du trajet (sécurité)
+
+        if ($covoiturage_id > 0) {
+            $this->Covoiturage->updateStatut($covoiturage_id, 5); // 5 = terminé
+            
+            // Envoyer un mail aux participants (Simulation)
+            $this->sendValidationEmails($covoiturage_id);
+        }
+
+        // Redirection vers le profil
+        $this->redirect('index.php?p=utilisateurs.profile.index');
+    }
+
+    private function sendValidationEmails($covoiturage_id)
+    {
+        // Récupérer les participants réels
+        $participants = $this->Covoiturage->getParticipants($covoiturage_id);
+        
+        // Log file creation as requested
+        $logFile = ROOT . '/log/us11_trip_terminé.txt';
+        $message = date('Y-m-d H:i:s') . " - Covoiturage $covoiturage_id terminé.\n";
+        
+        if (!empty($participants)) {
+            $message .= "Emails envoyés aux participants :\n";
+            foreach ($participants as $participant) {
+                // Simulation d'envoi de mail
+                $message .= " - " . $participant->email . " (" . $participant->pseudo . ")\n";
+                // Ici, on appellerait le service mail réel
+            }
+        } else {
+            $message .= "Aucun participant à notifier.\n";
+        }
+
+        $message .= "Lien de validation : " . $_SERVER['HTTP_HOST'] . "/EcoRide/public/index.php?p=participant.validate&covoiturage_id=" . $covoiturage_id . "\n";
+        $message .= "--------------------------------------------------\n";
+        
+        file_put_contents($logFile, $message, FILE_APPEND);
+        
+        error_log("Envoi des emails de validation pour le covoiturage " . $covoiturage_id);
+    }
+
+    /**
      * Envoie une réponse JSON
      * @param array $data Données à envoyer
      */

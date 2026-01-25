@@ -143,9 +143,23 @@ CREATE TABLE IF NOT EXISTS `voiture` (
     REFERENCES `utilisateur` (`utilisateur_id`)
 );
 
+
+-- -----------------------------------------------------
+-- Table `avis_covoiturage`
+-- -----------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `avis_covoiturage` (
+  `avis_covoiturage_id` INT NOT NULL AUTO_INCREMENT,
+  `libelle` VARCHAR(50) NOT NULL UNIQUE,
+  PRIMARY KEY (`avis_covoiturage_id`)
+) ;
+
+
 -- -----------------------------------------------------
 -- Table `covoiturage`
--- Relation 'utilise' (1,1) vers voiture
+-- Relation dispose (1,1) vers voiture
+-- Relation 'fk_statut_covoiturage_id' (1,1) vers statut_covoiturage
+-- Relation 'fk_avis_covoiturage_id' (1,1) vers avis_covoiturage
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `covoiturage` (
   `covoiturage_id` INT NOT NULL AUTO_INCREMENT,
@@ -156,18 +170,23 @@ CREATE TABLE IF NOT EXISTS `covoiturage` (
   `heure_arrivee` TIME NULL,	-- Stocke HH:MM:SS, mais on insère et affiche HH:MM
   `lieu_arrivee` VARCHAR(50) NOT NULL,
   `statut_covoiturage_id` INT NOT NULL, -- Clé étrangère 
+  `avis_covoiturage_id` INT NULL, -- Clé étrangère 
   `nb_place` INT NOT NULL,
   `prix_personne` FLOAT NOT NULL,
   `voiture_id` INT NOT NULL, -- Clé étrangère vers la voiture UTILISÉE pour le covoiturage
   PRIMARY KEY (`covoiturage_id`),
   INDEX `fk_covoiturage_voiture_utilise_idx` (`voiture_id` ASC),
   INDEX `fk_statut_covoiturage_idx` (`statut_covoiturage_id` ASC),
+  INDEX `fk_avis_covoiturage_idx` (`avis_covoiturage_id` ASC),
   CONSTRAINT `fk_covoiturage_voiture_utilise`
     FOREIGN KEY (`voiture_id`)
     REFERENCES `voiture` (`voiture_id`),
   CONSTRAINT `fk_statut_covoiturage_id`
     FOREIGN KEY (`statut_covoiturage_id`)
-    REFERENCES `statut_covoiturage` (`statut_covoiturage_id`)
+    REFERENCES `statut_covoiturage` (`statut_covoiturage_id`),
+  CONSTRAINT `fk_avis_covoiturage_id`
+    FOREIGN KEY (`avis_covoiturage_id`)
+    REFERENCES `avis_covoiturage` (`avis_covoiturage_id`)
 ) ;
 
 -- -----------------------------------------------------
@@ -211,8 +230,8 @@ CREATE TABLE IF NOT EXISTS `avis` (
   CONSTRAINT `fk_note_id`
     FOREIGN KEY (`note_id`)
     REFERENCES `note` (`note_id`)
-
 ) ;
+
 
 -- -----------------------------------------------------
 -- Table `preference`
@@ -227,7 +246,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
     FOREIGN KEY (`utilisateur_id`)
     REFERENCES `utilisateur` (`utilisateur_id`)
     ON DELETE CASCADE
-) ENGINE=InnoDB;
+) ;
 
 
 

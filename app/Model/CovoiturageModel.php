@@ -103,6 +103,7 @@ class CovoiturageModel extends Model
         return $this->query("
             select 
                 c.covoiturage_id ,
+                c.statut_covoiturage_id,
                 c.date_depart	 ,
                 c.heure_depart	 ,
                 c.lieu_depart	 ,
@@ -132,6 +133,7 @@ class CovoiturageModel extends Model
         $covoiturage = $this->query(
             "select 
                 c.covoiturage_id,
+                c.statut_covoiturage_id,
                 c.date_depart,
                 c.heure_depart,
                 c.lieu_depart,
@@ -265,5 +267,38 @@ class CovoiturageModel extends Model
     public function getListStatuts()
     {
         return $this->query("SELECT * FROM statut_covoiturage");
+    }
+
+    /**
+     * Met à jour le statut d'un covoiturage
+     * @param int $covoiturage_id
+     * @param int $statut_id
+     * @return bool
+     */
+    public function updateStatut($covoiturage_id, $statut_id)
+    {
+        $result = $this->query(
+            "UPDATE covoiturage 
+            SET statut_covoiturage_id = ? 
+            WHERE covoiturage_id = ?",
+            [$statut_id, $covoiturage_id]
+        );
+        return $result;
+    }
+
+    /**
+     * Récupère les participants d'un covoiturage
+     * @param int $covoiturage_id
+     * @return array Liste des participants (email, pseudo)
+     */
+    public function getParticipants($covoiturage_id)
+    {
+        return $this->query(
+            "SELECT u.email, u.pseudo 
+            FROM utilisateur u 
+            JOIN participe p ON u.utilisateur_id = p.utilisateur_id 
+            WHERE p.covoiturage_id = ?",
+            [$covoiturage_id]
+        );
     }
 }

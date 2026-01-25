@@ -106,5 +106,19 @@ elseif ($page === 'utilisateurs.edit' || $page === 'utilisateurs.profile.edit') 
 } elseif ($page === 'utilisateurs.profile.index') {
     $controller = new \NsAppEcoride\Controller\UtilisateursController();
     $controller->index();
+} 
+// US11
+elseif ($page === 'covoiturages.start') {
+    $controller = new \NsAppEcoride\Controller\CovoituragesController();
+    $controller->start();
+} elseif ($page === 'covoiturages.stop') {
+    $controller = new \NsAppEcoride\Controller\CovoituragesController();
+    $controller->stop();
+} elseif ($page === 'participant.validate') {
+    $controller = new \NsAppEcoride\Controller\ParticipantController();
+    $controller->validate();
+} elseif ($page === 'participant.submitValidation') {
+    $controller = new \NsAppEcoride\Controller\ParticipantController();
+    $controller->submitValidation();
 }
 

@@ -24,4 +24,10 @@ class AppController extends Controller
     {
         return App::getInstance()->getDb()->getlastInsertId();
     }
+
+    protected function redirect($url)
+    {
+        header("Location: " . $url);
+        exit;
+    }
 }
