@@ -99,7 +99,7 @@
 
             <div class="form-buttons">
                 <button type="submit" class="btn btn-primary">Enregistrer</button>
-                <button type="button" class="btn btn-danger" onclick="confirmDelete()">Supprimer</button>
+                <button type="button" class="btn btn-danger" onclick="confirmCancel()">Annuler ce trajet</button>
             </div>
         </form>
 

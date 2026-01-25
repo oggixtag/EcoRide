@@ -399,6 +399,16 @@ class TrajetsController extends AppController
             header('Location: index.php?p=utilisateurs.profile.index');
             exit;
         }
+
+        // Prevent cancelling past trips
+        $trip_date = new \DateTime($trajet->date_depart . ' ' . $trajet->heure_depart);
+        $now = new \DateTime();
+        if ($trip_date < $now) {
+             $_SESSION['flash_message'] = "Impossible d'annuler un trajet passé.";
+             $_SESSION['flash_type'] = "error";
+             header('Location: index.php?p=utilisateurs.profile.index');
+             exit;
+        }
         
         // 1. Update Status to 'annulé' (statut_covoiturage_id = 1)
         $this->Trajet->update($covoiturage_id, ['statut_covoiturage_id' => 1]);

@@ -109,6 +109,13 @@ elseif ($page === 'utilisateurs.edit' || $page === 'utilisateurs.profile.edit') 
 } elseif ($page === 'utilisateurs.profile.index') {
     $controller = new \NsAppEcoride\Controller\UtilisateursController();
     $controller->index();
+// US10
+} elseif ($page === 'utilisateurs.historique') {
+    $controller = new \NsAppEcoride\Controller\UtilisateursController();
+    $controller->historique();
+} elseif ($page === 'trajets.annuler') {
+    $controller = new \NsAppEcoride\Controller\TrajetsController();
+    $controller->annuler();
 } 
 // US11
 elseif ($page === 'covoiturages.start') {

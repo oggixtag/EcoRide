@@ -7,7 +7,7 @@
 
             <?php if (isset($statut_mail_id) && $statut_mail_id == 1): ?>
                 <!-- STATUT 1: Mail à confirmer -->
-                <div class="alert alert-warning" style="margin-top: 20px;">
+                <div class="alert alert-warning mt-20">
                     <p><strong>Mail à confirmer</strong></p>
                     <p>Veuillez cliquer sur le bouton ci-dessous pour valider votre adresse email.</p>
                     <br>
@@ -16,10 +16,10 @@
             
             <?php elseif (isset($statut_mail_id) && $statut_mail_id == 2): ?>
                 <!-- STATUT 2: Formulaire complet -->
-                <h2 style="margin-top: 20px;">Mes Informations Personnelles</h2>
+                <h2 class="mt-20">Mes Informations Personnelles</h2>
                 <p>Votre email est confirmé. Veuillez compléter votre profil pour accéder à toutes les fonctionnalités.</p>
                 
-                <form action="index.php?p=utilisateurs.finaliserInscription" method="POST" class="form-utilisateurs" style="text-align: left; max-width: 600px; margin: 0 auto;">
+                <form action="index.php?p=utilisateurs.finaliserInscription" method="POST" class="form-utilisateurs form-centered-600">
                     <div class="form-group-row">
                         <div class="form-group">
                             <label for="nom">Nom *</label>
@@ -73,14 +73,14 @@
     <!-- Section Informations Personnelles -->
     <section class="presentation-section">
         <div class="presentation-content">
-            <h2 style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
-                <div style="text-align: left;">
+            <h2 class="header-grid">
+                <div class="text-left">
                     <a href="index.php?p=utilisateurs.profile.edit" class="btn btn-secondary">Modifier</a>
                 </div>
-                <span style="text-align: center;">Mes Informations Personnelles</span>
+                <span class="header-grid-title">Mes Informations Personnelles</span>
                 <div></div>
             </h2>
-            <div class="info-grid" style="text-align: left;">
+            <div class="info-grid text-left">
                 <div class="info-item">
                     <label>Mon Rôle</label>
                     <p class="role-badge">
@@ -131,14 +131,14 @@
     <?php if (!empty($voitures)): ?>
         <section class="presentation-section">
             <div class="presentation-content">
-                <h2 style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
-                    <div style="text-align: left;">
+                <h2 class="header-grid">
+                    <div class="text-left">
                         <a href="index.php?p=utilisateurs.voitures.index" class="btn btn-secondary">Gérer</a>
                     </div>
-                    <span style="text-align: center;">Mes Voitures</span>
+                    <span class="header-grid-title">Mes Voitures</span>
                     <div></div>
                 </h2>
-                <div class="voitures-list" style="text-align: left;">
+                <div class="voitures-list text-left">
                     <?php foreach ($voitures as $voiture): ?>
                         <div class="voiture-item">
                             <h3><?php echo htmlspecialchars($voiture->marque ?? ''); ?> - <?php echo htmlspecialchars($voiture->modele ?? ''); ?></h3>
@@ -165,7 +165,7 @@
         <section class="presentation-section">
             <div class="presentation-content">
                 <h2>Mes Avis</h2>
-                <div class="avis-list" style="text-align: left;">
+                <div class="avis-list text-left">
                     <?php foreach ($avis as $av): ?>
                         <div class="avis-item">
                             <div class="avis-header">
@@ -190,20 +190,20 @@
     <?php if (!empty($covoiturages)): ?>
         <section class="presentation-section">
             <div class="presentation-content">
-                <h2 style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
-                    <div style="text-align: left;">
+                <h2 class="header-grid">
+                    <div class="text-left">
                         <a href="index.php?p=trajets.nouveau" class="btn btn-secondary">Ajouter trajet</a>
                     </div>
-                    <span style="text-align: center;">Mes Trajets en Covoiturage (en tant que chauffeur)</span>
-                    <div style="text-align: right;">
+                    <span class="header-grid-title">Mes Trajets en Covoiturage (en tant que chauffeur)</span>
+                    <div class="text-right">
                         <?php if (isset($has_history_chauffeur) && $has_history_chauffeur): ?>
-                            <a href="index.php?p=utilisateurs.historique" class="btn btn-outline-info">Historique (Passé)</a>
+                            <a href="index.php?p=utilisateurs.historique" class="btn btn-history">Historique (Passé)</a>
                         <?php endif; ?>
                     </div>
                 </h2>
-                <div class="covoiturages-list" style="text-align: left;">
+                <div class="covoiturages-list text-left">
                     <?php foreach ($covoiturages as $covoiturage): ?>
-                        <a href="index.php?p=trajets.edit&id=<?php echo $covoiturage->covoiturage_id; ?>" class="covoiturage-item" style="display:block; text-decoration:none; color:inherit; border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                        <a href="index.php?p=trajets.edit&id=<?php echo $covoiturage->covoiturage_id; ?>" class="covoiturage-item covoiturage-link-item">
                             <h3><?php echo htmlspecialchars($covoiturage->lieu_depart ?? ''); ?> → <?php echo htmlspecialchars($covoiturage->lieu_arrivee ?? ''); ?></h3>
                             <p><strong>Date:</strong> <?php echo htmlspecialchars($covoiturage->date_depart ?? ''); ?></p>
                             <p><strong>Heure:</strong> <?php echo htmlspecialchars(substr($covoiturage->heure_depart ?? '', 0, 5)); ?></p>
@@ -217,12 +217,16 @@
     <?php else: ?>
         <section class="presentation-section">
             <div class="presentation-content">
-                <h2 style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
-                    <div style="text-align: left;">
+                <h2 class="header-grid">
+                    <div class="text-left">
                         <a href="index.php?p=trajets.nouveau" class="btn btn-secondary">Ajouter trajet</a>
                     </div>
-                    <span style="text-align: center;">Mes Trajets en Covoiturage (en tant que chauffeur)</span>
-                    <div></div>
+                    <span class="header-grid-title">Mes Trajets en Covoiturage (en tant que chauffeur)</span>
+                    <div class="text-right">
+                        <?php if (isset($has_history_chauffeur) && $has_history_chauffeur): ?>
+                            <a href="index.php?p=utilisateurs.historique" class="btn btn-history">Historique (Passé)</a>
+                        <?php endif; ?>
+                    </div>
                 </h2>
                 <p class="empty-message">Aucun trajet créé pour le moment.</p>
             </div>
@@ -233,16 +237,16 @@
     <?php if (!empty($reservations)): ?>
         <section class="presentation-section">
             <div class="presentation-content">
-                <h2 style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;">
+                <h2 class="header-grid">
                     <div></div>
-                    <span style="text-align: center;">Mes Réservations (en tant que passager)</span>
-                    <div style="text-align: right;">
+                    <span class="header-grid-title">Mes Réservations (en tant que passager)</span>
+                    <div class="text-right">
                         <?php if (isset($has_history_passager) && $has_history_passager): ?>
-                            <a href="index.php?p=utilisateurs.historique" class="btn btn-outline-info">Historique (Passé)</a>
+                            <a href="index.php?p=utilisateurs.historique" class="btn btn-history">Historique (Passé)</a>
                         <?php endif; ?>
                     </div>
                 </h2>
-                <div class="reservations-list" style="text-align: left;">
+                <div class="reservations-list text-left">
                     <?php foreach ($reservations as $reservation): ?>
                         <div class="reservation-item">
                             <h3><?php echo htmlspecialchars($reservation->lieu_depart ?? ''); ?> → <?php echo htmlspecialchars($reservation->lieu_arrivee ?? ''); ?></h3>

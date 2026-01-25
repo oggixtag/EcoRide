@@ -1,14 +1,14 @@
 <section class="presentation-section">
     <div class="presentation-content">
-        <div class="dashboard-header" style="background: none; color: inherit; padding: 0; box-shadow: none;">
+        <div class="dashboard-header header-plain">
             <h1>Modifier mon Profil</h1>
         </div>
     </div>
 </section>
 
 <?php if (!empty($message)): ?>
-    <section class="presentation-section" style="padding: 15px; margin: 10px auto;">
-        <div class="alert alert-<?= $message_type ?>" style="width: 100%;">
+    <section class="presentation-section container-alert-full">
+        <div class="alert alert-<?= $message_type ?> w-100">
             <?= $message ?>
         </div>
     </section>
@@ -16,7 +16,7 @@
 
 <section class="presentation-section">
     <div class="presentation-content">
-        <form action="index.php?p=utilisateurs.profile.edit" method="POST" class="form-utilisateurs" style="text-align: left; max-width: 800px; margin: 0 auto;">
+        <form action="index.php?p=utilisateurs.profile.edit" method="POST" class="form-utilisateurs form-centered-800">
             
             <h3>Informations Personnelles</h3>
             <div class="form-group-row">
@@ -64,7 +64,7 @@
                 </div>
             </div>
 
-            <div id="chauffeur-info" style="display: <?= !$check_chauffeur ? 'block' : 'none' ?>; margin-top: 20px; padding: 15px; background-color: #e8f5e9; border-radius: 4px;">
+            <div id="chauffeur-info" class="chauffeur-info-box" style="display: <?= !$check_chauffeur ? 'block' : 'none' ?>;">
                 <p><strong>Information Chauffeur :</strong></p>
                 <p>Pour être chauffeur il faut impérativement ajouter un véhicule dans la section <a href="index.php?p=utilisateurs.voitures.index">Mes Voitures</a>.</p>
             </div>

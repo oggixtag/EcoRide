@@ -1,11 +1,14 @@
 <?php if (isset($utilisateur)): ?>
     <section class="presentation-section">
         <div class="presentation-content">
-            <div class="dashboard-header" style="background: none; color: inherit; padding: 0; box-shadow: none; display:flex; justify-content:space-between; align-items:center;">
-                <h1>Historique des Covoiturages</h1>
-                <a href="index.php?p=utilisateurs.profile.index" class="btn btn-secondary">Retour au profil</a>
+            <div class="dashboard-header header-grid header-plain">
+                <div></div>
+                <h1 class="header-grid-title">Historique des Covoiturages</h1>
+                <div class="text-right">
+                    <a href="index.php?p=utilisateurs.profile.index" class="btn btn-secondary">Retour au profil</a>
+                </div>
             </div>
-            <p>Historique pour <?php echo htmlspecialchars($utilisateur->pseudo ?? ''); ?></p>
+            <p class="subtitle-centered">Historique pour <?php echo htmlspecialchars($utilisateur->pseudo ?? ''); ?></p>
         </div>
     </section>
 
@@ -14,11 +17,13 @@
         <section class="presentation-section">
             <div class="presentation-content">
                 <h2>Covoiturages réalisés (Chauffeur)</h2>
-                <div class="covoiturages-list" style="text-align: left;">
+                <div class="covoiturages-list text-left">
                     <?php foreach ($historique_chauffeur as $covoiturage): ?>
-                        <div class="covoiturage-item" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; opacity: 0.8; background-color: #f9f9f9;">
+                        <div class="covoiturage-item history-item">
                             <h3><?php echo htmlspecialchars($covoiturage->lieu_depart ?? ''); ?> → <?php echo htmlspecialchars($covoiturage->lieu_arrivee ?? ''); ?></h3>
-                            <p><strong>Date:</strong> <?php echo htmlspecialchars($covoiturage->date_depart ?? ''); ?></p>
+                            <p>
+                                <strong>Date:</strong> <?php echo date('d/m/Y', strtotime($covoiturage->date_depart)); ?> à <?php echo substr($covoiturage->heure_depart, 0, 5); ?>
+                            </p>
                             <p><strong>Statut:</strong> <?php echo htmlspecialchars($covoiturage->statut ?? ''); ?></p>
                             <p><strong>Prix:</strong> <?php echo htmlspecialchars($covoiturage->prix_personne ?? ''); ?> €</p>
                             <p><strong>Places:</strong> <?php echo htmlspecialchars($covoiturage->nb_place ?? ''); ?></p>
@@ -34,11 +39,13 @@
         <section class="presentation-section">
             <div class="presentation-content">
                 <h2>Covoiturages passés (Passager)</h2>
-                <div class="reservations-list" style="text-align: left;">
+                <div class="reservations-list text-left">
                     <?php foreach ($historique_passager as $reservation): ?>
-                        <div class="reservation-item" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; opacity: 0.8; background-color: #f9f9f9;">
+                        <div class="reservation-item history-item">
                             <h3><?php echo htmlspecialchars($reservation->lieu_depart ?? ''); ?> → <?php echo htmlspecialchars($reservation->lieu_arrivee ?? ''); ?></h3>
-                            <p><strong>Date:</strong> <?php echo htmlspecialchars($reservation->date_depart ?? ''); ?></p>
+                            <p>
+                                <strong>Date:</strong> <?php echo date('d/m/Y', strtotime($reservation->date_depart)); ?> à <?php echo substr($reservation->heure_depart, 0, 5); ?>
+                            </p>
                             <p><strong>Chauffeur:</strong> <?php echo htmlspecialchars($reservation->pseudo ?? ''); ?></p>
                             <p><strong>Statut:</strong> <?php echo htmlspecialchars($reservation->statut ?? ''); ?></p>
                             <p><strong>Prix:</strong> <?php echo htmlspecialchars($reservation->prix_personne ?? ''); ?> €</p>
