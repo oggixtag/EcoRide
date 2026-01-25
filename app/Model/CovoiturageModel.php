@@ -104,6 +104,7 @@ class CovoiturageModel extends Model
             select 
                 c.covoiturage_id ,
                 c.statut_covoiturage_id,
+                c.voiture_id,
                 c.date_depart	 ,
                 c.heure_depart	 ,
                 c.lieu_depart	 ,

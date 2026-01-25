@@ -1,0 +1,6 @@
+Test log entry 2026-01-23 23:59:35
+2026-01-24 00:14:08 - Covoiturage 23 terminé.
+Emails envoyés aux participants :
+ - alice.d@mail.fr (Alice1)
+Lien de validation : localhost/EcoRide/public/index.php?p=participant.validate&covoiturage_id=23
+--------------------------------------------------

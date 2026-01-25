@@ -126,6 +126,30 @@ class UtilisateurModel extends Model
     }
 
     /**
+     * Ajoute des crédits à l'utilisateur
+     * @param int $utilisateur_id
+     * @param int $montant_credit
+     * @return bool
+     */
+    public function crediter($utilisateur_id, $montant_credit)
+    {
+        // Vérifier que le montant est positif
+        if ($montant_credit <= 0) {
+            return false;
+        }
+
+        // Exécuter la mise à jour
+        $result = $this->query(
+            "UPDATE utilisateur 
+            SET credit = credit + ? 
+            WHERE utilisateur_id = ?",
+            [$montant_credit, $utilisateur_id]
+        );
+
+        return $result > 0;
+    }
+
+    /**
      * Récupère un utilisateur par son email
      * @param string $email
      * @return object|null

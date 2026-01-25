@@ -74,12 +74,6 @@ class CovoituragesController extends AppController
             return;
         }
 
-        // Vérifier que l'utilisateur a assez de crédits (minimum 2)
-        if ($utilisateur->credit < 2) {
-            $this->jsonResponse(['success' => false, 'message' => 'Crédits insuffisants. Vous avez besoin de 2 crédits pour participer']);
-            return;
-        }
-
         // Vérifier que le covoiturage existe et a des places disponibles
         $covoiturage = $this->Covoiturage->find($covoiturage_id);
         if (!$covoiturage) {
@@ -87,10 +81,17 @@ class CovoituragesController extends AppController
             return;
         }
 
+        // Vérifier que l'utilisateur a assez de crédits (minimum 2)
+        // Vérifier que l'utilisateur a assez de crédits
+        if ($utilisateur->credit < $covoiturage->prix_personne) {
+            $this->jsonResponse(['success' => false, 'message' => "Crédits insuffisants. Vous avez besoin de {$covoiturage->prix_personne} crédits pour participer"]);
+            return;
+        }
+
         // Commencer la transaction pour garantir la cohérence des données
         try {
-            // 1. Déduire les crédits de l'utilisateur (2 crédits)
-            $credit_deduit = $this->Utilisateur->deduireCredit($utilisateur_id, 2);
+            // 1. Déduire les crédits de l'utilisateur
+            $credit_deduit = $this->Utilisateur->deduireCredit($utilisateur_id, $covoiturage->prix_personne);
 
             if (!$credit_deduit) {
                 $this->jsonResponse(['success' => false, 'message' => 'Erreur lors de la déduction des crédits']);
@@ -118,7 +119,8 @@ class CovoituragesController extends AppController
             // 4. Réponse positive
             $this->jsonResponse([
                 'success' => true,
-                'message' => 'Vous avez réservé votre place avec succès ! 2 crédits ont été déduits de votre compte'
+                'success' => true,
+                'message' => 'Vous avez réservé votre place avec succès ! ' . $covoiturage->prix_personne . ' crédits ont été déduits de votre compte'
             ]);
         } catch (\Exception $e) {
             $this->jsonResponse(['success' => false, 'message' => 'Erreur lors de la réservation : ' . $e->getMessage()]);
@@ -136,12 +138,14 @@ class CovoituragesController extends AppController
 
         $covoiturage_id = isset($_POST['covoiturage_id']) ? intval($_POST['covoiturage_id']) : 0;
         
-        // TODO: Vérifier que l'utilisateur est bien le conducteur du trajet (sécurité)
-
-        if ($covoiturage_id > 0) {
-            $this->Covoiturage->updateStatut($covoiturage_id, 4); // 4 = en_cours
+        // Vérifier que l'utilisateur est bien le conducteur du trajet
+        $covoiturage = $this->Covoiturage->findWithDetails($covoiturage_id);
+        if (!$covoiturage || $covoiturage->utilisateur_id != $_SESSION['auth']) {
+            $this->redirect('index.php?p=utilisateurs.profile.index');
         }
 
+        $this->Covoiturage->updateStatut($covoiturage_id, 4); // 4 = en_cours
+        
         // Redirection vers l'édition du trajet
         $this->redirect('index.php?p=trajets.edit&id=' . $covoiturage_id);
     }
@@ -157,14 +161,16 @@ class CovoituragesController extends AppController
 
         $covoiturage_id = isset($_POST['covoiturage_id']) ? intval($_POST['covoiturage_id']) : 0;
 
-        // TODO: Vérifier que l'utilisateur est bien le conducteur du trajet (sécurité)
-
-        if ($covoiturage_id > 0) {
-            $this->Covoiturage->updateStatut($covoiturage_id, 5); // 5 = terminé
-            
-            // Envoyer un mail aux participants (Simulation)
-            $this->sendValidationEmails($covoiturage_id);
+        // Vérifier que l'utilisateur est bien le conducteur du trajet
+        $covoiturage = $this->Covoiturage->findWithDetails($covoiturage_id);
+        if (!$covoiturage || $covoiturage->utilisateur_id != $_SESSION['auth']) {
+            $this->redirect('index.php?p=utilisateurs.profile.index');
         }
+
+        $this->Covoiturage->updateStatut($covoiturage_id, 5); // 5 = terminé
+        
+        // Envoyer un mail aux participants (Simulation)
+        $this->sendValidationEmails($covoiturage_id);
 
         // Redirection vers le profil
         $this->redirect('index.php?p=utilisateurs.profile.index');

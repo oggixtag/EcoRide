@@ -62,20 +62,13 @@ class ParticipantController extends AppController
             // Créditer le chauffeur
             $covoiturage = $this->Covoiturage->find($covoiturage_id);
             if ($covoiturage) {
-                // Récupérer le prix par personne (crédits à transférer)
-                // Note: Le système de crédits actuel est simple (1 crédit = 1 euro ? ou points ?)
-                // D'après DML, les crédits sont des entiers.
-                // On va supposer pour l'instant un transfert de 2 crédits comme la réservation, ou le prix du trajet ?
-                // US11 dit : "les crédits du « chauffeur » est mis à jour"
-                // On va créditer le montant de la réservation (2 crédits par défaut ?)
-                // D'après CovoituragesController::participer, on déduit 2 crédits.
-                // Donc on crédite 2 crédits au chauffeur.
+                // On crédite le montant du trajet
                 
                 // On assume que le chauffeur est l'utilisateur lié à la voiture du trajet
                 $voiture = $this->Covoiturage->query("SELECT utilisateur_id FROM voiture WHERE voiture_id = ?", [$covoiturage->voiture_id], true);
                 if ($voiture) {
                     $chauffeur_id = $voiture->utilisateur_id;
-                    $this->Utilisateur->crediter($chauffeur_id, 2); 
+                    $this->Utilisateur->crediter($chauffeur_id, $covoiturage->prix_personne); 
                 }
             }
         } elseif ($avis_covoiturage_id == 2) {
