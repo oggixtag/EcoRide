@@ -335,50 +335,21 @@ class UtilisateursController extends AppController
      */
     private function sendValidationEmail($email, $pseudo)
     {
-        file_put_contents(ROOT . '/log/email_debug.txt', date('Y-m-d H:i:s'). " - START sendValidationEmail($email)\n", FILE_APPEND);
+        require_once ROOT . '/app/Service/Mailer.php';
+        $mailer = new \NsAppEcoride\Service\Mailer();
         
-        $mail = new PHPMailer(true);
+        $subject = 'Bienvenue sur EcoRide - Confirmez votre email';
+        $body = "
+            <h1>Bienvenue $pseudo !</h1>
+            <p>Merci de vous être inscrit sur EcoRide.</p>
+            <p>Pour finaliser votre inscription, veuillez confirmer votre voir email en cliquant sur le lien suivant (fictif pour le moment) :</p>
+            <p><a href='#'>Confirmer mon email</a></p>
+            <br>
+            <p>L'équipe EcoRide</p>
+        ";
+        $altBody = "Bienvenue $pseudo ! Merci de confirmer votre email.";
 
-        try {
-            // Configuration serveur 
-            $mail->SMTPDebug = 2; 
-            $mail->Debugoutput = function($str, $level) {
-                file_put_contents(ROOT . '/log/email_debug.txt', date('Y-m-d H:i:s'). "\t" . $str . "\n", FILE_APPEND);
-            };
-
-            $mail->isSMTP();
-            $mail->Host       = 'sandbox.smtp.mailtrap.io'; 
-            $mail->SMTPAuth   = true;
-            $mail->Username   = '463794f0298096'; 
-            $mail->Password   = '885b66ca80971b';
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port       = 2525;
-            $mail->CharSet    = 'UTF-8';
-
-            // Destinataires
-            $mail->setFrom('no-reply@ecoride.fr', 'EcoRide');
-            $mail->addAddress($email, $pseudo);
-
-            // Contenu
-            $mail->isHTML(true);
-            $mail->Subject = 'Bienvenue sur EcoRide - Confirmez votre email';
-            $mail->Body    = "
-                <h1>Bienvenue $pseudo !</h1>
-                <p>Merci de vous être inscrit sur EcoRide.</p>
-                <p>Pour finaliser votre inscription, veuillez confirmer votre voir email en cliquant sur le lien suivant (fictif pour le moment) :</p>
-                <p><a href='#'>Confirmer mon email</a></p>
-                <br>
-                <p>L'équipe EcoRide</p>
-            ";
-            $mail->AltBody = "Bienvenue $pseudo ! Merci de confirmer votre email.";
-
-            $mail->send();
-            file_put_contents(ROOT . '/log/email_debug.txt', date('Y-m-d H:i:s'). " - SUCCESS sendValidationEmail\n", FILE_APPEND);
-            return true;
-        } catch (\Throwable $e) {
-            file_put_contents(ROOT . '/log/email_debug.txt', "MAIL ERROR: " . $e->getMessage() . "\n" . $mail->ErrorInfo . "\n", FILE_APPEND);
-            return false;
-        }
+        return $mailer->send($email, $subject, $body, $altBody);
     }
     /**
      * Modifie les informations du profil utilisateur

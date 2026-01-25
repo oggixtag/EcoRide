@@ -1,11 +1,9 @@
-2026-01-21 15:53:17 - Tentative création visiteur (oggix)
-2026-01-21 15:53:17 - Visiteur créé avec succès
-2026-01-21 15:53:17 - START sendValidationEmail(andreaoggix@gmail.com)
-2026-01-21 15:53:18	SERVER -> CLIENT: 220 smtp.mailtrap.io ESMTP ready
+2026-01-25 22:54:19 - START Mailer::send(alice.d@mail.fr)
+2026-01-25 22:54:19	SERVER -> CLIENT: 220 smtp.mailtrap.io ESMTP ready
 
-2026-01-21 15:53:18	CLIENT -> SERVER: EHLO localhost
+2026-01-25 22:54:19	CLIENT -> SERVER: EHLO localhost
 
-2026-01-21 15:53:18	SERVER -> CLIENT: 250-smtp.mailtrap.io
+2026-01-25 22:54:19	SERVER -> CLIENT: 250-smtp.mailtrap.io
 250-SIZE 5242880
 250-PIPELINING
 250-ENHANCEDSTATUSCODES
@@ -14,13 +12,13 @@
 250-AUTH PLAIN LOGIN CRAM-MD5
 250 STARTTLS
 
-2026-01-21 15:53:18	CLIENT -> SERVER: STARTTLS
+2026-01-25 22:54:19	CLIENT -> SERVER: STARTTLS
 
-2026-01-21 15:53:18	SERVER -> CLIENT: 220 2.0.0 Start TLS
+2026-01-25 22:54:19	SERVER -> CLIENT: 220 2.0.0 Start TLS
 
-2026-01-21 15:53:23	CLIENT -> SERVER: EHLO localhost
+2026-01-25 22:54:24	CLIENT -> SERVER: EHLO localhost
 
-2026-01-21 15:53:24	SERVER -> CLIENT: 250-smtp.mailtrap.io
+2026-01-25 22:54:24	SERVER -> CLIENT: 250-smtp.mailtrap.io
 250-SIZE 5242880
 250-PIPELINING
 250-ENHANCEDSTATUSCODES
@@ -28,105 +26,120 @@
 250-DSN
 250 AUTH PLAIN LOGIN CRAM-MD5
 
-2026-01-21 15:53:24	CLIENT -> SERVER: AUTH CRAM-MD5
+2026-01-25 22:54:24	CLIENT -> SERVER: AUTH CRAM-MD5
 
-2026-01-21 15:53:24	SERVER -> CLIENT: 334 PDUzNDcyMjU0OC4xNzY5MDA3MjA0QHNtdHAubWFpbHRyYXAuaW8+
+2026-01-25 22:54:24	SERVER -> CLIENT: 334 PDk4MzMyMjUxNC4xNzY5Mzc4MDY1QHNtdHAubWFpbHRyYXAuaW8+
 
-2026-01-21 15:53:24	CLIENT -> SERVER: [credentials hidden]
-2026-01-21 15:53:24	SERVER -> CLIENT: 235 2.0.0 OK
+2026-01-25 22:54:24	CLIENT -> SERVER: [credentials hidden]
+2026-01-25 22:54:24	SERVER -> CLIENT: 235 2.0.0 OK
 
-2026-01-21 15:53:24	CLIENT -> SERVER: MAIL FROM:<no-reply@ecoride.fr>
+2026-01-25 22:54:24	CLIENT -> SERVER: MAIL FROM:<no-reply@ecoride.fr>
 
-2026-01-21 15:53:24	SERVER -> CLIENT: 250 2.1.0 Ok
+2026-01-25 22:54:24	SERVER -> CLIENT: 250 2.1.0 Ok
 
-2026-01-21 15:53:24	CLIENT -> SERVER: RCPT TO:<andreaoggix@gmail.com>
+2026-01-25 22:54:24	CLIENT -> SERVER: RCPT TO:<alice.d@mail.fr>
 
-2026-01-21 15:53:25	SERVER -> CLIENT: 250 2.1.0 Ok
+2026-01-25 22:54:25	SERVER -> CLIENT: 250 2.1.0 Ok
 
-2026-01-21 15:53:25	CLIENT -> SERVER: DATA
+2026-01-25 22:54:25	CLIENT -> SERVER: DATA
 
-2026-01-21 15:53:25	SERVER -> CLIENT: 354 Go ahead
+2026-01-25 22:54:25	SERVER -> CLIENT: 354 Go ahead
 
-2026-01-21 15:53:25	CLIENT -> SERVER: Date: Wed, 21 Jan 2026 15:53:17 +0100
+2026-01-25 22:54:25	CLIENT -> SERVER: Date: Sun, 25 Jan 2026 22:54:19 +0100
 
-2026-01-21 15:53:25	CLIENT -> SERVER: To: oggix <andreaoggix@gmail.com>
+2026-01-25 22:54:25	CLIENT -> SERVER: To: alice.d@mail.fr
 
-2026-01-21 15:53:25	CLIENT -> SERVER: From: EcoRide <no-reply@ecoride.fr>
+2026-01-25 22:54:25	CLIENT -> SERVER: From: EcoRide <no-reply@ecoride.fr>
 
-2026-01-21 15:53:25	CLIENT -> SERVER: Subject: Bienvenue sur EcoRide - Confirmez votre email
+2026-01-25 22:54:25	CLIENT -> SERVER: Subject: Annulation de votre trajet EcoRide
 
-2026-01-21 15:53:25	CLIENT -> SERVER: Message-ID: <2pfQfQk9AxUyMMPyXGmgpySYhTvQ27jCKF9y5cAo@localhost>
+2026-01-25 22:54:25	CLIENT -> SERVER: Message-ID: <LtIERINQtThus46ZrOyN6s8Mv7aI9O0VaYdJs4bmg@localhost>
 
-2026-01-21 15:53:25	CLIENT -> SERVER: X-Mailer: PHPMailer 7.0.2 (https://github.com/PHPMailer/PHPMailer)
+2026-01-25 22:54:25	CLIENT -> SERVER: X-Mailer: PHPMailer 7.0.2 (https://github.com/PHPMailer/PHPMailer)
 
-2026-01-21 15:53:25	CLIENT -> SERVER: MIME-Version: 1.0
+2026-01-25 22:54:25	CLIENT -> SERVER: Content-Type: multipart/alternative;
 
-2026-01-21 15:53:25	CLIENT -> SERVER: Content-Type: multipart/alternative;
+2026-01-25 22:54:25	CLIENT -> SERVER:  boundary="b1=_LtIERINQtThus46ZrOyN6s8Mv7aI9O0VaYdJs4bmg"
 
-2026-01-21 15:53:25	CLIENT -> SERVER:  boundary="b1=_2pfQfQk9AxUyMMPyXGmgpySYhTvQ27jCKF9y5cAo"
+2026-01-25 22:54:25	CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
 
-2026-01-21 15:53:25	CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+2026-01-25 22:54:25	CLIENT -> SERVER: 
 
-2026-01-21 15:53:25	CLIENT -> SERVER: 
+2026-01-25 22:54:25	CLIENT -> SERVER: --b1=_LtIERINQtThus46ZrOyN6s8Mv7aI9O0VaYdJs4bmg
 
-2026-01-21 15:53:25	CLIENT -> SERVER: --b1=_2pfQfQk9AxUyMMPyXGmgpySYhTvQ27jCKF9y5cAo
+2026-01-25 22:54:25	CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
 
-2026-01-21 15:53:25	CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii
+2026-01-25 22:54:25	CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
 
-2026-01-21 15:53:25	CLIENT -> SERVER: 
+2026-01-25 22:54:25	CLIENT -> SERVER: 
 
-2026-01-21 15:53:25	CLIENT -> SERVER: Bienvenue oggix ! Merci de confirmer votre email.
+2026-01-25 22:54:25	CLIENT -> SERVER: 
 
-2026-01-21 15:53:25	CLIENT -> SERVER: 
+2026-01-25 22:54:25	CLIENT -> SERVER:                     Trajet Annulé
 
-2026-01-21 15:53:25	CLIENT -> SERVER: --b1=_2pfQfQk9AxUyMMPyXGmgpySYhTvQ27jCKF9y5cAo
+2026-01-25 22:54:25	CLIENT -> SERVER:                     Bonjour Alice1,
 
-2026-01-21 15:53:25	CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+2026-01-25 22:54:25	CLIENT -> SERVER:                     Nous vous informons que le trajet antibes - lyon prévu le 31/07/2026 a été annulé par le conducteur.
 
-2026-01-21 15:53:25	CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+2026-01-25 22:54:25	CLIENT -> SERVER:                     Nous vous prions de nous excuser pour la gêne occasionnée.
 
-2026-01-21 15:53:25	CLIENT -> SERVER: 
+2026-01-25 22:54:25	CLIENT -> SERVER:                     
 
-2026-01-21 15:53:25	CLIENT -> SERVER: 
+2026-01-25 22:54:25	CLIENT -> SERVER:                     L'équipe EcoRide
 
-2026-01-21 15:53:25	CLIENT -> SERVER:                 <h1>Bienvenue oggix !</h1>
+2026-01-25 22:54:25	CLIENT -> SERVER:                 
 
-2026-01-21 15:53:25	CLIENT -> SERVER:                 <p>Merci de vous être inscrit sur EcoRide.</p>
+2026-01-25 22:54:25	CLIENT -> SERVER: 
 
-2026-01-21 15:53:25	CLIENT -> SERVER:                 <p>Pour finaliser votre inscription, veuillez confirmer votre voir email en cliquant sur le lien suivant (fictif pour le moment) :</p>
+2026-01-25 22:54:25	CLIENT -> SERVER: --b1=_LtIERINQtThus46ZrOyN6s8Mv7aI9O0VaYdJs4bmg
 
-2026-01-21 15:53:25	CLIENT -> SERVER:                 <p><a href='#'>Confirmer mon email</a></p>
+2026-01-25 22:54:25	CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
 
-2026-01-21 15:53:25	CLIENT -> SERVER:                 <br>
+2026-01-25 22:54:25	CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
 
-2026-01-21 15:53:25	CLIENT -> SERVER:                 <p>L'équipe EcoRide</p>
+2026-01-25 22:54:25	CLIENT -> SERVER: 
 
-2026-01-21 15:53:25	CLIENT -> SERVER:             
+2026-01-25 22:54:25	CLIENT -> SERVER: 
 
-2026-01-21 15:53:25	CLIENT -> SERVER: 
+2026-01-25 22:54:25	CLIENT -> SERVER:                     <h1>Trajet Annulé</h1>
 
-2026-01-21 15:53:25	CLIENT -> SERVER: 
+2026-01-25 22:54:25	CLIENT -> SERVER:                     <p>Bonjour Alice1,</p>
 
-2026-01-21 15:53:25	CLIENT -> SERVER: --b1=_2pfQfQk9AxUyMMPyXGmgpySYhTvQ27jCKF9y5cAo--
+2026-01-25 22:54:25	CLIENT -> SERVER:                     <p>Nous vous informons que le trajet <strong>antibes - lyon</strong> prévu le <strong>31/07/2026</strong> a été annulé par le conducteur.</p>
 
-2026-01-21 15:53:25	CLIENT -> SERVER: 
+2026-01-25 22:54:25	CLIENT -> SERVER:                     <p>Nous vous prions de nous excuser pour la gêne occasionnée.</p>
 
-2026-01-21 15:53:25	CLIENT -> SERVER: .
+2026-01-25 22:54:25	CLIENT -> SERVER:                     <br>
 
-2026-01-21 15:53:25	SERVER -> CLIENT: 250 2.0.0 Ok: queued
+2026-01-25 22:54:25	CLIENT -> SERVER:                     <p>L'équipe EcoRide</p>
 
-2026-01-21 15:53:25	CLIENT -> SERVER: QUIT
+2026-01-25 22:54:25	CLIENT -> SERVER:                 
 
-2026-01-21 15:53:25	SERVER -> CLIENT: 221 2.0.0 Bye
+2026-01-25 22:54:25	CLIENT -> SERVER: 
 
-2026-01-21 15:59:08 - Tentative création visiteur (oggix)
-2026-01-21 15:59:08 - Visiteur créé avec succès
-2026-01-21 15:59:08 - START sendValidationEmail(andreaoggix@gmail.com)
-2026-01-21 15:59:09	SERVER -> CLIENT: 220 smtp.mailtrap.io ESMTP ready
+2026-01-25 22:54:25	CLIENT -> SERVER: 
 
-2026-01-21 15:59:09	CLIENT -> SERVER: EHLO localhost
+2026-01-25 22:54:25	CLIENT -> SERVER: --b1=_LtIERINQtThus46ZrOyN6s8Mv7aI9O0VaYdJs4bmg--
 
-2026-01-21 15:59:09	SERVER -> CLIENT: 250-smtp.mailtrap.io
+2026-01-25 22:54:25	CLIENT -> SERVER: 
+
+2026-01-25 22:54:25	CLIENT -> SERVER: .
+
+2026-01-25 22:54:25	SERVER -> CLIENT: 250 2.0.0 Ok: queued
+
+2026-01-25 22:54:25	CLIENT -> SERVER: QUIT
+
+2026-01-25 22:54:25	SERVER -> CLIENT: 221 2.0.0 Bye
+
+2026-01-25 22:54:25 - SUCCESS Mailer::send
+2026-01-25 23:07:55 - Tentative création visiteur (oggix)
+2026-01-25 23:07:55 - Visiteur créé avec succès
+2026-01-25 23:07:55 - START Mailer::send(andreaoggix@gmail.com)
+2026-01-25 23:07:56	SERVER -> CLIENT: 220 smtp.mailtrap.io ESMTP ready
+
+2026-01-25 23:07:56	CLIENT -> SERVER: EHLO localhost
+
+2026-01-25 23:07:56	SERVER -> CLIENT: 250-smtp.mailtrap.io
 250-SIZE 5242880
 250-PIPELINING
 250-ENHANCEDSTATUSCODES
@@ -135,13 +148,13 @@
 250-AUTH PLAIN LOGIN CRAM-MD5
 250 STARTTLS
 
-2026-01-21 15:59:09	CLIENT -> SERVER: STARTTLS
+2026-01-25 23:07:56	CLIENT -> SERVER: STARTTLS
 
-2026-01-21 15:59:09	SERVER -> CLIENT: 220 2.0.0 Start TLS
+2026-01-25 23:07:56	SERVER -> CLIENT: 220 2.0.0 Start TLS
 
-2026-01-21 15:59:14	CLIENT -> SERVER: EHLO localhost
+2026-01-25 23:08:00	CLIENT -> SERVER: EHLO localhost
 
-2026-01-21 15:59:15	SERVER -> CLIENT: 250-smtp.mailtrap.io
+2026-01-25 23:08:01	SERVER -> CLIENT: 250-smtp.mailtrap.io
 250-SIZE 5242880
 250-PIPELINING
 250-ENHANCEDSTATUSCODES
@@ -149,462 +162,93 @@
 250-DSN
 250 AUTH PLAIN LOGIN CRAM-MD5
 
-2026-01-21 15:59:15	CLIENT -> SERVER: AUTH CRAM-MD5
+2026-01-25 23:08:01	CLIENT -> SERVER: AUTH CRAM-MD5
 
-2026-01-21 15:59:15	SERVER -> CLIENT: 334 PDcxOTYxOTcwMi4xNzY5MDA3NTU2QHNtdHAubWFpbHRyYXAuaW8+
+2026-01-25 23:08:01	SERVER -> CLIENT: 334 PDEwMjM3NTY1NTAuMTc2OTM3ODg4MUBzbXRwLm1haWx0cmFwLmlvPg==
 
-2026-01-21 15:59:15	CLIENT -> SERVER: [credentials hidden]
-2026-01-21 15:59:16	SERVER -> CLIENT: 235 2.0.0 OK
+2026-01-25 23:08:01	CLIENT -> SERVER: [credentials hidden]
+2026-01-25 23:08:01	SERVER -> CLIENT: 235 2.0.0 OK
 
-2026-01-21 15:59:16	CLIENT -> SERVER: MAIL FROM:<no-reply@ecoride.fr>
+2026-01-25 23:08:01	CLIENT -> SERVER: MAIL FROM:<no-reply@ecoride.fr>
 
-2026-01-21 15:59:16	SERVER -> CLIENT: 250 2.1.0 Ok
+2026-01-25 23:08:01	SERVER -> CLIENT: 250 2.1.0 Ok
 
-2026-01-21 15:59:16	CLIENT -> SERVER: RCPT TO:<andreaoggix@gmail.com>
+2026-01-25 23:08:01	CLIENT -> SERVER: RCPT TO:<andreaoggix@gmail.com>
 
-2026-01-21 15:59:16	SERVER -> CLIENT: 250 2.1.0 Ok
+2026-01-25 23:08:01	SERVER -> CLIENT: 250 2.1.0 Ok
 
-2026-01-21 15:59:16	CLIENT -> SERVER: DATA
+2026-01-25 23:08:02	CLIENT -> SERVER: DATA
 
-2026-01-21 15:59:16	SERVER -> CLIENT: 354 Go ahead
+2026-01-25 23:08:02	SERVER -> CLIENT: 354 Go ahead
 
-2026-01-21 15:59:16	CLIENT -> SERVER: Date: Wed, 21 Jan 2026 15:59:09 +0100
+2026-01-25 23:08:02	CLIENT -> SERVER: Date: Sun, 25 Jan 2026 23:07:55 +0100
 
-2026-01-21 15:59:16	CLIENT -> SERVER: To: oggix <andreaoggix@gmail.com>
+2026-01-25 23:08:02	CLIENT -> SERVER: To: andreaoggix@gmail.com
 
-2026-01-21 15:59:16	CLIENT -> SERVER: From: EcoRide <no-reply@ecoride.fr>
+2026-01-25 23:08:02	CLIENT -> SERVER: From: EcoRide <no-reply@ecoride.fr>
 
-2026-01-21 15:59:16	CLIENT -> SERVER: Subject: Bienvenue sur EcoRide - Confirmez votre email
+2026-01-25 23:08:02	CLIENT -> SERVER: Subject: Bienvenue sur EcoRide - Confirmez votre email
 
-2026-01-21 15:59:16	CLIENT -> SERVER: Message-ID: <T9MRM9T7LdcQkq4K8GWKzWevaI2ySfrBa52NUB9g@localhost>
+2026-01-25 23:08:02	CLIENT -> SERVER: Message-ID: <17VXsZ1ZKD11oEhp7fEXi30gOv2rqDwFl0p2TptU5w@localhost>
 
-2026-01-21 15:59:16	CLIENT -> SERVER: X-Mailer: PHPMailer 7.0.2 (https://github.com/PHPMailer/PHPMailer)
+2026-01-25 23:08:02	CLIENT -> SERVER: X-Mailer: PHPMailer 7.0.2 (https://github.com/PHPMailer/PHPMailer)
 
-2026-01-21 15:59:16	CLIENT -> SERVER: MIME-Version: 1.0
+2026-01-25 23:08:02	CLIENT -> SERVER: MIME-Version: 1.0
 
-2026-01-21 15:59:16	CLIENT -> SERVER: Content-Type: multipart/alternative;
+2026-01-25 23:08:02	CLIENT -> SERVER: Content-Type: multipart/alternative;
 
-2026-01-21 15:59:16	CLIENT -> SERVER:  boundary="b1=_T9MRM9T7LdcQkq4K8GWKzWevaI2ySfrBa52NUB9g"
+2026-01-25 23:08:02	CLIENT -> SERVER:  boundary="b1=_17VXsZ1ZKD11oEhp7fEXi30gOv2rqDwFl0p2TptU5w"
 
-2026-01-21 15:59:16	CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+2026-01-25 23:08:02	CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
 
-2026-01-21 15:59:16	CLIENT -> SERVER: 
+2026-01-25 23:08:02	CLIENT -> SERVER: 
 
-2026-01-21 15:59:16	CLIENT -> SERVER: --b1=_T9MRM9T7LdcQkq4K8GWKzWevaI2ySfrBa52NUB9g
+2026-01-25 23:08:02	CLIENT -> SERVER: --b1=_17VXsZ1ZKD11oEhp7fEXi30gOv2rqDwFl0p2TptU5w
 
-2026-01-21 15:59:16	CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii
+2026-01-25 23:08:02	CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii
 
-2026-01-21 15:59:16	CLIENT -> SERVER: 
+2026-01-25 23:08:02	CLIENT -> SERVER: 
 
-2026-01-21 15:59:16	CLIENT -> SERVER: Bienvenue oggix ! Merci de confirmer votre email.
+2026-01-25 23:08:02	CLIENT -> SERVER: 
 
-2026-01-21 15:59:16	CLIENT -> SERVER: 
+2026-01-25 23:08:02	CLIENT -> SERVER: --b1=_17VXsZ1ZKD11oEhp7fEXi30gOv2rqDwFl0p2TptU5w
 
-2026-01-21 15:59:16	CLIENT -> SERVER: --b1=_T9MRM9T7LdcQkq4K8GWKzWevaI2ySfrBa52NUB9g
+2026-01-25 23:08:02	CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
 
-2026-01-21 15:59:16	CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+2026-01-25 23:08:02	CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
 
-2026-01-21 15:59:16	CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+2026-01-25 23:08:02	CLIENT -> SERVER: 
 
-2026-01-21 15:59:16	CLIENT -> SERVER: 
+2026-01-25 23:08:02	CLIENT -> SERVER: 
 
-2026-01-21 15:59:16	CLIENT -> SERVER: 
+2026-01-25 23:08:02	CLIENT -> SERVER:             <h1>Bienvenue oggix !</h1>
 
-2026-01-21 15:59:16	CLIENT -> SERVER:                 <h1>Bienvenue oggix !</h1>
+2026-01-25 23:08:02	CLIENT -> SERVER:             <p>Merci de vous être inscrit sur EcoRide.</p>
 
-2026-01-21 15:59:16	CLIENT -> SERVER:                 <p>Merci de vous être inscrit sur EcoRide.</p>
+2026-01-25 23:08:02	CLIENT -> SERVER:             <p>Pour finaliser votre inscription, veuillez confirmer votre voir email en cliquant sur le lien suivant (fictif pour le moment) :</p>
 
-2026-01-21 15:59:16	CLIENT -> SERVER:                 <p>Pour finaliser votre inscription, veuillez confirmer votre voir email en cliquant sur le lien suivant (fictif pour le moment) :</p>
+2026-01-25 23:08:02	CLIENT -> SERVER:             <p><a href='#'>Confirmer mon email</a></p>
 
-2026-01-21 15:59:16	CLIENT -> SERVER:                 <p><a href='#'>Confirmer mon email</a></p>
+2026-01-25 23:08:02	CLIENT -> SERVER:             <br>
 
-2026-01-21 15:59:16	CLIENT -> SERVER:                 <br>
+2026-01-25 23:08:02	CLIENT -> SERVER:             <p>L'équipe EcoRide</p>
 
-2026-01-21 15:59:16	CLIENT -> SERVER:                 <p>L'équipe EcoRide</p>
+2026-01-25 23:08:02	CLIENT -> SERVER:         
 
-2026-01-21 15:59:16	CLIENT -> SERVER:             
+2026-01-25 23:08:02	CLIENT -> SERVER: 
 
-2026-01-21 15:59:16	CLIENT -> SERVER: 
+2026-01-25 23:08:02	CLIENT -> SERVER: 
 
-2026-01-21 15:59:16	CLIENT -> SERVER: 
+2026-01-25 23:08:02	CLIENT -> SERVER: --b1=_17VXsZ1ZKD11oEhp7fEXi30gOv2rqDwFl0p2TptU5w--
 
-2026-01-21 15:59:16	CLIENT -> SERVER: --b1=_T9MRM9T7LdcQkq4K8GWKzWevaI2ySfrBa52NUB9g--
+2026-01-25 23:08:02	CLIENT -> SERVER: 
 
-2026-01-21 15:59:16	CLIENT -> SERVER: 
+2026-01-25 23:08:02	CLIENT -> SERVER: .
 
-2026-01-21 15:59:16	CLIENT -> SERVER: .
+2026-01-25 23:08:02	SERVER -> CLIENT: 250 2.0.0 Ok: queued
 
-2026-01-21 15:59:17	SERVER -> CLIENT: 250 2.0.0 Ok: queued
+2026-01-25 23:08:02	CLIENT -> SERVER: QUIT
 
-2026-01-21 15:59:17	CLIENT -> SERVER: QUIT
+2026-01-25 23:08:03	SERVER -> CLIENT: 221 2.0.0 Bye
 
-2026-01-21 15:59:17	SERVER -> CLIENT: 221 2.0.0 Bye
-
-2026-01-21 15:59:17 - SUCCESS sendValidationEmail
-2026-01-21 16:19:17 - Tentative création visiteur (oggix)
-2026-01-21 16:19:18 - Visiteur créé avec succès
-2026-01-21 16:19:18 - START sendValidationEmail(andreaoggix@gmail.com)
-2026-01-21 16:19:19	SERVER -> CLIENT: 220 smtp.mailtrap.io ESMTP ready
-
-2026-01-21 16:19:19	CLIENT -> SERVER: EHLO localhost
-
-2026-01-21 16:19:19	SERVER -> CLIENT: 250-smtp.mailtrap.io
-250-SIZE 5242880
-250-PIPELINING
-250-ENHANCEDSTATUSCODES
-250-8BITMIME
-250-DSN
-250-AUTH PLAIN LOGIN CRAM-MD5
-250 STARTTLS
-
-2026-01-21 16:19:19	CLIENT -> SERVER: STARTTLS
-
-2026-01-21 16:19:19	SERVER -> CLIENT: 220 2.0.0 Start TLS
-
-2026-01-21 16:19:22	CLIENT -> SERVER: EHLO localhost
-
-2026-01-21 16:19:23	SERVER -> CLIENT: 250-smtp.mailtrap.io
-250-SIZE 5242880
-250-PIPELINING
-250-ENHANCEDSTATUSCODES
-250-8BITMIME
-250-DSN
-250 AUTH PLAIN LOGIN CRAM-MD5
-
-2026-01-21 16:19:23	CLIENT -> SERVER: AUTH CRAM-MD5
-
-2026-01-21 16:19:23	SERVER -> CLIENT: 334 PDEwMTg3OTEwMi4xNzY5MDA4NzYzQHNtdHAubWFpbHRyYXAuaW8+
-
-2026-01-21 16:19:23	CLIENT -> SERVER: [credentials hidden]
-2026-01-21 16:19:23	SERVER -> CLIENT: 235 2.0.0 OK
-
-2026-01-21 16:19:23	CLIENT -> SERVER: MAIL FROM:<no-reply@ecoride.fr>
-
-2026-01-21 16:19:23	SERVER -> CLIENT: 250 2.1.0 Ok
-
-2026-01-21 16:19:23	CLIENT -> SERVER: RCPT TO:<andreaoggix@gmail.com>
-
-2026-01-21 16:19:23	SERVER -> CLIENT: 250 2.1.0 Ok
-
-2026-01-21 16:19:23	CLIENT -> SERVER: DATA
-
-2026-01-21 16:19:24	SERVER -> CLIENT: 354 Go ahead
-
-2026-01-21 16:19:24	CLIENT -> SERVER: Date: Wed, 21 Jan 2026 16:19:18 +0100
-
-2026-01-21 16:19:24	CLIENT -> SERVER: To: oggix <andreaoggix@gmail.com>
-
-2026-01-21 16:19:24	CLIENT -> SERVER: From: EcoRide <no-reply@ecoride.fr>
-
-2026-01-21 16:19:24	CLIENT -> SERVER: Subject: Bienvenue sur EcoRide - Confirmez votre email
-
-2026-01-21 16:19:24	CLIENT -> SERVER: Message-ID: <Lw70vEoJ1pLPdqB0njQRkBE62hwo45TDJoP9DTp6Y9E@localhost>
-
-2026-01-21 16:19:24	CLIENT -> SERVER: X-Mailer: PHPMailer 7.0.2 (https://github.com/PHPMailer/PHPMailer)
-
-2026-01-21 16:19:24	CLIENT -> SERVER: MIME-Version: 1.0
-
-2026-01-21 16:19:24	CLIENT -> SERVER: Content-Type: multipart/alternative;
-
-2026-01-21 16:19:24	CLIENT -> SERVER:  boundary="b1=_Lw70vEoJ1pLPdqB0njQRkBE62hwo45TDJoP9DTp6Y9E"
-
-2026-01-21 16:19:24	CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
-
-2026-01-21 16:19:24	CLIENT -> SERVER: 
-
-2026-01-21 16:19:24	CLIENT -> SERVER: --b1=_Lw70vEoJ1pLPdqB0njQRkBE62hwo45TDJoP9DTp6Y9E
-
-2026-01-21 16:19:24	CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii
-
-2026-01-21 16:19:24	CLIENT -> SERVER: 
-
-2026-01-21 16:19:24	CLIENT -> SERVER: Bienvenue oggix ! Merci de confirmer votre email.
-
-2026-01-21 16:19:24	CLIENT -> SERVER: 
-
-2026-01-21 16:19:24	CLIENT -> SERVER: --b1=_Lw70vEoJ1pLPdqB0njQRkBE62hwo45TDJoP9DTp6Y9E
-
-2026-01-21 16:19:24	CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
-
-2026-01-21 16:19:24	CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
-
-2026-01-21 16:19:24	CLIENT -> SERVER: 
-
-2026-01-21 16:19:24	CLIENT -> SERVER: 
-
-2026-01-21 16:19:24	CLIENT -> SERVER:                 <h1>Bienvenue oggix !</h1>
-
-2026-01-21 16:19:24	CLIENT -> SERVER:                 <p>Merci de vous être inscrit sur EcoRide.</p>
-
-2026-01-21 16:19:24	CLIENT -> SERVER:                 <p>Pour finaliser votre inscription, veuillez confirmer votre voir email en cliquant sur le lien suivant (fictif pour le moment) :</p>
-
-2026-01-21 16:19:24	CLIENT -> SERVER:                 <p><a href='#'>Confirmer mon email</a></p>
-
-2026-01-21 16:19:24	CLIENT -> SERVER:                 <br>
-
-2026-01-21 16:19:24	CLIENT -> SERVER:                 <p>L'équipe EcoRide</p>
-
-2026-01-21 16:19:24	CLIENT -> SERVER:             
-
-2026-01-21 16:19:24	CLIENT -> SERVER: 
-
-2026-01-21 16:19:24	CLIENT -> SERVER: 
-
-2026-01-21 16:19:24	CLIENT -> SERVER: --b1=_Lw70vEoJ1pLPdqB0njQRkBE62hwo45TDJoP9DTp6Y9E--
-
-2026-01-21 16:19:24	CLIENT -> SERVER: 
-
-2026-01-21 16:19:24	CLIENT -> SERVER: .
-
-2026-01-21 16:19:24	SERVER -> CLIENT: 250 2.0.0 Ok: queued
-
-2026-01-21 16:19:24	CLIENT -> SERVER: QUIT
-
-2026-01-21 16:19:24	SERVER -> CLIENT: 221 2.0.0 Bye
-
-2026-01-21 16:19:24 - SUCCESS sendValidationEmail
-2026-01-23 14:51:46 - Tentative création visiteur (ndr)
-2026-01-23 14:51:47 - Visiteur créé avec succès
-2026-01-23 14:51:47 - START sendValidationEmail(andreaoggix@gmail.com)
-2026-01-23 14:51:47	SERVER -> CLIENT: 220 smtp.mailtrap.io ESMTP ready
-
-2026-01-23 14:51:47	CLIENT -> SERVER: EHLO localhost
-
-2026-01-23 14:51:47	SERVER -> CLIENT: 250-smtp.mailtrap.io
-250-SIZE 5242880
-250-PIPELINING
-250-ENHANCEDSTATUSCODES
-250-8BITMIME
-250-DSN
-250-AUTH PLAIN LOGIN CRAM-MD5
-250 STARTTLS
-
-2026-01-23 14:51:47	CLIENT -> SERVER: STARTTLS
-
-2026-01-23 14:51:47	SERVER -> CLIENT: 220 2.0.0 Start TLS
-
-2026-01-23 14:51:52	CLIENT -> SERVER: EHLO localhost
-
-2026-01-23 14:51:52	SERVER -> CLIENT: 250-smtp.mailtrap.io
-250-SIZE 5242880
-250-PIPELINING
-250-ENHANCEDSTATUSCODES
-250-8BITMIME
-250-DSN
-250 AUTH PLAIN LOGIN CRAM-MD5
-
-2026-01-23 14:51:52	CLIENT -> SERVER: AUTH CRAM-MD5
-
-2026-01-23 14:51:52	SERVER -> CLIENT: 334 PDE5MTcyMDQzODYuMTc2OTE3NjMxM0BzbXRwLm1haWx0cmFwLmlvPg==
-
-2026-01-23 14:51:53	CLIENT -> SERVER: [credentials hidden]
-2026-01-23 14:51:53	SERVER -> CLIENT: 235 2.0.0 OK
-
-2026-01-23 14:51:53	CLIENT -> SERVER: MAIL FROM:<no-reply@ecoride.fr>
-
-2026-01-23 14:51:53	SERVER -> CLIENT: 250 2.1.0 Ok
-
-2026-01-23 14:51:53	CLIENT -> SERVER: RCPT TO:<andreaoggix@gmail.com>
-
-2026-01-23 14:51:53	SERVER -> CLIENT: 250 2.1.0 Ok
-
-2026-01-23 14:51:53	CLIENT -> SERVER: DATA
-
-2026-01-23 14:51:53	SERVER -> CLIENT: 354 Go ahead
-
-2026-01-23 14:51:53	CLIENT -> SERVER: Date: Fri, 23 Jan 2026 14:51:47 +0100
-
-2026-01-23 14:51:53	CLIENT -> SERVER: To: ndr <andreaoggix@gmail.com>
-
-2026-01-23 14:51:53	CLIENT -> SERVER: From: EcoRide <no-reply@ecoride.fr>
-
-2026-01-23 14:51:53	CLIENT -> SERVER: Subject: Bienvenue sur EcoRide - Confirmez votre email
-
-2026-01-23 14:51:53	CLIENT -> SERVER: Message-ID: <sjPjyjaIrHqk5pKc4lkoBzD0DNP1lks41n14w5bV6E@localhost>
-
-2026-01-23 14:51:53	CLIENT -> SERVER: X-Mailer: PHPMailer 7.0.2 (https://github.com/PHPMailer/PHPMailer)
-
-2026-01-23 14:51:53	CLIENT -> SERVER: MIME-Version: 1.0
-
-2026-01-23 14:51:53	CLIENT -> SERVER: Content-Type: multipart/alternative;
-
-2026-01-23 14:51:53	CLIENT -> SERVER:  boundary="b1=_sjPjyjaIrHqk5pKc4lkoBzD0DNP1lks41n14w5bV6E"
-
-2026-01-23 14:51:53	CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
-
-2026-01-23 14:51:53	CLIENT -> SERVER: 
-
-2026-01-23 14:51:53	CLIENT -> SERVER: --b1=_sjPjyjaIrHqk5pKc4lkoBzD0DNP1lks41n14w5bV6E
-
-2026-01-23 14:51:53	CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii
-
-2026-01-23 14:51:53	CLIENT -> SERVER: 
-
-2026-01-23 14:51:53	CLIENT -> SERVER: Bienvenue ndr ! Merci de confirmer votre email.
-
-2026-01-23 14:51:53	CLIENT -> SERVER: 
-
-2026-01-23 14:51:53	CLIENT -> SERVER: --b1=_sjPjyjaIrHqk5pKc4lkoBzD0DNP1lks41n14w5bV6E
-
-2026-01-23 14:51:53	CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
-
-2026-01-23 14:51:53	CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
-
-2026-01-23 14:51:53	CLIENT -> SERVER: 
-
-2026-01-23 14:51:53	CLIENT -> SERVER: 
-
-2026-01-23 14:51:53	CLIENT -> SERVER:                 <h1>Bienvenue ndr !</h1>
-
-2026-01-23 14:51:53	CLIENT -> SERVER:                 <p>Merci de vous être inscrit sur EcoRide.</p>
-
-2026-01-23 14:51:53	CLIENT -> SERVER:                 <p>Pour finaliser votre inscription, veuillez confirmer votre voir email en cliquant sur le lien suivant (fictif pour le moment) :</p>
-
-2026-01-23 14:51:53	CLIENT -> SERVER:                 <p><a href='#'>Confirmer mon email</a></p>
-
-2026-01-23 14:51:54	CLIENT -> SERVER:                 <br>
-
-2026-01-23 14:51:54	CLIENT -> SERVER:                 <p>L'équipe EcoRide</p>
-
-2026-01-23 14:51:54	CLIENT -> SERVER:             
-
-2026-01-23 14:51:54	CLIENT -> SERVER: 
-
-2026-01-23 14:51:54	CLIENT -> SERVER: 
-
-2026-01-23 14:51:54	CLIENT -> SERVER: --b1=_sjPjyjaIrHqk5pKc4lkoBzD0DNP1lks41n14w5bV6E--
-
-2026-01-23 14:51:54	CLIENT -> SERVER: 
-
-2026-01-23 14:51:54	CLIENT -> SERVER: .
-
-2026-01-23 14:51:54	SERVER -> CLIENT: 250 2.0.0 Ok: queued
-
-2026-01-23 14:51:54	CLIENT -> SERVER: QUIT
-
-2026-01-23 14:51:54	SERVER -> CLIENT: 221 2.0.0 Bye
-
-2026-01-23 14:51:54 - SUCCESS sendValidationEmail
-2026-01-23 21:36:16 - SEND EMAIL to alice.d@mail.fr: Bonjour Alice1, le trajet nice-cannes du 2026-09-11 a été annulé par le conducteur.
-2026-01-23 23:39:44 - Tentative création visiteur (oggix)
-2026-01-23 23:39:44 - Visiteur créé avec succès
-2026-01-23 23:39:44 - START sendValidationEmail(andreaoggix@gmail.com)
-2026-01-23 23:39:44	SERVER -> CLIENT: 220 smtp.mailtrap.io ESMTP ready
-
-2026-01-23 23:39:44	CLIENT -> SERVER: EHLO localhost
-
-2026-01-23 23:39:44	SERVER -> CLIENT: 250-smtp.mailtrap.io
-250-SIZE 5242880
-250-PIPELINING
-250-ENHANCEDSTATUSCODES
-250-8BITMIME
-250-DSN
-250-AUTH PLAIN LOGIN CRAM-MD5
-250 STARTTLS
-
-2026-01-23 23:39:44	CLIENT -> SERVER: STARTTLS
-
-2026-01-23 23:39:45	SERVER -> CLIENT: 220 2.0.0 Start TLS
-
-2026-01-23 23:39:48	CLIENT -> SERVER: EHLO localhost
-
-2026-01-23 23:39:49	SERVER -> CLIENT: 250-smtp.mailtrap.io
-250-SIZE 5242880
-250-PIPELINING
-250-ENHANCEDSTATUSCODES
-250-8BITMIME
-250-DSN
-250 AUTH PLAIN LOGIN CRAM-MD5
-
-2026-01-23 23:39:49	CLIENT -> SERVER: AUTH CRAM-MD5
-
-2026-01-23 23:39:49	SERVER -> CLIENT: 334 PDEzNjA3MDU5NS4xNzY5MjA3OTkwQHNtdHAubWFpbHRyYXAuaW8+
-
-2026-01-23 23:39:49	CLIENT -> SERVER: [credentials hidden]
-2026-01-23 23:39:49	SERVER -> CLIENT: 235 2.0.0 OK
-
-2026-01-23 23:39:49	CLIENT -> SERVER: MAIL FROM:<no-reply@ecoride.fr>
-
-2026-01-23 23:39:49	SERVER -> CLIENT: 250 2.1.0 Ok
-
-2026-01-23 23:39:49	CLIENT -> SERVER: RCPT TO:<andreaoggix@gmail.com>
-
-2026-01-23 23:39:49	SERVER -> CLIENT: 250 2.1.0 Ok
-
-2026-01-23 23:39:49	CLIENT -> SERVER: DATA
-
-2026-01-23 23:39:49	SERVER -> CLIENT: 354 Go ahead
-
-2026-01-23 23:39:49	CLIENT -> SERVER: Date: Fri, 23 Jan 2026 23:39:44 +0100
-
-2026-01-23 23:39:49	CLIENT -> SERVER: To: oggix <andreaoggix@gmail.com>
-
-2026-01-23 23:39:49	CLIENT -> SERVER: From: EcoRide <no-reply@ecoride.fr>
-
-2026-01-23 23:39:49	CLIENT -> SERVER: Subject: Bienvenue sur EcoRide - Confirmez votre email
-
-2026-01-23 23:39:49	CLIENT -> SERVER: Message-ID: <iFHImI5BPA4ZaYP71htp88xIJbLuZJi4tBdP45itoxk@localhost>
-
-2026-01-23 23:39:49	CLIENT -> SERVER: X-Mailer: PHPMailer 7.0.2 (https://github.com/PHPMailer/PHPMailer)
-
-2026-01-23 23:39:49	CLIENT -> SERVER: MIME-Version: 1.0
-
-2026-01-23 23:39:49	CLIENT -> SERVER: Content-Type: multipart/alternative;
-
-2026-01-23 23:39:49	CLIENT -> SERVER:  boundary="b1=_iFHImI5BPA4ZaYP71htp88xIJbLuZJi4tBdP45itoxk"
-
-2026-01-23 23:39:49	CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
-
-2026-01-23 23:39:49	CLIENT -> SERVER: 
-
-2026-01-23 23:39:49	CLIENT -> SERVER: --b1=_iFHImI5BPA4ZaYP71htp88xIJbLuZJi4tBdP45itoxk
-
-2026-01-23 23:39:49	CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii
-
-2026-01-23 23:39:49	CLIENT -> SERVER: 
-
-2026-01-23 23:39:49	CLIENT -> SERVER: Bienvenue oggix ! Merci de confirmer votre email.
-
-2026-01-23 23:39:50	CLIENT -> SERVER: 
-
-2026-01-23 23:39:50	CLIENT -> SERVER: --b1=_iFHImI5BPA4ZaYP71htp88xIJbLuZJi4tBdP45itoxk
-
-2026-01-23 23:39:50	CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
-
-2026-01-23 23:39:50	CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
-
-2026-01-23 23:39:50	CLIENT -> SERVER: 
-
-2026-01-23 23:39:50	CLIENT -> SERVER: 
-
-2026-01-23 23:39:50	CLIENT -> SERVER:                 <h1>Bienvenue oggix !</h1>
-
-2026-01-23 23:39:50	CLIENT -> SERVER:                 <p>Merci de vous être inscrit sur EcoRide.</p>
-
-2026-01-23 23:39:50	CLIENT -> SERVER:                 <p>Pour finaliser votre inscription, veuillez confirmer votre voir email en cliquant sur le lien suivant (fictif pour le moment) :</p>
-
-2026-01-23 23:39:50	CLIENT -> SERVER:                 <p><a href='#'>Confirmer mon email</a></p>
-
-2026-01-23 23:39:50	CLIENT -> SERVER:                 <br>
-
-2026-01-23 23:39:50	CLIENT -> SERVER:                 <p>L'équipe EcoRide</p>
-
-2026-01-23 23:39:50	CLIENT -> SERVER:             
-
-2026-01-23 23:39:50	CLIENT -> SERVER: 
-
-2026-01-23 23:39:50	CLIENT -> SERVER: 
-
-2026-01-23 23:39:50	CLIENT -> SERVER: --b1=_iFHImI5BPA4ZaYP71htp88xIJbLuZJi4tBdP45itoxk--
-
-2026-01-23 23:39:50	CLIENT -> SERVER: 
-
-2026-01-23 23:39:50	CLIENT -> SERVER: .
-
-2026-01-23 23:39:50	SERVER -> CLIENT: 250 2.0.0 Ok: queued
-
-2026-01-23 23:39:50	CLIENT -> SERVER: QUIT
-
-2026-01-23 23:39:50	SERVER -> CLIENT: 221 2.0.0 Bye
-
-2026-01-23 23:39:50 - SUCCESS sendValidationEmail
+2026-01-25 23:08:03 - SUCCESS Mailer::send

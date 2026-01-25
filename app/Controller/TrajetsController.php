@@ -365,7 +365,7 @@ class TrajetsController extends AppController
     }
 
     /**
-     * Annule un trajet et rembourse le conducteur
+     * Annule un trajet
      */
     public function annuler()
     {
@@ -392,10 +392,7 @@ class TrajetsController extends AppController
         }
         
         // Verify Status - only non-cancelled trips?
-        // Let's assume we can cancel if not already cancelled.
-        // DML: 1=annulé
         if ($trajet->statut == 'annulé') { 
-            // Already cancelled
             header('Location: index.php?p=utilisateurs.profile.index');
             exit;
         }
@@ -410,46 +407,40 @@ class TrajetsController extends AppController
              exit;
         }
         
-        // 1. Update Status to 'annulé' (statut_covoiturage_id = 1)
-        $this->Trajet->update($covoiturage_id, ['statut_covoiturage_id' => 1]);
+        // 1. Execute Cancellation (Status Update, Refund, Notify)
+        $result = $this->Covoiturage->cancelTrip($covoiturage_id, $utilisateur_id);
         
-        // 2. Refund credits (2)
-        $this->loadModel('Utilisateur');
-        // Need a method to ADD credit. 
-        // UtilisateurModel has `deduireCredit`. I should probably duplicate it for adding or just use sql update.
-        // Creating addCredit method is cleaner.
-        // For now, I will use raw query via Model if needed or add method.
-        // Wait, deduireCredit logic: credit = credit - X.
-        // I'll add `ajouterCredit` to TrajetsController via ad-hoc query or update Model.
-        // Ideally update Model. I'll do it in next step. For now I'll add placeholder.
-        $this->Utilisateur->query("UPDATE utilisateur SET credit = credit + 2 WHERE utilisateur_id = ?", [$utilisateur_id]);
-        
-        // 3. Notify Participants
-        // Get participants
-        $participations = $this->Covoiturage->query(
-            "SELECT u.email, u.pseudo 
-             FROM participe p 
-             JOIN utilisateur u ON p.utilisateur_id = u.utilisateur_id 
-             WHERE p.covoiturage_id = ?", 
-            [$covoiturage_id]
-        );
-        
-        if ($participations) {
-            foreach ($participations as $participant) {
-                // Send Email (simulated)
-                $msg = "Bonjour {$participant->pseudo}, le trajet {$trajet->lieu_depart}-{$trajet->lieu_arrivee} du {$trajet->date_depart} a été annulé par le conducteur.";
-                file_put_contents(ROOT . '/log/email_debug.txt', date('Y-m-d H:i:s'). " - SEND EMAIL to {$participant->email}: $msg\n", FILE_APPEND);
+        // 2. Send Emails via Service
+        if ($result && !empty($result['participants'])) {
+            require_once ROOT . '/app/Service/Mailer.php';
+            $mailer = new \NsAppEcoride\Service\Mailer();
+            
+            $trip = $result['trip'];
+            foreach ($result['participants'] as $participant) {
+                // Formatting Date
+                $dateFormatted = date('d/m/Y', strtotime($trip->date_depart));
+                
+                $subject = "Annulation de votre trajet EcoRide";
+                $body = "
+                    <h1>Trajet Annulé</h1>
+                    <p>Bonjour {$participant->pseudo},</p>
+                    <p>Nous vous informons que le trajet <strong>{$trip->lieu_depart} - {$trip->lieu_arrivee}</strong> prévu le <strong>{$dateFormatted}</strong> a été annulé par le conducteur.</p>
+                    <p>Nous vous prions de nous excuser pour la gêne occasionnée.</p>
+                    <br>
+                    <p>L'équipe EcoRide</p>
+                ";
+                
+                $mailer->send($participant->email, $subject, $body);
             }
         }
         
-        $_SESSION['flash_message'] = "Trajet annulé. Crédits remboursés.";
+        $_SESSION['flash_message'] = "Trajet annulé. Crédits remboursés. Les passagers ont été notifiés.";
         $_SESSION['flash_type'] = "success";
         
         header('Location: index.php?p=utilisateurs.profile.index');
         exit;
     }
 
-    // --- Private Helpers ---
 
     private function applyFilters($covoiturages, $filters)
     {

@@ -55,64 +55,64 @@ INSERT INTO `role` (`libelle`) VALUES
 -- -----------------------------------------------------
 
 -- Utilisateur ID 1 : Rôle Chauffeur (1)
-INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (1, 'Dupont', 'Alice', 'alice.d@mail.fr', 'pwd1', '0601010101', '12 Rue de Paris, Paris', '1985-05-12', 'Alice1', 1, 20);
+INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`) 
+VALUES (1, 'Dupont', 'Alice', 'alice.d@mail.fr', 'pwd1', '0601010101', '12 Rue de Paris, Paris', '1985-05-12', 'Alice1', 1);
 
 -- Utilisateur ID 2 : Rôle Chauffeur (1)
-INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (2, 'Durand', 'Bob', 'bob.d@mail.fr', 'pwd2', '0602020202', '5 Av. de Lyon, Lyon', '1988-03-20', 'Bob2', 1, 20);
+INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`) 
+VALUES (2, 'Durand', 'Bob', 'bob.d@mail.fr', 'pwd2', '0602020202', '5 Av. de Lyon, Lyon', '1988-03-20', 'Bob2', 1);
 
 -- Utilisateur ID 3 : Rôle Chauffeur (1)
-INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (3, 'Leroy', 'Cecile', 'cecile.l@mail.fr', 'pwd3', '0603030303', '8 Bd. de la Mer, Nice', '1990-11-02', 'Cecile3', 1, 20);
+INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`) 
+VALUES (3, 'Leroy', 'Cecile', 'cecile.l@mail.fr', 'pwd3', '0603030303', '8 Bd. de la Mer, Nice', '1990-11-02', 'Cecile3', 1);
 
 -- Utilisateur ID 4 : Rôle Chauffeur (1)
-INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (4, 'Morel', 'David', 'david.m@mail.fr', 'pwd4', '0604040404', '3 Rue du Port, Nantes', '1982-07-15', 'David4', 1, 20);
+INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`) 
+VALUES (4, 'Morel', 'David', 'david.m@mail.fr', 'pwd4', '0604040404', '3 Rue du Port, Nantes', '1982-07-15', 'David4', 1);
 
 -- Utilisateur ID 5 : Rôle Chauffeur (1)
-INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (5, 'Simon', 'Eva', 'eva.s@mail.fr', 'pwd5', '0605050505', '10 Pl. du Capitole, Toulouse', '1995-01-22', 'Eva5', 1, 60);
+INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`) 
+VALUES (5, 'Simon', 'Eva', 'eva.s@mail.fr', 'pwd5', '0605050505', '10 Pl. du Capitole, Toulouse', '1995-01-22', 'Eva5', 1);
 
 -- Utilisateur ID 6 : Rôle Passager (2)
-INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (6, 'Laurent', 'Frank', 'frank.l@mail.fr', 'pwd6', '0706060606', '1 Pl. de Lille, Lille', '1992-09-10', 'Frank6', 2, 20);
+INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`) 
+VALUES (6, 'Laurent', 'Frank', 'frank.l@mail.fr', 'pwd6', '0706060606', '1 Pl. de Lille, Lille', '1992-09-10', 'Frank6', 2);
 
 -- Utilisateur ID 7 : Rôle Passager (2)
-INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (7, 'Lefebvre', 'Gina', 'gina.l@mail.fr', 'pwd7', '0707070707', '22 Av. Verte, Bordeaux', '1998-04-30', 'Gina7', 2, 25);
+INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`) 
+VALUES (7, 'Lefebvre', 'Gina', 'gina.l@mail.fr', 'pwd7', '0707070707', '22 Av. Verte, Bordeaux', '1998-04-30', 'Gina7', 2);
 
 -- Utilisateur ID 8 : Rôle Passager (2)
-INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (8, 'Michel', 'Hugo', 'hugo.m@mail.fr', 'pwd8', '0708080808', '4 Rue de l''Est, Strasbourg', '2000-12-05', 'Hugo8', 2, 15);
+INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`) 
+VALUES (8, 'Michel', 'Hugo', 'hugo.m@mail.fr', 'pwd8', '0708080808', '4 Rue de l''Est, Strasbourg', '2000-12-05', 'Hugo8', 2);
 
 -- Utilisateur ID 9 : Rôle Passager (2)
-INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (9, 'Garcia', 'Ingrid', 'ingrid.g@mail.fr', 'pwd9', '0709090909', '9 Bd. Sud, Marseille', '1993-02-14', 'Ingrid9', 2, 30);
+INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`) 
+VALUES (9, 'Garcia', 'Ingrid', 'ingrid.g@mail.fr', 'pwd9', '0709090909', '9 Bd. Sud, Marseille', '1993-02-14', 'Ingrid9', 2);
 
 -- Utilisateur ID 10 : Rôle Passager (2)
-INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (10, 'Bertrand', 'Jules', 'jules.b@mail.fr', 'pwd10', '0710101010', '15 Rue du Lac, Annecy', '1997-06-18', 'Jules10', 2, 22);
+INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`) 
+VALUES (10, 'Bertrand', 'Jules', 'jules.b@mail.fr', 'pwd10', '0710101010', '15 Rue du Lac, Annecy', '1997-06-18', 'Jules10', 2);
 
 -- Utilisateur ID 11 : Rôle Chauffeur-Passager (3)
-INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (11, 'Roux', 'Karine', 'karine.r@mail.fr', 'pwd11', '0611111111', '1 Pl. Royale, Reims', '1989-10-25', 'Karine11', 3, 100);
+INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`) 
+VALUES (11, 'Roux', 'Karine', 'karine.r@mail.fr', 'pwd11', '0611111111', '1 Pl. Royale, Reims', '1989-10-25', 'Karine11', 3);
 
 -- Utilisateur ID 12 : Rôle Chauffeur-Passager (3)
-INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (12, 'Vincent', 'Louis', 'louis.v@mail.fr', 'pwd12', '0612121212', '3 Rue de la Paix, Paris', '1986-08-12', 'Louis12', 3, 90);
+INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`) 
+VALUES (12, 'Vincent', 'Louis', 'louis.v@mail.fr', 'pwd12', '0612121212', '3 Rue de la Paix, Paris', '1986-08-12', 'Louis12', 3);
 
 -- Utilisateur ID 13 : Rôle Chauffeur-Passager (3)
-INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (13, 'Fournier', 'Manon', 'manon.f@mail.fr', 'pwd13', '0613131313', '10 Av. Foch, Metz', '1994-03-01', 'Manon13', 3, 110);
+INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`) 
+VALUES (13, 'Fournier', 'Manon', 'manon.f@mail.fr', 'pwd13', '0613131313', '10 Av. Foch, Metz', '1994-03-01', 'Manon13', 3);
 
 -- Utilisateur ID 14 : Rôle Chauffeur-Passager (3)
-INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (14, 'Moreau', 'Nicolas', 'nicolas.m@mail.fr', 'pwd14', '0614141414', '88 Bd. Central, Lyon', '1991-05-30', 'Nicolas14', 3, 85);
+INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`) 
+VALUES (14, 'Moreau', 'Nicolas', 'nicolas.m@mail.fr', 'pwd14', '0614141414', '88 Bd. Central, Lyon', '1991-05-30', 'Nicolas14', 3);
 
 -- Utilisateur ID 15 : Rôle Chauffeur-Passager (3)
-INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (15, 'Girard', 'Ophelie', 'ophelie.g@mail.fr', 'pwd15', '0615151515', '2 Pl. Bellecour, Lyon', '1999-11-15', 'Ophelie15', 3, 95);
+INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`) 
+VALUES (15, 'Girard', 'Ophelie', 'ophelie.g@mail.fr', 'pwd15', '0615151515', '2 Pl. Bellecour, Lyon', '1999-11-15', 'Ophelie15', 3);
 
 
 -- -----------------------------------------------------

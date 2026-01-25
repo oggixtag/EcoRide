@@ -241,21 +241,32 @@ class US10Test extends TestCase
         $tomorrow = date('Y-m-d', strtotime('+1 day'));
         $tripId = $this->createTrip($carId, $tomorrow);
         
-        // 3. Simulate Cancellation Logic
-        // Since we can't call Controller methods directly easily (they use header/exit), 
-        // we will manually execute the logic steps to verify the DB interactions work as expected.
+        // 3. Create Passenger and Participation (for Email Test)
+        $passengerId = $this->createUser(2);
+        $this->createParticipation($passengerId, $tripId);
         
-        // A. Update Status
-        $this->db->prepare("UPDATE covoiturage SET statut_covoiturage_id = 1 WHERE covoiturage_id = ?", [$tripId]);
+        // Clear log file before test
+        $logFile = __DIR__ . '/../../log/email_debug.txt';
+        file_put_contents($logFile, '');
+
+        // 4. Execute Cancellation via Model
+        $covoiturageModel = new \NsAppEcoride\Model\CovoiturageModel($this->db);
+        $result = $covoiturageModel->cancelTrip($tripId, $driverId);
         
-        // B. Refund Credit (+2)
-        $this->db->prepare("UPDATE utilisateur SET credit = credit + 2 WHERE utilisateur_id = ?", [$driverId]);
-        
-        // 4. Verify
+        // 5. Verify DB Updates
         $trip = $this->db->prepare("SELECT * FROM covoiturage WHERE covoiturage_id = ?", [$tripId], null, true);
         $user = $this->db->prepare("SELECT * FROM utilisateur WHERE utilisateur_id = ?", [$driverId], null, true);
         
         $this->assertEquals(1, $trip->statut_covoiturage_id);
         $this->assertEquals(22, $user->credit); // 20 start + 2 refund
+
+        // 6. Verify Return Data (Notification Info)
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('participants', $result);
+        $this->assertNotEmpty($result['participants']);
+        // Verify we have the correct participant by email (since user_id is not selected)
+        $this->assertStringContainsString('TestUser_', $result['participants'][0]->email);
+        // Note: getParticipants returns objects with email/pseudo, verify count
+        $this->assertCount(1, $result['participants']);
     }
 }

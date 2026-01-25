@@ -4,3 +4,8 @@ Emails envoyés aux participants :
  - alice.d@mail.fr (Alice1)
 Lien de validation : localhost/EcoRide/public/index.php?p=participant.validate&covoiturage_id=23
 --------------------------------------------------
+2026-01-25 23:11:57 - Covoiturage 11 terminé.
+Emails envoyés aux participants :
+ - jules.b@mail.fr (Jules10)
+Lien de validation : localhost/EcoRide/public/index.php?p=participant.validate&covoiturage_id=11
+--------------------------------------------------

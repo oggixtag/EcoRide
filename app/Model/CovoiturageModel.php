@@ -302,4 +302,33 @@ class CovoiturageModel extends Model
             [$covoiturage_id]
         );
     }
+    /**
+     * Annule un covoiturage, rembourse le conducteur et retourne les infos pour notification
+     * @param int $covoiturage_id
+     * @param int $driver_id
+     * @return array|bool
+     */
+    public function cancelTrip($covoiturage_id, $driver_id)
+    {
+        // 1. Update Status to 'annulé' (1)
+        $this->query(
+            "UPDATE covoiturage SET statut_covoiturage_id = 1 WHERE covoiturage_id = ?",
+            [$covoiturage_id]
+        );
+
+        // 2. Refund credits (2) to driver
+        $this->query(
+            "UPDATE utilisateur SET credit = credit + 2 WHERE utilisateur_id = ?",
+            [$driver_id]
+        );
+
+        // 3. Prepare Notification Data
+        $trip = $this->find($covoiturage_id);
+        $participants = $this->getParticipants($covoiturage_id);
+
+        return [
+            'trip' => $trip,
+            'participants' => $participants
+        ];
+    }
 }
