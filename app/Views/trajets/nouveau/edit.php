@@ -1,7 +1,25 @@
-<section class="presentation-section">
     <div class="presentation-content">
-        <div class="dashboard-header" style="background: none; color: inherit; padding: 0; box-shadow: none;">
+        <div class="dashboard-header" style="background: none; color: inherit; padding: 0; box-shadow: none; display: flex; justify-content: space-between; align-items: center;">
+             <!-- Bouton Démarrer (visible si prévu(2) ou confirmé(3)) -->
+            <?php if (in_array($trajet->statut_covoiturage_id, [2, 3])): ?>
+                <form action="index.php?p=covoiturages.start" method="POST" style="display:inline;">
+                    <input type="hidden" name="covoiturage_id" value="<?= $trajet->covoiturage_id ?>">
+                    <button type="submit" class="btn btn-success" style="margin-right: 15px;">Démarrer covoiturage</button>
+                </form>
+            <?php 
+            // Bouton Arrivée (visible si en_cours(4))
+             elseif ($trajet->statut_covoiturage_id == 4): ?>
+                <form action="index.php?p=covoiturages.stop" method="POST" style="display:inline;">
+                    <input type="hidden" name="covoiturage_id" value="<?= $trajet->covoiturage_id ?>">
+                    <button type="submit" class="btn btn-info" style="margin-right: 15px;">Arrivée à destination</button>
+                </form>
+            <?php else: ?>
+                <div style="width: 1px;"></div> <!-- Spacer si pas de bouton -->
+            <?php endif; ?>
+
             <h1>Modifier le trajet</h1>
+            
+            <a href="index.php?p=utilisateurs.profile.index" class="btn btn-secondary">Retour au profil</a>
         </div>
     </div>
 </section>
@@ -81,8 +99,7 @@
 
             <div class="form-buttons">
                 <button type="submit" class="btn btn-primary">Enregistrer</button>
-                <button type="button" class="btn btn-danger" onclick="confirmCancel()">Annuler ce trajet</button>
-                <a href="index.php?p=utilisateurs.profile.index" class="btn btn-secondary">Retour au profil</a>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete()">Supprimer</button>
             </div>
         </form>
 

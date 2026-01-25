@@ -7,6 +7,7 @@
 -- Nettoyage 
 DELETE FROM `preference`;
 DELETE FROM `avis`;
+DELETE FROM `avis_covoiturage`;
 DELETE FROM `participe`;
 DELETE FROM `covoiturage`;
 DELETE FROM `voiture`;
@@ -28,6 +29,7 @@ ALTER TABLE `covoiturage` AUTO_INCREMENT = 1;
 ALTER TABLE `participe` AUTO_INCREMENT = 1;
 ALTER TABLE `preference` AUTO_INCREMENT = 1;
 ALTER TABLE `avis` AUTO_INCREMENT = 1;
+ALTER TABLE `avis_covoiturage` AUTO_INCREMENT = 1;
 ALTER TABLE `statut_covoiturage` AUTO_INCREMENT = 1;
 ALTER TABLE `statut_avis` AUTO_INCREMENT = 1;
 ALTER TABLE `statut_mail` AUTO_INCREMENT = 1;
@@ -54,19 +56,19 @@ INSERT INTO `role` (`libelle`) VALUES
 
 -- Utilisateur ID 1 : Rôle Chauffeur (1)
 INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (1, 'Dupont', 'Alice', 'alice.d@mail.fr', 'pwd1', '0601010101', '12 Rue de Paris, Paris', '1985-05-12', 'Alice1', 1, 50);
+VALUES (1, 'Dupont', 'Alice', 'alice.d@mail.fr', 'pwd1', '0601010101', '12 Rue de Paris, Paris', '1985-05-12', 'Alice1', 1, 20);
 
 -- Utilisateur ID 2 : Rôle Chauffeur (1)
 INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (2, 'Durand', 'Bob', 'bob.d@mail.fr', 'pwd2', '0602020202', '5 Av. de Lyon, Lyon', '1988-03-20', 'Bob2', 1, 40);
+VALUES (2, 'Durand', 'Bob', 'bob.d@mail.fr', 'pwd2', '0602020202', '5 Av. de Lyon, Lyon', '1988-03-20', 'Bob2', 1, 20);
 
 -- Utilisateur ID 3 : Rôle Chauffeur (1)
 INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (3, 'Leroy', 'Cecile', 'cecile.l@mail.fr', 'pwd3', '0603030303', '8 Bd. de la Mer, Nice', '1990-11-02', 'Cecile3', 1, 75);
+VALUES (3, 'Leroy', 'Cecile', 'cecile.l@mail.fr', 'pwd3', '0603030303', '8 Bd. de la Mer, Nice', '1990-11-02', 'Cecile3', 1, 20);
 
 -- Utilisateur ID 4 : Rôle Chauffeur (1)
 INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
-VALUES (4, 'Morel', 'David', 'david.m@mail.fr', 'pwd4', '0604040404', '3 Rue du Port, Nantes', '1982-07-15', 'David4', 1, 30);
+VALUES (4, 'Morel', 'David', 'david.m@mail.fr', 'pwd4', '0604040404', '3 Rue du Port, Nantes', '1982-07-15', 'David4', 1, 20);
 
 -- Utilisateur ID 5 : Rôle Chauffeur (1)
 INSERT INTO `utilisateur` (`utilisateur_id`, `nom`, `prenom`, `email`, `password`, `telephone`, `adresse`, `date_naissance`, `pseudo`, `role_id`, `credit`) 
@@ -135,7 +137,9 @@ INSERT INTO `marque` (`libelle`) VALUES
 INSERT INTO `statut_covoiturage` (`libelle`) VALUES
 ('annulé'),
 ('prévu'),
-('confirmé');
+('confirmé'),
+('en_cours'),
+('terminé');
 
 
 -- -----------------------------------------------------
@@ -172,7 +176,6 @@ INSERT INTO `note` (`libelle`) VALUES
 -- 6. -- Insertion initiale dans la table `voiture`
 -- -----------------------------------------------------
 
-
 INSERT INTO `voiture` (`voiture_id`, `modele`, `immatriculation`, `energie`, `couleur`, `date_premiere_immatriculation`, `marque_id`, `utilisateur_id`)  VALUES
 (1, 'Clio V', 'AA-101-BB', 'Essence', 'Rouge', '2020-01-20', 1, 1),			-- Voiture ID 1 : Marque Renault (1) appartenant à Alice1 (ID 1) 
 (2, '208', 'CC-202-DD', 'Diesel', 'Bleu', '2019-06-10', 2, 2),				-- Voiture ID 2 : Marque Peugeot (2) appartenant à Bob2 (ID 2)
@@ -202,69 +205,71 @@ VALUES (14, 'C4 Cactus', 'AB-414-CD', 'Diesel', 'Jaune', 6, 4);
 INSERT INTO `voiture` (`voiture_id`, `modele`, `immatriculation`, `energie`, `couleur`, `marque_id`, `utilisateur_id`) 
 VALUES (15, 'X3', 'EF-515-GH', 'Essence', 'Noir', 7, 5);
 
+
 -- -----------------------------------------------------
 -- 7. -- Insertion initiale dans la table `covoiturage`
 -- -----------------------------------------------------
 
 -- Covoiturage 1 : Voiture ID 1, Statut prévu (2). Créé par Alice1
-INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
-VALUES (1, '2026-06-01', '08:00', 'Paris', '2026-06-01', '12:30', 'Lyon', 2, 3, 25.50, 1);
+INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `avis_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
+VALUES (1, '2026-06-01', '08:00', 'Paris', '2026-06-01', '12:30', 'Lyon', 2, NULL, 3, 25.50, 1);
 
 -- Covoiturage 2 : Voiture ID 2, Statut confirmé (3). Créé par Bob2
-INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
-VALUES (2, '2026-06-02', '09:30', 'Lyon', '2026-06-02', '13:00', 'Marseille', 3, 2, 18.00, 2);
+INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `avis_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
+VALUES (2, '2026-06-02', '09:30', 'Lyon', '2026-06-02', '13:00', 'Marseille', 3, NULL, 2, 18.00, 2);
 
 -- Covoiturage 3 : Voiture ID 3, Statut prévu (2). Créé par Cecile3
-INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
-VALUES (3, '2026-06-03', '14:00', 'Nice', '2026-06-03', '15:30', 'Antibes', 2, 4, 8.00, 3);
+INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `avis_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
+VALUES (3, '2026-06-03', '14:00', 'Nice', '2026-06-03', '15:30', 'Antibes', 2, NULL, 4, 8.00, 3);
 
 -- Covoiturage 4 : Voiture ID 4, Statut prévu (2). Créé par David4
-INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
-VALUES (4, '2026-06-04', '07:15', 'Nantes', '2026-06-04', '11:45', 'Bordeaux', 2, 3, 22.00, 4);
+INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `avis_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
+VALUES (4, '2026-06-04', '07:15', 'Nantes', '2026-06-04', '11:45', 'Bordeaux', 2, NULL, 3, 22.00, 4);
 
 -- Covoiturage 5 : Voiture ID 5, Statut confirmé (3). Créé par Eva5
-INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
-VALUES (5, '2026-06-05', '10:00', 'Toulouse', '2026-06-05', '14:30', 'Montpellier', 3, 3, 19.50, 5);
+INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `avis_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
+VALUES (5, '2026-06-05', '10:00', 'Toulouse', '2026-06-05', '14:30', 'Montpellier', 3, NULL, 3, 19.50, 5);
 
 -- Covoiturage 6 : Voiture ID 6, Statut prévu (2). Créé par Karine11
-INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
-VALUES (6, '2026-06-06', '06:45', 'Reims', '2026-06-06', '08:30', 'Paris', 2, 4, 15.00, 6);
+INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `avis_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
+VALUES (6, '2026-06-06', '06:45', 'Reims', '2026-06-06', '08:30', 'Paris', 2, NULL, 4, 15.00, 6);
 
 -- Covoiturage 7 : Voiture ID 7, Statut confirmé (3). Créé par Louis12
-INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
-VALUES (7, '2026-06-07', '18:20', 'Paris', '2026-06-07', '21:00', 'Lille', 3, 2, 28.00, 7);
+INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `avis_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
+VALUES (7, '2026-06-07', '18:20', 'Paris', '2026-06-07', '21:00', 'Lille', 3, NULL, 2, 28.00, 7);
 
 -- Covoiturage 8 : Voiture ID 8, Statut prévu (2). Créé par Manon13
-INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
-VALUES (8, '2026-06-08', '08:00', 'Metz', '2026-06-08', '09:45', 'Nancy', 2, 3, 10.00, 8);
+INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `avis_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
+VALUES (8, '2026-06-08', '08:00', 'Metz', '2026-06-08', '09:45', 'Nancy', 2, NULL, 3, 10.00, 8);
 
 -- Covoiturage 9 : Voiture ID 9, Statut confirmé (3). Créé par Nicolas14
-INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
-VALUES (9, '2026-06-09', '11:30', 'Lyon', '2026-06-09', '16:00', 'Grenoble', 3, 4, 12.00, 9);
+INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `avis_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
+VALUES (9, '2026-06-09', '11:30', 'Lyon', '2026-06-09', '16:00', 'Grenoble', 3, NULL, 4, 12.00, 9);
 
 -- Covoiturage 10 : Voiture ID 10, Statut annulé (1). Créé par Ophelie15
-INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
-VALUES (10, '2026-06-10', '07:00', 'Saint-Étienne', '2026-06-10', '08:15', 'Lyon', 1, 3, 7.50, 10);
+INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `avis_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
+VALUES (10, '2026-06-10', '07:00', 'Saint-Étienne', '2026-06-10', '08:15', 'Lyon', 1, NULL, 3, 7.50, 10);
 
 -- Covoiturage 11 : Voiture ID 1, Statut prévu (2). Créé par Alice1
-INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
-VALUES (11, '2026-06-11', '13:00', 'Paris', '2026-06-11', '15:30', 'Orléans', 2, 3, 14.00, 1);
+INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `avis_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
+VALUES (11, '2026-06-11', '13:00', 'Paris', '2026-06-11', '15:30', 'Orléans', 2, NULL, 3, 14.00, 1);
 
 -- Covoiturage 12 : Voiture ID 2, Statut confirmé (3). Créé par Bob2
-INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
-VALUES (12, '2026-06-12', '05:30', 'Lyon', '2026-06-12', '10:00', 'Toulouse', 3, 2, 45.00, 2);
+INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `avis_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
+VALUES (12, '2026-06-12', '05:30', 'Lyon', '2026-06-12', '10:00', 'Toulouse', 3, NULL, 2, 45.00, 2);
 
 -- Covoiturage 13 : Voiture ID 3, Statut prévu (2). Créé par Cecile3
-INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
-VALUES (13, '2026-06-13', '09:15', 'Antibes', '2026-06-13', '10:00', 'Cannes', 2, 3, 5.00, 3);
+INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `avis_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
+VALUES (13, '2026-06-13', '09:15', 'Antibes', '2026-06-13', '10:00', 'Cannes', 2, NULL, 3, 5.00, 3);
 
 -- Covoiturage 14 : Voiture ID 4, Statut prévu (2). Créé par David4
-INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
-VALUES (14, '2026-06-14', '08:00', 'Bordeaux', '2026-06-14', '11:00', 'Anglet', 2, 2, 19.00, 4);
+INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `avis_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
+VALUES (14, '2026-06-14', '08:00', 'Bordeaux', '2026-06-14', '11:00', 'Anglet', 2, NULL, 2, 19.00, 4);
 
 -- Covoiturage 15 : Voiture ID 5, Statut confirmé (3). Créé par Eva5
-INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
-VALUES (15, '2026-06-15', '16:45', 'Montpellier', '2026-06-15', '18:15', 'Narbonne', 3, 3, 11.00, 5);
+INSERT INTO `covoiturage` (`covoiturage_id`, `date_depart`, `heure_depart`, `lieu_depart`, `date_arrivee`, `heure_arrivee`, `lieu_arrivee`, `statut_covoiturage_id`, `avis_covoiturage_id`, `nb_place`, `prix_personne`, `voiture_id`) 
+VALUES (15, '2026-06-15', '16:45', 'Montpellier', '2026-06-15', '18:15', 'Narbonne', 3, NULL, 3, 11.00, 5);
+
 
 -- -----------------------------------------------------
 -- 8. -- Insertion initiale dans la table `participe`
@@ -300,6 +305,7 @@ INSERT INTO `participe` (`utilisateur_id`, `covoiturage_id`) VALUES (13, 14);
 INSERT INTO `participe` (`utilisateur_id`, `covoiturage_id`) VALUES (14, 15);
 -- Ophelie15 (ID 15) participe au trajet 1
 INSERT INTO `participe` (`utilisateur_id`, `covoiturage_id`) VALUES (15, 1);
+
 
 -- -----------------------------------------------------
 -- 9. -- Insertion initiale dans la table `avis`
@@ -364,6 +370,15 @@ VALUES (14, 'Excellent!', 5, 2, 9);
 -- Note 5 (Très content), Statut 1 (publié). Déposé par Jules10 (ID 10)
 INSERT INTO `avis` (`avis_id`, `commentaire`, `note_id`, `statut_avis_id`, `utilisateur_id`) 
 VALUES (15, 'Rien à redire.', 5, 1, 10);
+
+
+-- -----------------------------------------------------
+-- 10. -- Insertion initiale dans la table `avis_covoiturage`
+-- -----------------------------------------------------
+
+INSERT INTO `avis_covoiturage` (`libelle`) VALUES
+('s’est bien passé'),
+('s’est mal passé');
 
 
 -- -----------------------------------------------------
