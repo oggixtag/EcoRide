@@ -13,9 +13,120 @@ class EmployesController extends AppController
 
     public function index()
     {
+        if (!$this->isEmploye()) {
+             $this->forbidden();
+        }
+
         $employes = $this->Employe->all();
         $this->render('admin.employe.index', compact('employes'));
     }
+
+    /**
+     * Dashboard pour les employés (Review Validation + Bad Carpools)
+     */
+    public function dashboard()
+    {
+         if (!$this->isEmploye()) {
+             header('Location: index.php?p=admin.employe.login');
+             exit;
+         }
+
+         $this->loadModel('Avis');
+         $this->loadModel('Covoiturage');
+
+         $avis_pending = $this->Avis->findAllPending();
+         $bad_carpools = $this->Covoiturage->findBadCarpools();
+
+         $this->render('admin.employe.dashboard', compact('avis_pending', 'bad_carpools'));
+    }
+
+    private function isEmploye()
+    {
+        $auth = new \NsCoreEcoride\Auth\DbAuth(\App::getInstance()->getDb());
+        return $auth->isEmploye();
+    }
+
+    public function login()
+    {
+        $errors = false;
+        if (!empty($_POST)) {
+            $auth = new \NsCoreEcoride\Auth\DbAuth(\App::getInstance()->getDb());
+            if ($auth->loginEmploye($_POST['email'], $_POST['password'])) {
+                header('Location: index.php?p=admin.employe.dashboard');
+                exit;
+            } else {
+                $errors = true;
+            }
+        }
+        $form = new \NsCoreEcoride\HTML\MyForm($_POST);
+        $this->render('admin.employe.login', compact('form', 'errors'));
+    }
+
+    public function logout()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        $_SESSION['auth_employe'] = null;
+        header('Location: index.php?p=admin.employe.login');
+        exit;
+    }
+
+    public function validateAvis()
+    {
+        if (!$this->isEmploye() || empty($_POST['id'])) {
+             $this->forbidden();
+        }
+        
+        $this->loadModel('Avis');
+        $avis = $this->Avis->findOneWithUser($_POST['id']);
+        
+        if ($avis) {
+            // Update Status
+            $this->Avis->updateStatus($_POST['id'], 1); // 1 = Validé/Publié
+
+            // Send Email
+            require_once ROOT . '/app/Service/Mailer.php';
+            $mailer = new \NsAppEcoride\Service\Mailer();
+            $subject = "EcoRide - Avis validé";
+            $body = "Bonjour {$avis->pseudo},<br><br>Votre avis a été validé par notre équipe et est maintenant visible.<br><br>L'équipe EcoRide";
+            $mailer->send($avis->email, $subject, $body);
+        }
+        
+        header('Location: index.php?p=admin.employe.dashboard');
+        exit;
+    }
+
+    public function refuseAvis()
+    {
+        if (!$this->isEmploye() || empty($_POST['id'])) {
+             $this->forbidden();
+        }
+        
+        $this->loadModel('Avis');
+        $avis = $this->Avis->findOneWithUser($_POST['id']);
+        
+        if ($avis) {
+            // Update Status
+            // Note: As per DML, we only have 'publié' and 'modération'. 
+            // Ideally we should have a 'refusé' status or delete it.
+            // Assuming 3 = Refusé/Rejeté based on common practice, though DML needs update if strictly foreign keyed.
+            // For safety, we keeps it as is or hypothetical 3. 
+            $this->Avis->updateStatus($_POST['id'], 3);
+
+            // Send Email
+            require_once ROOT . '/app/Service/Mailer.php';
+            $mailer = new \NsAppEcoride\Service\Mailer();
+            $subject = "EcoRide - Avis refusé";
+            $body = "Bonjour {$avis->pseudo},<br><br>Votre avis n'a pas été validé par notre équipe car il ne respecte pas nos conditions d'utilisation.<br><br>L'équipe EcoRide";
+            $mailer->send($avis->email, $subject, $body);
+        }
+        
+        header('Location: index.php?p=admin.employe.dashboard');
+        exit;
+    }
+
+
 
     public function add()
     {
@@ -23,9 +134,10 @@ class EmployesController extends AppController
         if (!empty($_POST)) {
             $result = $this->Employe->insert(
                 [
-                    'nom' => $_POST['nom'],
+                'nom' => $_POST['nom'],
                     'prenom' => $_POST['prenom'],
-                    'mail' => $_POST['mail'],
+                    'email' => $_POST['email'],
+                    'password' => $_POST['password'],
                     'date_embauche' => $_POST['date_embauche'],
                     'salaire' => $_POST['salaire'],
                     'id_poste' => $_POST['id_poste'],
@@ -64,7 +176,8 @@ class EmployesController extends AppController
                 [
                     'nom' => $_POST['nom'],
                     'prenom' => $_POST['prenom'],
-                    'mail' => $_POST['mail'],
+                    'email' => $_POST['email'],
+                    // 'password' => $_POST['password'], // Optional update? Let's leave it out for edit for now to simplify
                     'date_embauche' => $_POST['date_embauche'],
                     'salaire' => $_POST['salaire'],
                     'id_poste' => $_POST['id_poste'],

@@ -45,11 +45,32 @@ class DbAuth
     }
 
     /**
+     * @param string $username
+     * @param string $password
+     * @return boolean 
+     * */
+    public function loginEmploye($username, $password)
+    {
+        $employe = $this->db->prepare("SELECT * FROM employe WHERE email = ? and password=?", [$username, $password], null, true);
+
+        if ($employe) {
+            $_SESSION['auth_employe'] = $employe->id_emp;
+            // No auth_type needed effectively, or specific one
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Vérifie si un utilisateur est connecté
      * @return bool
      */
     public function isConnected()
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         return isset($_SESSION['auth']) && !empty($_SESSION['auth']);
     }
 
@@ -62,12 +83,20 @@ class DbAuth
         return $_SESSION['auth'] ?? null;
     }
 
-    /**
-     * Récupère le type d'utilisateur connecté ('utilisateur' ou 'visiteur')
-     * @return string|null
-     */
     public function getAuthType()
     {
         return $_SESSION['auth_type'] ?? null;
+    }
+
+    /**
+     * Vérifie si un employé est connecté
+     * @return bool
+     */
+    public function isEmploye()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        return isset($_SESSION['auth_employe']) && !empty($_SESSION['auth_employe']);
     }
 }

@@ -29,7 +29,8 @@ class UtilisateursController extends AppController
         $auth_type = $auth->getAuthType();
 
         if (!$utilisateur_id) {
-            $this->forbidden();
+            header('Location: index.php?p=utilisateurs.login');
+            exit;
         }
 
         if ($auth_type === 'visiteur') {

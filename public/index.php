@@ -124,11 +124,30 @@ elseif ($page === 'covoiturages.start') {
 } elseif ($page === 'covoiturages.stop') {
     $controller = new \NsAppEcoride\Controller\CovoituragesController();
     $controller->stop();
+} elseif ($page === 'covoiturages.stop') {
+    $controller = new \NsAppEcoride\Controller\CovoituragesController();
+    $controller->stop();
 } elseif ($page === 'participant.validate') {
     $controller = new \NsAppEcoride\Controller\ParticipantController();
     $controller->validate();
 } elseif ($page === 'participant.submitValidation') {
     $controller = new \NsAppEcoride\Controller\ParticipantController();
     $controller->submitValidation();
+// US12
+} elseif ($page === 'admin.employe.login') {
+    $controller = new \NsAppEcoride\Controller\Admin\EmployesController();
+    $controller->login();
+} elseif ($page === 'admin.employe.logout') {
+    $controller = new \NsAppEcoride\Controller\Admin\EmployesController();
+    $controller->logout();
+} elseif ($page === 'admin.employe.dashboard') {
+    $controller = new \NsAppEcoride\Controller\Admin\EmployesController();
+    $controller->dashboard();
+} elseif ($page === 'admin.employe.validateAvis') {
+    $controller = new \NsAppEcoride\Controller\Admin\EmployesController();
+    $controller->validateAvis();
+} elseif ($page === 'admin.employe.refuseAvis') {
+    $controller = new \NsAppEcoride\Controller\Admin\EmployesController();
+    $controller->refuseAvis();
 }
 

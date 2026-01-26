@@ -148,7 +148,8 @@ INSERT INTO `statut_covoiturage` (`libelle`) VALUES
 
 INSERT INTO `statut_avis` (`libelle`) VALUES
 ('publié'),
-('modération');
+('modération'),
+('refusé');
 
 
 -- -----------------------------------------------------
@@ -393,6 +394,6 @@ INSERT INTO `poste` (intitule, salaire_min, salaire_max) VALUES
 ('Admiinstrateur', 60000, 70000),
 ('Employe', 50000, 60000);
 
-INSERT INTO `employe` (nom, prenom, email, date_embauche, salaire, id_poste, id_dept, id_manager) VALUES
-('ndr', 'ndr', 'ndr@mail.com', '2019-09-01',65000, 1, 2, NULL), 	-- manager
-('Durand', 'Sophie', 'sophie.durand@mail.com', '2021-03-10', 42000, 2, 2, 1); -- Employe rattachés au manager
+INSERT INTO `employe` (nom, prenom, email, password, date_embauche, salaire, id_poste, id_dept, id_manager) VALUES
+('ndr', 'ndr', 'ndr@mail.com', 'pwd_admin', '2019-09-01',65000, 1, 2, NULL), 	-- manager
+('Durand', 'Sophie', 'sophie.durand@mail.com', 'pwd_sophie', '2021-03-10', 42000, 2, 2, 1); -- Employe rattachés au manager

@@ -331,4 +331,28 @@ class CovoiturageModel extends Model
             'participants' => $participants
         ];
     }
+
+    /**
+     * Finds carpools reported as "mal passé" (avis_covoiturage_id = 2)
+     * @return array
+     */
+    public function findBadCarpools()
+    {
+        return $this->query(
+            "SELECT 
+                c.covoiturage_id,
+                c.date_depart,
+                c.lieu_depart,
+                c.date_arrivee,
+                c.lieu_arrivee,
+                u_driver.pseudo as driver_pseudo,
+                u_driver.email as driver_email,
+                ac.libelle as motif
+             FROM covoiturage c
+             JOIN voiture v ON c.voiture_id = v.voiture_id
+             JOIN utilisateur u_driver ON v.utilisateur_id = u_driver.utilisateur_id
+             JOIN avis_covoiturage ac ON c.avis_covoiturage_id = ac.avis_covoiturage_id
+             WHERE c.avis_covoiturage_id = 2"
+        );
+    }
 }

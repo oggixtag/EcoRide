@@ -17,7 +17,8 @@ class AppController extends \NsAppEcoride\Controller\AppController
 
         $auth = new DbAuth($app->getDb());
 
-        if (!$auth->logged()) {
+        // Check if connected as Employee (since this is the Admin/Employee area)
+        if (!$auth->isEmploye() && isset($_GET['p']) && $_GET['p'] !== 'admin.employe.login') {
             $this->forbidden();
         }
     }

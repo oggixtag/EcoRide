@@ -284,6 +284,7 @@ CREATE TABLE IF NOT EXISTS `employe` (
     nom          VARCHAR(50)  NOT NULL,
     prenom       VARCHAR(50)  NOT NULL,
     email        VARCHAR(100) UNIQUE,
+    password     VARCHAR(50)  NOT NULL,
     date_embauche DATE        NOT NULL,
 	date_fin 	DATE        ,
     salaire      DECIMAL(10,2) NOT NULL,
