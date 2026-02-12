@@ -12,10 +12,9 @@
                 <?php endif; ?>
 
                 <form method="post">
-                    <?= $form->input('email', 'Email'); ?>
+                    <?= $form->input('pseudo', 'Pseudo'); ?>
                     <?= $form->input('password', 'Mot de passe', ['type' => 'password']); ?>
                     <button class="btn btn-primary btn-block">Se connecter</button>
-                    <!-- IMPORTANT: The previous design had btn-primary, ensure style_app.css defines it or use bootstrap -->
                 </form>
             </div>
         </div>

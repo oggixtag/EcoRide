@@ -2,32 +2,51 @@
 
 namespace NsAppEcoride\Controller\Admin;
 
+/**
+ * Contrôleur pour la gestion des employés.
+ * Gère le CRUD des employés, l'authentification et la validation des avis.
+ */
 class EmployesController extends AppController
 {
 
+    /**
+     * Constructeur du contrôleur employés.
+     * Initialise le modèle Employe.
+     * 
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
         $this->loadModel('Employe');
     }
 
+    /**
+     * Affiche la liste de tous les employés (sauf admin).
+     * Accessible uniquement aux employés connectés.
+     * 
+     * @return void Affiche la vue admin.employes.index
+     */
     public function index()
     {
         if (!$this->isEmploye()) {
              $this->forbidden();
         }
 
-        $employes = $this->Employe->all();
-        $this->render('admin.employe.index', compact('employes'));
+        $employes = $this->Employe->findAllWithoutAdmin();
+        $this->render('admin.employes.index', compact('employes'));
     }
 
     /**
-     * Dashboard pour les employés (Review Validation + Bad Carpools)
+     * Affiche le tableau de bord des employés.
+     * Contient les avis en attente de validation et les covoiturages problématiques.
+     * 
+     * @return void Affiche la vue admin.employes.dashboard
      */
     public function dashboard()
     {
          if (!$this->isEmploye()) {
-             header('Location: index.php?p=admin.employe.login');
+             header('Location: index.php?p=admin.employes.login');
              exit;
          }
 
@@ -37,41 +56,104 @@ class EmployesController extends AppController
          $avis_pending = $this->Avis->findAllPending();
          $bad_carpools = $this->Covoiturage->findBadCarpools();
 
-         $this->render('admin.employe.dashboard', compact('avis_pending', 'bad_carpools'));
+         $this->render('admin.employes.dashboard', compact('avis_pending', 'bad_carpools'));
     }
 
+    /**
+     * Vérifie si l'utilisateur courant est un employé connecté.
+     * 
+     * @return bool True si un employé est connecté, false sinon
+     */
     private function isEmploye()
     {
         $auth = new \NsCoreEcoride\Auth\DbAuth(\App::getInstance()->getDb());
-        return $auth->isEmploye();
+        return $auth->isEmploye() || $auth->isAdmin();
     }
 
+    /**
+     * Affiche la page de connexion et gère l'authentification des employés.
+     * Redirige vers le dashboard admin ou employé selon le poste.
+     * 
+     * @return void Affiche la vue admin.employes.login ou redirige après connexion
+     */
     public function login()
     {
         $errors = false;
         if (!empty($_POST)) {
             $auth = new \NsCoreEcoride\Auth\DbAuth(\App::getInstance()->getDb());
-            if ($auth->loginEmploye($_POST['email'], $_POST['password'])) {
-                header('Location: index.php?p=admin.employe.dashboard');
+            // loginEmploye() retourne l'id_poste (1=admin, 2=employe) ou false
+            $id_poste = $auth->loginEmploye($_POST['pseudo'], $_POST['password']);
+            
+            if ($id_poste !== false) {
+                session_write_close(); // S'assurer que la session est sauvegardée avant la redirection
+                
+                // Rediriger selon le poste de l'utilisateur qui vient de se connecter
+                if ($id_poste == 1) {
+                    // Administrateur
+                    header('Location: index.php?p=admin.dashboard');
+                } else {
+                    // Employé
+                    header('Location: index.php?p=admin.employes.dashboard');
+                }
                 exit;
             } else {
                 $errors = true;
             }
         }
-        $form = new \NsCoreEcoride\HTML\MyForm($_POST);
-        $this->render('admin.employe.login', compact('form', 'errors'));
+        // $form = new \NsCoreEcoride\Html\Form($_POST); // Namespace Html validé
+        $form = new \NsCoreEcoride\Html\Form($_POST);
+        $this->render('admin.employes.login', compact('form', 'errors'));
     }
 
+    /**
+     * Suspend un employé.
+     * 
+     * @return void Redirige vers la liste des employés
+     */
+    public function suspendre()
+    {
+        if (!empty($_POST['id'])) {
+             $this->Employe->suspendre($_POST['id']);
+        }
+        header('Location: index.php?p=admin.employes.index');
+    }
+
+    /**
+     * Réactive un employé précédemment suspendu.
+     * 
+     * @return void Redirige vers la liste des employés
+     */
+    public function reactiver()
+    {
+        if (!empty($_POST['id'])) {
+             $this->Employe->reactiver($_POST['id']);
+        }
+        header('Location: index.php?p=admin.employes.index');
+    }
+
+    /**
+     * Déconnecte l'employé.
+     * Efface seulement auth_employe sans toucher à auth_admin.
+     * 
+     * @return void Redirige vers la page de connexion employé
+     */
     public function logout()
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-        $_SESSION['auth_employe'] = null;
-        header('Location: index.php?p=admin.employe.login');
+        // Effacer seulement la session employé, ne pas toucher à auth_admin
+        unset($_SESSION['auth_employe']);
+        header('Location: index.php?p=admin.employes.login');
         exit;
     }
 
+    /**
+     * Valide un avis en attente.
+     * Met à jour le statut de l'avis et envoie un email de confirmation.
+     * 
+     * @return void Redirige vers le dashboard employé
+     */
     public function validateAvis()
     {
         if (!$this->isEmploye() || empty($_POST['id'])) {
@@ -82,10 +164,10 @@ class EmployesController extends AppController
         $avis = $this->Avis->findOneWithUser($_POST['id']);
         
         if ($avis) {
-            // Update Status
+            // Mettre à jour le statut
             $this->Avis->updateStatus($_POST['id'], 1); // 1 = Validé/Publié
 
-            // Send Email
+            // Envoyer l'email
             require_once ROOT . '/app/Service/Mailer.php';
             $mailer = new \NsAppEcoride\Service\Mailer();
             $subject = "EcoRide - Avis validé";
@@ -93,10 +175,16 @@ class EmployesController extends AppController
             $mailer->send($avis->email, $subject, $body);
         }
         
-        header('Location: index.php?p=admin.employe.dashboard');
+        header('Location: index.php?p=admin.employes.dashboard');
         exit;
     }
 
+    /**
+     * Refuse un avis en attente.
+     * Met à jour le statut de l'avis et envoie un email de notification.
+     * 
+     * @return void Redirige vers le dashboard employé
+     */
     public function refuseAvis()
     {
         if (!$this->isEmploye() || empty($_POST['id'])) {
@@ -107,14 +195,14 @@ class EmployesController extends AppController
         $avis = $this->Avis->findOneWithUser($_POST['id']);
         
         if ($avis) {
-            // Update Status
-            // Note: As per DML, we only have 'publié' and 'modération'. 
-            // Ideally we should have a 'refusé' status or delete it.
-            // Assuming 3 = Refusé/Rejeté based on common practice, though DML needs update if strictly foreign keyed.
-            // For safety, we keeps it as is or hypothetical 3. 
+            // Mettre à jour le statut
+            // Note : Selon le DML, nous n'avons que 'publié' et 'modération'.
+            // Idéalement, nous devrions avoir un statut 'refusé' ou le supprimer.
+            // En supposant que 3 = Refusé/Rejeté selon la pratique courante, bien que le DML doive être mis à jour si strictement lié par clé étrangère.
+            // Par sécurité, nous gardons cela tel quel ou utilisons un 3 hypothétique.
             $this->Avis->updateStatus($_POST['id'], 3);
 
-            // Send Email
+            // Envoyer l'email
             require_once ROOT . '/app/Service/Mailer.php';
             $mailer = new \NsAppEcoride\Service\Mailer();
             $subject = "EcoRide - Avis refusé";
@@ -122,12 +210,17 @@ class EmployesController extends AppController
             $mailer->send($avis->email, $subject, $body);
         }
         
-        header('Location: index.php?p=admin.employe.dashboard');
+        header('Location: index.php?p=admin.employes.dashboard');
         exit;
     }
 
 
 
+    /**
+     * Affiche le formulaire et traite l'ajout d'un nouvel employé.
+     * 
+     * @return void Affiche la vue admin.employes.add ou redirige après création
+     */
     public function add()
     {
         // si les données ont été passé en parametre, on le sauvegarde
@@ -136,6 +229,7 @@ class EmployesController extends AppController
                 [
                 'nom' => $_POST['nom'],
                     'prenom' => $_POST['prenom'],
+                    'pseudo' => $_POST['pseudo'],
                     'email' => $_POST['email'],
                     'password' => $_POST['password'],
                     'date_embauche' => $_POST['date_embauche'],
@@ -146,13 +240,8 @@ class EmployesController extends AppController
                 ]
             );
             if ($result) {
-                $this->index();
-
-                /*echo '<pre>';
-                var_dump('Admin.EmployesController.add().location admin.employe.edit..');
-                echo '</pre>';
-                Warning: Cannot modify header information - headers already sent by (output started at C:\xampp\htdocs\PHP POO\blog\app\App.php:103) in C:\xampp\htdocs\PHP POO\blog\app\Controller\Admin\PostsController.php on line 59
-                header('Location: admin.php?p=admin.employe.edit&id=' . $this->getlastInsertId());*/
+                header('Location: index.php?p=admin.employes.index');
+                exit;
             }
         }
 
@@ -160,13 +249,26 @@ class EmployesController extends AppController
         $departements = $this->Departement->extratList('id_dept', 'nom_dept');
 
         $this->loadModel('Poste');
-        $postes = $this->Poste->extratList('id_poste', 'intitule');
+        // Filtrer les postes pour n'afficher que les employés (non-admins)
+        $rawPostes = $this->Poste->getPosteEmploye(); 
+        $postes = [];
+        foreach($rawPostes as $p) {
+            $postes[$p->id_poste] = $p->intitule;
+        }
 
-        $form = new MyForm($_POST);
+        // Récupérer la liste des managers
+        $managers = $this->Employe->getManagersList();
 
-        $this->render('admin.employe.add', compact('employes', 'departements', 'postes', 'form'));
+        $form = new \NsCoreEcoride\Html\Form($_POST);
+
+        $this->render('admin.employes.add', compact('departements', 'postes', 'managers', 'form')); // managers passé en paramètre
     }
 
+    /**
+     * Affiche le formulaire et traite la modification d'un employé.
+     * 
+     * @return void Affiche la vue admin.employes.edit ou redirige après modification
+     */
     public function edit()
     {
         // si les données ont été passé en parametre, on le sauvegarde
@@ -176,8 +278,9 @@ class EmployesController extends AppController
                 [
                     'nom' => $_POST['nom'],
                     'prenom' => $_POST['prenom'],
+                    'pseudo' => $_POST['pseudo'],
                     'email' => $_POST['email'],
-                    // 'password' => $_POST['password'], // Optional update? Let's leave it out for edit for now to simplify
+                    // 'password' => $_POST['password'], // Mise à jour optionnelle ? On le laisse de côté pour l'édition pour le moment pour simplifier
                     'date_embauche' => $_POST['date_embauche'],
                     'salaire' => $_POST['salaire'],
                     'id_poste' => $_POST['id_poste'],
@@ -186,7 +289,8 @@ class EmployesController extends AppController
                 ]
             );
             if ($result) {
-                return $this->index();
+                header('Location: index.php?p=admin.employes.index');
+                exit;
             }
         }
 
@@ -196,13 +300,26 @@ class EmployesController extends AppController
         $departements = $this->Departement->extratList('id_dept', 'nom_dept');
 
         $this->loadModel('Poste');
-        $postes = $this->Poste->extratList('id_poste', 'intitule');
+        // Filtrer les postes pour n'afficher que les employés (non-admins)
+        $rawPostes = $this->Poste->getPosteEmploye(); 
+        $postes = [];
+        foreach($rawPostes as $p) {
+            $postes[$p->id_poste] = $p->intitule;
+        }
 
-        $form = new MyForm($employes);
+        // Récupérer la liste des managers
+        $managers = $this->Employe->getManagersList();
 
-        $this->render('admin.employe.edit', compact('employes', 'departements', 'postes', 'form'));
+        $form = new \NsCoreEcoride\Html\Form($employes);
+
+        $this->render('admin.employes.edit', compact('employes', 'departements', 'postes', 'managers', 'form'));
     }
 
+    /**
+     * Supprime un employé de la base de données.
+     * 
+     * @return void Redirige vers la liste des employés ou affiche l'index
+     */
     public function delete()
     {
         if (!empty($_POST)) {

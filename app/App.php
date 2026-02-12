@@ -3,16 +3,26 @@
 use NsCoreEcoride\Config;
 use NsCoreEcoride\Database\MysqlDatabase;
 
+/**
+ * Classe principale de l'application EcoRide.
+ * Implémente le pattern Singleton pour fournir un point d'accès unique
+ * aux services de l'application (base de données, modèles).
+ */
 class App
 {
 
-    // pour instancier la classe App
+    /** @var App|null Instance unique de la classe App (Singleton) */
     private static $_instance;
 
-    // pour instancier la classe Config
+    /** @var MysqlDatabase|null Instance de connexion à la base de données */
     private $db_instance;
 
-    // Methode pour rendre la classe App en singleton.
+    /**
+     * Récupère l'instance unique de l'application (Singleton).
+     * Crée l'instance si elle n'existe pas encore.
+     * 
+     * @return App Instance unique de l'application
+     */
     public static function getInstance()
     {
         if (is_null(self::$_instance)) {
@@ -22,7 +32,12 @@ class App
         return self::$_instance;
     }
 
-    // 
+    /**
+     * Charge et initialise l'application.
+     * Démarre la session, enregistre les autoloaders et charge les dépendances.
+     * 
+     * @return void
+     */
     public static function load()
     {
         session_start();
@@ -37,13 +52,11 @@ class App
     }
 
     /**
-     * Factoring pour les tables, creation à partir du nom d'une classe
+     * Factory pour les modèles (tables).
+     * Crée et retourne une instance du modèle demandé avec injection de la base de données.
      * 
-     * public static function getTable($name) <=> avec l'injection de dépandences.
-     * 
-     * passage à l'injection de dépandences <=> suppression static.
-     * Sinon : Fatal error: Uncaught Error: Using $this when not in object context in C:\xampp\htdocs\PHP POO\blog\app\App.php:38 Stack trace: #0 C:\xampp\htdocs\PHP POO\blog\public\index.php(102): NsAppBlog\App::getTable('Post') #1 {main} thrown in C:\xampp\htdocs\PHP POO\blog\app\App.php on line 38
-     * 
+     * @param string $name Nom du modèle (ex: 'Utilisateur', 'Covoiturage')
+     * @return object Instance du modèle demandé (ex: UtilisateurModel, CovoiturageModel)
      */
     public function getTable($name)
     {
@@ -56,7 +69,13 @@ class App
         return new $class_name($this->getDb());
     }
 
-    // Factory pour la connexion à base de données
+    /**
+     * Factory pour la connexion à la base de données (Singleton).
+     * Crée et retourne l'instance de connexion MySQL.
+     * Réutilise l'instance existante si déjà créée.
+     * 
+     * @return MysqlDatabase Instance de connexion à la base de données
+     */
     public function getDb()
     {
         $config = Config::getInstance(ROOT . '/config/config.php');

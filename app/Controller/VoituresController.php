@@ -6,8 +6,18 @@ use \NsCoreEcoride\Auth\DbAuth;
 use \NsCoreEcoride\HTML\MyForm;
 use \App;
 
+/**
+ * Contrôleur pour la gestion des voitures des utilisateurs.
+ * Gère le CRUD complet des véhicules associés à un utilisateur.
+ */
 class VoituresController extends AppController
 {
+    /**
+     * Constructeur du contrôleur des voitures.
+     * Initialise le modèle Voiture.
+     * 
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
@@ -15,7 +25,9 @@ class VoituresController extends AppController
     }
 
     /**
-     * Liste des voitures de l'utilisateur
+     * Affiche la liste des voitures de l'utilisateur connecté.
+     * 
+     * @return void Affiche la vue utilisateurs.voitures.index
      */
     public function index()
     {
@@ -32,7 +44,10 @@ class VoituresController extends AppController
     }
 
     /**
-     * Ajout d'une voiture
+     * Affiche le formulaire et traite l'ajout d'une nouvelle voiture.
+     * Met à jour le rôle de l'utilisateur en Chauffeur-Passager après création.
+     * 
+     * @return void Affiche la vue utilisateurs.voitures.add ou redirige après création
      */
     public function add()
     {
@@ -76,7 +91,10 @@ class VoituresController extends AppController
     }
 
     /**
-     * Modification d'une voiture
+     * Affiche le formulaire et traite la modification d'une voiture existante.
+     * Vérifie que la voiture appartient à l'utilisateur connecté.
+     * 
+     * @return void Affiche la vue utilisateurs.voitures.edit ou redirige après modification
      */
     public function edit() 
     {
@@ -126,7 +144,10 @@ class VoituresController extends AppController
     }
 
     /**
-     * Suppression d'une voiture
+     * Supprime une voiture de l'utilisateur connecté.
+     * Vérifie la propriété et les dépendances (covoiturages liés) avant suppression.
+     * 
+     * @return void Redirige vers la liste des voitures
      */
     public function delete()
     {
@@ -140,21 +161,21 @@ class VoituresController extends AppController
         if (!empty($_POST)) {
             $voiture_id = intval($_POST['id']);
             
-            // SECURITY: Check ownership first
+            // SÉCURITÉ : Vérifier la propriété d'abord
             $voiture = $this->Voiture->find($voiture_id);
             if (!$voiture || $voiture->utilisateur_id != $id) {
                  $this->forbidden();
             }
 
-            // CHECK DEPENDENCIES
+            // VÉRIFIER LES DÉPENDANCES
             if ($this->Voiture->hasCovoiturages($voiture_id)) {
-                // Cannot delete, redirect with error
+                // Impossible de supprimer, rediriger avec erreur
                 header('Location: index.php?p=utilisateurs.voitures.index&error=constraint');
                 exit;
             }
 
             if ($this->Voiture->deleteCar($voiture_id, $id)) {
-                // Success
+                // Succès
             }
         }
 

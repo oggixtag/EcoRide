@@ -1,25 +1,58 @@
+-- --------------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------------
+
 -- -----------------------------------------------------
 -- Schéma : abcrdv_ecoride_db
 -- Base de données pour le projet de covoiturage EcoRide
 -- -----------------------------------------------------
 
-
 -- -----------------------------------------------------
--- Script de suppression des tables (DROP)
--- Ordre basé sur les contraintes de clés étrangères (enfants avant parents)
+-- en local
 -- -----------------------------------------------------
-
 DROP DATABASE IF EXISTS `abcrdv_ecoride_db`;
-
 
 -- Create the EcoRide database
 CREATE DATABASE IF NOT EXISTS abcrdv_ecoride_db;
 USE abcrdv_ecoride_db;
 
 -- -----------------------------------------------------
+-- alwaysdata
+-- -----------------------------------------------------
+
+USE abcrdv_ecoride_db;
+-- 1. Désactiver la vérification des clés étrangères
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- 2. Liste des suppressions (l'ordre n'a plus d'importance ici)
+DROP TABLE IF EXISTS `avis`;
+DROP TABLE IF EXISTS `preference`;
+DROP TABLE IF EXISTS `visiteur_utilisateur`;
+DROP TABLE IF EXISTS `employe`;
+DROP TABLE IF EXISTS `statut_mail`;
+DROP TABLE IF EXISTS `note`;
+DROP TABLE IF EXISTS `poste`;
+DROP TABLE IF EXISTS `departement`;
+--
+DROP TABLE IF EXISTS `statut_avis`;
+DROP TABLE IF EXISTS `participe`;
+DROP TABLE IF EXISTS `covoiturage`;
+DROP TABLE IF EXISTS `voiture`;
+DROP TABLE IF EXISTS `statut_covoiturage`;
+DROP TABLE IF EXISTS `avis_covoiturage`;
+DROP TABLE IF EXISTS `marque`;
+DROP TABLE IF EXISTS `utilisateur`;
+DROP TABLE IF EXISTS `role`; 
+
+-- 0. Réactiver la vérification des clés étrangères
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- --------------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------------
+
+-- -----------------------------------------------------
 -- PARTIE UTILISATEUR
 -- ---------------------------------------------------
-
+USE abcrdv_ecoride_db;
 -- -----------------------------------------------------
 -- Table `role`
 -- -----------------------------------------------------
@@ -50,11 +83,12 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
   `password` VARCHAR(50) NOT NULL,
   `telephone` VARCHAR(50) NULL,
   `adresse` VARCHAR(50) NULL,
-  `date_naissance` VARCHAR(50) NULL, -- Le type DATE serait plus approprié, mais je respecte VARCHAR(50) du schéma
+  `date_naissance` VARCHAR(50) NULL,
   `photo` BLOB NULL,
   `pseudo` VARCHAR(50) NOT NULL UNIQUE,
   `role_id` INT NOT NULL, -- Clé étrangère vers `role`
   `credit` INT NOT NULL DEFAULT 20,
+  `est_suspendu` INT NOT NULL DEFAULT 0, -- 0: Actif, 1: Suspendu
   PRIMARY KEY (`utilisateur_id`),
   INDEX `fk_utilisateur_role_idx` (`role_id` ASC),
   CONSTRAINT `fk_utilisateur_role`
@@ -280,17 +314,19 @@ CREATE TABLE IF NOT EXISTS `departement` (
 -- Table `employe`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `employe` (
-    id_emp       INT     AUTO_INCREMENT,
-    nom          VARCHAR(50)  NOT NULL,
-    prenom       VARCHAR(50)  NOT NULL,
-    email        VARCHAR(100) UNIQUE,
-    password     VARCHAR(50)  NOT NULL,
-    date_embauche DATE        NOT NULL,
-	date_fin 	DATE        ,
-    salaire      DECIMAL(10,2) NOT NULL,
-    id_poste     INT NOT NULL,
-    id_dept      INT NOT NULL,
-    id_manager   INT NULL,	-- Doit être NULL pour ON DELETE SET NULL
+    id_emp       	INT     AUTO_INCREMENT,
+    nom          	VARCHAR(50)  NOT NULL,
+    prenom       	VARCHAR(50)  NOT NULL,
+    email        	VARCHAR(100) UNIQUE,
+    password     	VARCHAR(50)  NOT NULL,
+    date_embauche 	DATE        NOT NULL,
+	date_fin 		DATE        ,
+    salaire      	INT(10) NOT NULL,
+    id_poste     	INT NOT NULL,
+    id_dept      	INT NOT NULL,
+    id_manager   	INT NULL,	-- Doit être NULL pour ON DELETE SET NULL
+    est_suspendu 	INT NOT NULL DEFAULT 0, -- 0: Actif, 1: Suspendu
+	pseudo 			VARCHAR(50) NOT NULL UNIQUE,
 	PRIMARY KEY (`id_emp`),
 	INDEX `fk_poste_idx` (`id_poste` ASC),
 	INDEX `fk_dept_idx` (`id_dept` ASC),

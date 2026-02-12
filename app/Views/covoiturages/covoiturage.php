@@ -17,7 +17,7 @@
             <div class="trip-row">
                 <!-- Chaque cellule a un attribut data-label pour le responsive mobile -->
                 <div class="trip-cell" data-label="Date">
-                    <?= htmlspecialchars($covoiturage->date_depart); ?>
+                    <?= htmlspecialchars(date('d-m-Y', strtotime($covoiturage->date_depart))); ?>
                 </div>
 
                 <div class="trip-cell" data-label="Départ">

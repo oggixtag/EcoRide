@@ -124,6 +124,21 @@ class MysqlDatabase extends Database
     }
 
     /**
+     * Exécute une requête préparée et retourne le nombre de lignes affectées.
+     * Utile pour UPDATE/DELETE où on veut savoir si une ligne a été modifiée.
+     * 
+     * @param string $statement
+     * @param array $attributes
+     * @return int
+     */
+    public function executeRowCount($statement, $attributes)
+    {
+        $req = $this->getPdo()->prepare($statement);
+        $req->execute($attributes);
+        return $req->rowCount();
+    }
+
+    /**
      * Recupère le dernier enregistrement 
      * @return int
      */

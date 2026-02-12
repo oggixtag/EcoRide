@@ -33,7 +33,7 @@ class MyForm extends Form
         return $this->surround($label . $input);
     }
 
-    public function select($name, $label, $options)
+    public function select($name, $label, $options, $extraOptions = [])
     {
         $label = '<label>' . $label . '</label>';
         $input = '<select class="form-control" name="' . $name . '">';

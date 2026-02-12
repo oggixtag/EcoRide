@@ -218,3 +218,26 @@ textarea {
 .mt-4 {
     margin-top: 1.5rem !important;
 }
+
+.bg-success {
+    background-color: var(--color-success);
+    color: white;
+}
+
+.mb-3 {
+    margin-bottom: 1rem !important;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}

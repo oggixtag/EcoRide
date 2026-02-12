@@ -4,9 +4,16 @@ namespace NsAppEcoride\Model;
 
 use NsCoreEcoride\Model\Model;
 
+/**
+ * Modèle pour la gestion des trajets de covoiturage.
+ * Fournit les méthodes CRUD pour la création, modification et suppression de trajets.
+ */
 class TrajetModel extends Model
 {
+    /** @var string Nom de la table en base de données */
     protected $table = 'covoiturage';
+    
+    /** @var string Nom de la colonne clé primaire */
     protected $column = 'covoiturage_id';
 
     /**

@@ -47,16 +47,25 @@ class DbAuth
     /**
      * @param string $username
      * @param string $password
-     * @return boolean 
+     * @return int|false Retourne l'id_poste (1=admin, 2=employe) ou false si échec
      * */
     public function loginEmploye($username, $password)
     {
-        $employe = $this->db->prepare("SELECT * FROM employe WHERE email = ? and password=?", [$username, $password], null, true);
+        // Récupérer l'employé avec son poste
+        $employe = $this->db->prepare("SELECT * FROM employe WHERE pseudo = ? and password=?", [$username, $password], null, true);
 
         if ($employe) {
-            $_SESSION['auth_employe'] = $employe->id_emp;
-            // No auth_type needed effectively, or specific one
-            return true;
+            // Stocker l'ID dans la session correspondante selon le poste
+            if ($employe->id_poste == 1) {
+                // Administrateur - stocker l'ID dans auth_admin
+                $_SESSION['auth_admin'] = $employe->id_emp;
+            } else {
+                // Employé - stocker l'ID dans auth_employe
+                $_SESSION['auth_employe'] = $employe->id_emp;
+            }
+            
+            // Retourner le poste pour que le contrôleur puisse rediriger correctement
+            return $employe->id_poste;
         }
 
         return false;
@@ -98,5 +107,34 @@ class DbAuth
             session_start();
         }
         return isset($_SESSION['auth_employe']) && !empty($_SESSION['auth_employe']);
+    }
+    /**
+     * Récupère l'ID de l'employé connecté
+     * @return int|null
+     */
+    public function getEmployeId()
+    {
+        return $_SESSION['auth_employe'] ?? null;
+    }
+
+    /**
+     * Vérifie si un administrateur est connecté
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        return isset($_SESSION['auth_admin']) && !empty($_SESSION['auth_admin']);
+    }
+
+    /**
+     * Récupère l'ID de l'administrateur connecté
+     * @return int|null
+     */
+    public function getAdminId()
+    {
+        return $_SESSION['auth_admin'] ?? null;
     }
 }

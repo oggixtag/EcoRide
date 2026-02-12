@@ -17,11 +17,11 @@
             <!-- Formulaire de connexion -->
             <form id="loginForm" method="POST" class="login-form" style="display: block;">
                 <div class="form-group">
-                    <label for="username">Pseudo</label>
+                    <label for="pseudo">Pseudo</label>
                     <input
                         type="text"
-                        id="username"
-                        name="username"
+                        id="pseudo"
+                        name="pseudo"
                         class="form-control"
                         placeholder="Entrez votre pseudo"
                         required />

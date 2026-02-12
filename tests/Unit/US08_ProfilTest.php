@@ -8,11 +8,23 @@ use NsCoreEcoride\Model\Model;
 // Since we are running in the same environment, we'll try to use the real App.
 require_once __DIR__ . '/../../app/App.php'; 
 
-class UtilisateurTest extends TestCase
+/**
+ * Tests unitaires pour le modèle Utilisateur.
+ * Vérifie les préférences utilisateur et les mises à jour de profil.
+ */
+class US08_ProfilTest extends TestCase
 {
+    /** @var UtilisateurModel Modèle utilisateur pour les tests */
     protected $modele;
+    
+    /** @var int ID de l'utilisateur de test */
     protected $idUtilisateurTest;
 
+    /**
+     * Initialise le modèle et crée un utilisateur de test.
+     * 
+     * @return void
+     */
     protected function setUp(): void
     {
         // Debug : Require manuel pour vérifier le chemin du fichier
@@ -40,6 +52,12 @@ class UtilisateurTest extends TestCase
         $this->idUtilisateurTest = $utilisateur->utilisateur_id;
     }
 
+    /**
+     * Nettoie les données de test après chaque test.
+     * Supprime les préférences et l'utilisateur de test.
+     * 
+     * @return void
+     */
     protected function tearDown(): void
     {
         if ($this->idUtilisateurTest) {
@@ -48,6 +66,11 @@ class UtilisateurTest extends TestCase
         }
     }
 
+    /**
+     * Teste l'ajout et la récupération des préférences utilisateur.
+     * 
+     * @return void
+     */
     public function testAjouterEtRecupererPreferences()
     {
         // Action
@@ -63,6 +86,11 @@ class UtilisateurTest extends TestCase
         $this->assertContains('Voyage test', $libelles);
     }
 
+    /**
+     * Teste la suppression des préférences utilisateur.
+     * 
+     * @return void
+     */
     public function testEffacerPreferences()
     {
         // Arrangement
@@ -76,6 +104,11 @@ class UtilisateurTest extends TestCase
         $this->assertCount(0, $preferences);
     }
 
+    /**
+     * Teste la mise à jour des informations utilisateur.
+     * 
+     * @return void
+     */
     public function testMettreAJourUtilisateur()
     {
         // Action

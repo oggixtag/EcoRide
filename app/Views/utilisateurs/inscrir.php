@@ -11,16 +11,16 @@
 
             <form id="registerForm" method="POST" class="login-form">
                 <div class="form-group">
-                    <label for="username">Pseudo</label>
+                    <label for="pseudo">Pseudo</label>
                     <input
                         type="text"
-                        id="username"
-                        name="username"
+                        id="pseudo"
+                        name="pseudo"
                         class="form-control"
                         placeholder="Choisissez un pseudo"
-                        value="<?= htmlspecialchars($_POST['username'] ?? '') ?>"
+                        value="<?= htmlspecialchars($_POST['pseudo'] ?? '') ?>"
                         required />
-                    <span id="usernameError" class="error-msg"></span>
+                    <span id="pseudoError" class="error-msg"></span>
                 </div>
 
                 <div class="form-group">
@@ -37,6 +37,19 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="email">Confirmation Adresse mail</label>
+                    <input
+                        type="email"
+                        id="emailConfirmation"
+                        name="emailConfirmation"
+                        class="form-control"
+                        placeholder="Adresse email à nouveau"
+                        value="<?= htmlspecialchars($_POST['emailConfirmation'] ?? '') ?>"
+                        required />
+                    <span id="emailErrorConfirmation" class="error-msg"></span>
+                </div>
+
+                <div class="form-group">
                     <label for="password">Mot de passe</label>
                     <input
                         type="password"
@@ -45,6 +58,8 @@
                         class="form-control"
                         placeholder="Choisissez un mot de passe sécurisé"
                         required />
+                    <h5>8 caractères : minuscule + majuscule + chiffre.</h5>
+                    <span id="passwordError" class="error-msg"></span>
                 </div>
 
                 <div class="form-buttons">

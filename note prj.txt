@@ -1,22 +1,48 @@
-DDL:
-Ce script inclut la création des tables, la définition des clés primaires (PRIMARY KEY), et la gestion des liens entre les tables grâce aux clés étrangères (FOREIGN KEY).
 
-CSS:
-La mise en page est maintenant robuste : elle utilise la puissance de CSS Grid pour l'affichage "tableau" sur grand écran, et bascule élégamment vers des "cartes" (mode display: block; avec data-label) sur mobile, offrant une expérience utilisateur fluide pour EcoRide.
+--------------------------------------------------------------------------
+-- DEBUG
+--------------------------------------------------------------------------
+DEBUG
+echo "<pre>DEBUG DbAuth::loginEmploye</br>";
+var_dump(username, password);
+echo "Result: "; var_dump(employe ? 'Found' : 'Not Found');
+if (employe) { echo "Suspended: "; var_dump(employe->est_suspendu); }
+echo "</pre>";
+END DEBUG
 
-MVC
+--------------------------------------------------------------------------
+-- composer
+--------------------------------------------------------------------------
+dans le repertoire 
+composer require --dev phpunit/phpunit
+composer require phpmailer/phpmailer
 
-MVC (Modèle-Vue-Contrôleur) est excellent pour un projet PHP car il permet de séparer clairement les responsabilités et de faciliter la maintenance (notamment en isolant la logique de la présentation).
+…\htdocs\EcoRide > composer dump-autoload
 
-Cette structure est plus conventionnelle et rend le cœur du framework (core/) distinct de la logique métier (app/)
 
-BUGS : 
+--------------------------------------------------------------------------
+-- phpunit
+--------------------------------------------------------------------------
+Generating autoload files
 
-US11
+…\htdocs\EcoRide > vendor\bin\phpunit
 
-bug -> https://localhost/EcoRide/public/index.php?p=trajet-detail
-le bouton partecipation 
-la partecipation ne prend pas 2 crédits mail le montant saisi dans le champ prix
+PHPUnit 11.5.48 by Sebastian Bergmann and contributors.
 
-améllioration -> trajets.edit
-'Statut du voyage' in ('en_cours','annullé','terminé') -> les champs du formulaires sont grisé 
+Runtime:       PHP 8.2.12
+Configuration: C:\xampp\htdocs\EcoRide\phpunit.xml
+...
+
+
+vendor\bin\phpunit tests\Unit\US12Test.php --filter testReviewRefusalAndEmail
+
+
+--------------------------------------------------------------------------
+-- notes
+--------------------------------------------------------------------------
+
+│ 48 ## 4. Iconographie                                                                                                                                                                        │
+│ 49                                                                                                                                                                                           │
+│ 50 - **Librairie :** [Font Awesome](https://fontawesome.com/)                                                                                                                                │
+│ 51 - **Utilisation :** Utilisé pour les préférences de l'utilisateur (musique, fumeur, animaux) et les icônes de profil.
+

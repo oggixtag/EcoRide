@@ -4,9 +4,16 @@ namespace NsAppEcoride\Model;
 
 use NsCoreEcoride\Model\Model;
 
+/**
+ * Modèle pour la gestion des voitures.
+ * Fournit les méthodes CRUD pour les véhicules des utilisateurs.
+ */
 class VoitureModel extends Model
 {
+    /** @var string Nom de la table en base de données */
     protected $table = 'voiture';
+    
+    /** @var string Nom de la colonne clé primaire */
     protected $column = 'voiture_id';
 
     /**
@@ -111,7 +118,7 @@ class VoitureModel extends Model
         $result = $this->query(
             "SELECT COUNT(*) as count FROM covoiturage WHERE voiture_id = ?",
             [$voiture_id],
-            true // one result
+            true // un seul résultat
         );
         return $result->count > 0;
     }

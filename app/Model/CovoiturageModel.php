@@ -4,9 +4,16 @@ namespace NsAppEcoride\Model;
 
 use NsCoreEcoride\Model\Model;
 
+/**
+ * Modèle pour la gestion des covoiturages.
+ * Fournit les méthodes de recherche, participation, gestion de statut et annulation.
+ */
 class CovoiturageModel extends Model
 {
+    /** @var string Nom de la table en base de données */
     protected $table = 'covoiturage';
+    
+    /** @var string Nom de la colonne clé primaire */
     protected $column = 'covoiturage_id';
 
     /**
@@ -41,6 +48,14 @@ class CovoiturageModel extends Model
         );
     }
 
+    /**
+     * Recherche des covoiturages par lieu de départ OU date de départ.
+     * Utilisé pour afficher des alternatives lorsque la recherche exacte ne donne pas de résultats.
+     * 
+     * @param string $lieu_depart Ville de départ
+     * @param string $date_depart Date de départ au format YYYY-MM-DD
+     * @return array Liste des covoiturages correspondant à l'un des critères
+     */
     public function recherche_lieu_ou_date($lieu_depart, $date_depart)
     {
         return $this->query(
@@ -67,6 +82,12 @@ class CovoiturageModel extends Model
         );
     }
 
+    /**
+     * Récupère tous les covoiturages avec leurs détails.
+     * Triés par date de départ décroissante puis lieu de départ.
+     * 
+     * @return array Liste de tous les covoiturages
+     */
     public function all()
     {
         return $this->query(
@@ -265,6 +286,11 @@ class CovoiturageModel extends Model
         return $result > 0;
     }
 
+    /**
+     * Récupère la liste de tous les statuts de covoiturage disponibles.
+     * 
+     * @return array Liste des statuts (prévu, en_cours, terminé, annulé, etc.)
+     */
     public function getListStatuts()
     {
         return $this->query("SELECT * FROM statut_covoiturage");
@@ -310,19 +336,19 @@ class CovoiturageModel extends Model
      */
     public function cancelTrip($covoiturage_id, $driver_id)
     {
-        // 1. Update Status to 'annulé' (1)
+        // 1. Mettre à jour le statut à 'annulé' (1)
         $this->query(
             "UPDATE covoiturage SET statut_covoiturage_id = 1 WHERE covoiturage_id = ?",
             [$covoiturage_id]
         );
 
-        // 2. Refund credits (2) to driver
+        // 2. Rembourser les crédits (2) au conducteur
         $this->query(
             "UPDATE utilisateur SET credit = credit + 2 WHERE utilisateur_id = ?",
             [$driver_id]
         );
 
-        // 3. Prepare Notification Data
+        // 3. Préparer les données de notification
         $trip = $this->find($covoiturage_id);
         $participants = $this->getParticipants($covoiturage_id);
 
@@ -333,7 +359,7 @@ class CovoiturageModel extends Model
     }
 
     /**
-     * Finds carpools reported as "mal passé" (avis_covoiturage_id = 2)
+     * Trouve les covoiturages signalés comme "mal passé" (avis_covoiturage_id = 2)
      * @return array
      */
     public function findBadCarpools()
@@ -354,5 +380,106 @@ class CovoiturageModel extends Model
              JOIN avis_covoiturage ac ON c.avis_covoiturage_id = ac.avis_covoiturage_id
              WHERE c.avis_covoiturage_id = 2"
         );
+    }
+    /**
+     * Applique les filtres sur une liste de covoiturages.
+     * 
+     * @param array $covoiturages Liste des covoiturages à filtrer
+     * @param array $filters Tableau des filtres (energie, prix_min, prix_max, duree_max, score_min)
+     * @return array Liste des covoiturages filtrés
+     */
+    public function filterResults($covoiturages, $filters)
+    {
+        if (empty($covoiturages)) {
+            return $covoiturages;
+        }
+
+        $filtered = $covoiturages;
+
+        // Filtre par type d'énergie (écologique/standard)
+        if (!empty($filters['energie']) && is_array($filters['energie'])) {
+            $filtered = array_filter($filtered, function ($covoiturage) use ($filters) {
+                $energie_normalized = strtolower($this->removeAccents($covoiturage->energie));
+                $est_ecologique = ($energie_normalized === 'electrique');
+
+                // Vérifier si 'écologique' et/ou 'standard' sont sélectionnés
+                $inclure_ecologique = in_array('ecologique', $filters['energie']);
+                $inclure_standard = in_array('standard', $filters['energie']);
+
+                // Retourner true si le covoiturage correspond à l'une des sélections
+                if ($inclure_ecologique && $est_ecologique) {
+                    return true;
+                }
+                if ($inclure_standard && !$est_ecologique) {
+                    return true;
+                }
+
+                return false;
+            });
+        }
+
+        // Filtre par prix minimum
+        if (!empty($filters['prix_min'])) {
+            $prix_min = floatval($filters['prix_min']);
+            $filtered = array_filter($filtered, function ($covoiturage) use ($prix_min) {
+                return floatval($covoiturage->prix_personne) >= $prix_min;
+            });
+        }
+
+        // Filtre par prix maximum
+        if (!empty($filters['prix_max'])) {
+            $prix_max = floatval($filters['prix_max']);
+            $filtered = array_filter($filtered, function ($covoiturage) use ($prix_max) {
+                return floatval($covoiturage->prix_personne) <= $prix_max;
+            });
+        }
+
+        // Filtre par durée maximale du voyage
+        if (!empty($filters['duree_max'])) {
+            $duree_max_heures = floatval($filters['duree_max']); // en heures (1-12 du slider)
+            $duree_max_minutes = $duree_max_heures * 60; // convertir en minutes
+            $filtered = array_filter($filtered, function ($covoiturage) use ($duree_max_minutes) {
+                $depart = \DateTime::createFromFormat('Y-m-d H:i:s', $covoiturage->date_depart . ' ' . $covoiturage->heure_depart);
+                $arrivee = \DateTime::createFromFormat('Y-m-d H:i:s', $covoiturage->date_arrivee . ' ' . $covoiturage->heure_arrivee);
+                if ($depart && $arrivee) {
+                    $interval = $arrivee->diff($depart);
+                    $duree_minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
+                    return $duree_minutes <= $duree_max_minutes;
+                }
+                return true;
+            });
+        }
+
+        // Filtre par score minimum (Non implémenté en DB pour l'instant)
+        if (!empty($filters['score_min'])) {
+            // $score_min = floatval($filters['score_min']);
+            // $filtered = array_filter($filtered, function ($covoiturage) use ($score_min) {
+            //     return floatval($covoiturage->score) >= $score_min;
+            // });
+        }
+
+        return array_values($filtered); // Réinitialiser les clés du tableau
+    }
+
+    /**
+     * Supprime les accents d'une chaîne de caractères.
+     * 
+     * @param string $str Chaîne de caractères avec accents
+     * @return string Chaîne de caractères sans accents
+     */
+    private function removeAccents($str)
+    {
+        $str = (string) $str;
+        $map = array(
+            'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'ç' => 'c',
+            'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i',
+            'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ù' => 'u',
+            'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ý' => 'y', 'ÿ' => 'y', 'À' => 'A', 'Á' => 'A',
+            'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E',
+            'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I', 'Ñ' => 'N',
+            'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ù' => 'U', 'Ú' => 'U',
+            'Û' => 'U', 'Ü' => 'U', 'Ý' => 'Y'
+        );
+        return strtr($str, $map);
     }
 }

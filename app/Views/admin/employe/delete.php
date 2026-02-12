@@ -1,1 +1,0 @@
-<a href="?p=admin.employes.index">go to employes index</a>

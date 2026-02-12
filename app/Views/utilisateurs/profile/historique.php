@@ -38,7 +38,7 @@
     <?php if (!empty($historique_passager)): ?>
         <section class="presentation-section">
             <div class="presentation-content">
-                <h2>Covoiturages passés (Passager)</h2>
+                <h2>Covoiturages passés (Passanger)</h2>
                 <div class="reservations-list text-left">
                     <?php foreach ($historique_passager as $reservation): ?>
                         <div class="reservation-item history-item">

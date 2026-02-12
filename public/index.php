@@ -1,5 +1,7 @@
 <?php
 define('ROOT', dirname(__DIR__));
+// Protection contre le Clickjacking
+header('X-Frame-Options: DENY');
 require(ROOT . '/app/App.php');
 App::load();
 
@@ -9,9 +11,9 @@ if (isset($_GET['p'])) {
     $page = 'home';
 }
 
-// naming : controller + route
+// convention de nommage : contrôleur + route
 
-// Router to load controller based on page called
+// Routeur pour charger le contrôleur en fonction de la page appelée
 // US1
 if ($page === 'home') {
     $controller = new \NsAppEcoride\Controller\CovoituragesController();
@@ -134,20 +136,57 @@ elseif ($page === 'covoiturages.start') {
     $controller = new \NsAppEcoride\Controller\ParticipantController();
     $controller->submitValidation();
 // US12
-} elseif ($page === 'admin.employe.login') {
+} elseif ($page === 'admin.employes.login') {
     $controller = new \NsAppEcoride\Controller\Admin\EmployesController();
     $controller->login();
-} elseif ($page === 'admin.employe.logout') {
+} elseif ($page === 'admin.employes.logout') {
     $controller = new \NsAppEcoride\Controller\Admin\EmployesController();
     $controller->logout();
-} elseif ($page === 'admin.employe.dashboard') {
+} elseif ($page === 'admin.employes.dashboard') {
     $controller = new \NsAppEcoride\Controller\Admin\EmployesController();
     $controller->dashboard();
-} elseif ($page === 'admin.employe.validateAvis') {
+} elseif ($page === 'admin.employes.validateAvis') {
     $controller = new \NsAppEcoride\Controller\Admin\EmployesController();
     $controller->validateAvis();
-} elseif ($page === 'admin.employe.refuseAvis') {
+} elseif ($page === 'admin.employes.refuseAvis') {
     $controller = new \NsAppEcoride\Controller\Admin\EmployesController();
     $controller->refuseAvis();
+} 
+// US13 - Admin Employes Management
+elseif ($page === 'admin.employes.index') {
+    $controller = new \NsAppEcoride\Controller\Admin\EmployesController();
+    $controller->index();
+} elseif ($page === 'admin.employes.add') {
+    $controller = new \NsAppEcoride\Controller\Admin\EmployesController();
+    $controller->add();
+} elseif ($page === 'admin.employes.edit') {
+    $controller = new \NsAppEcoride\Controller\Admin\EmployesController();
+    $controller->edit();
+} elseif ($page === 'admin.employes.delete') {
+    $controller = new \NsAppEcoride\Controller\Admin\EmployesController();
+    $controller->delete();
+} elseif ($page === 'admin.employes.suspendre') {
+    $controller = new \NsAppEcoride\Controller\Admin\EmployesController();
+    $controller->suspendre();
+} elseif ($page === 'admin.employes.reactiver') {
+    $controller = new \NsAppEcoride\Controller\Admin\EmployesController();
+    $controller->reactiver();
+}
+// US13 - Administrateur Dashboard & User Management
+elseif ($page === 'admin.dashboard') {
+    $controller = new \NsAppEcoride\Controller\Admin\AdministrateurController();
+    $controller->dashboard();
+} elseif ($page === 'admin.logout') {
+    $controller = new \NsAppEcoride\Controller\Admin\AdministrateurController();
+    $controller->logout();
+} elseif ($page === 'admin.index') {
+    $controller = new \NsAppEcoride\Controller\Admin\AdministrateurController();
+    $controller->utilisateurs();
+} elseif ($page === 'admin.suspendreUtilisateur') {
+    $controller = new \NsAppEcoride\Controller\Admin\AdministrateurController();
+    $controller->suspendreUtilisateur();
+} elseif ($page === 'admin.reactiverUtilisateur') {
+    $controller = new \NsAppEcoride\Controller\Admin\AdministrateurController();
+    $controller->reactiverUtilisateur();
 }
 

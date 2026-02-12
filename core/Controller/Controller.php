@@ -26,23 +26,23 @@ class Controller
 
     protected function forbidden()
     {
-        // Set HTTP status header
+        // Définir l'en-tête de statut HTTP
         header("HTTP/1.0 403 Forbidden");
 
-        // Set localisation
+        // Définir la localisation
         //header('Location:index.php?p=403');
 
-        die('Acces interdit');
+        die('Accès interdit');
     }
 
     protected static function notFound()
     {
-        // Set HTTP status header
+        // Définir l'en-tête de statut HTTP
         header("HTTP/1.0 404 Not Found");
 
-        // Set localisation
+        // Définir la localisation
         //header('Location:index.php?p=404');
 
-        die('Page not found');
+        die('Page non trouvée');
     }
 }

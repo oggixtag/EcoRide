@@ -12,16 +12,20 @@
 <body>
 
     <nav class="navbar">
-        <a class="navbar-brand" href="index.php?p=admin.employe.dashboard">EcoRide Admin</a>
+        <a class="navbar-brand" href="index.php?p=admin.employes.dashboard">EcoRide Admin</a>
         <div class="navbar-nav">
-            <?php if (isset($_SESSION['auth_employe'])): ?>
-                <a href="index.php?p=admin.employe.dashboard">Tableau de bord</a>
+            <?php if (isset($_SESSION['auth_admin'])): ?>
+                <a href="index.php?p=admin.dashboard">Tableau de bord</a>
+            <?php elseif (isset($_SESSION['auth_employe'])): ?>
+                <a href="index.php?p=admin.employes.dashboard">Tableau de bord</a>
             <?php endif; ?>
             
             <a href="index.php?p=home">Retour au Site</a>
 
-            <?php if (isset($_SESSION['auth_employe'])): ?>
-                <a href="index.php?p=admin.employe.logout">Déconnexion</a>
+            <?php if (isset($_SESSION['auth_admin'])): ?>
+                <a href="index.php?p=admin.logout">Déconnexion</a>
+            <?php elseif (isset($_SESSION['auth_employe'])): ?>
+                <a href="index.php?p=admin.employes.logout">Déconnexion</a>
             <?php endif; ?>
         </div>
     </nav>

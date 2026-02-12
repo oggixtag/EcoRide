@@ -4,9 +4,19 @@ namespace NsAppEcoride\Controller;
 
 use \NsCoreEcoride\HTML\MyForm;
 
+/**
+ * Contrôleur pour la gestion des covoiturages.
+ * Gère la participation, le démarrage et l'arrêt des trajets.
+ */
 class CovoituragesController extends AppController
 {
 
+    /**
+     * Constructeur du contrôleur de covoiturages.
+     * Initialise le modèle Covoiturage.
+     * 
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
@@ -14,6 +24,11 @@ class CovoituragesController extends AppController
         $this->loadModel('Covoiturage');
     }
 
+    /**
+     * Affiche la page d'accueil des covoiturages.
+     * 
+     * @return void Affiche la vue covoiturages.index
+     */
     public function index()
     {
         // ça appelle la page index (C:\xampp\htdocs\EcoRide\app\Views\covoiturages)
@@ -23,6 +38,11 @@ class CovoituragesController extends AppController
         );
     }
 
+    /**
+     * Affiche tous les covoiturages disponibles.
+     * 
+     * @return void Affiche la vue covoiturages.covoiturage avec la liste complète
+     */
     public function all()
     {
         // Récupérer tous les covoiturages
@@ -34,8 +54,11 @@ class CovoituragesController extends AppController
 
 
     /**
-     * Action pour participer à un covoiturage
-     * Gère la déduction de crédits et l'enregistrement de la participation
+     * Action pour participer à un covoiturage.
+     * Gère la déduction de crédits, l'enregistrement de la participation
+     * et la mise à jour du nombre de places disponibles.
+     * 
+     * @return void Envoie une réponse JSON avec le résultat de l'opération
      */
     public function participer()
     {
@@ -83,15 +106,15 @@ class CovoituragesController extends AppController
 
         // Vérifier que l'utilisateur a assez de crédits (minimum 2)
         // Vérifier que l'utilisateur a assez de crédits
-        if ($utilisateur->credit < $covoiturage->prix_personne) {
-            $this->jsonResponse(['success' => false, 'message' => "Crédits insuffisants. Vous avez besoin de {$covoiturage->prix_personne} crédits pour participer"]);
+        if ($utilisateur->credit < 2) {
+            $this->jsonResponse(['success' => false, 'message' => "Crédits insuffisants. Vous avez besoin de 2 crédits pour participer"]);
             return;
         }
 
         // Commencer la transaction pour garantir la cohérence des données
         try {
             // 1. Déduire les crédits de l'utilisateur
-            $credit_deduit = $this->Utilisateur->deduireCredit($utilisateur_id, $covoiturage->prix_personne);
+            $credit_deduit = $this->Utilisateur->deduireCredit($utilisateur_id, 2);
 
             if (!$credit_deduit) {
                 $this->jsonResponse(['success' => false, 'message' => 'Erreur lors de la déduction des crédits']);
@@ -116,11 +139,32 @@ class CovoituragesController extends AppController
                 return;
             }
 
-            // 4. Réponse positive
+            // 4. Envoyer l'email de confirmation
+            try {
+                require_once ROOT . '/app/Service/Mailer.php';
+                $mailer = new \NsAppEcoride\Service\Mailer();
+
+                $subject = "Confirmation de réservation - EcoRide";
+                $body = "
+                    <h1>Réservation Confirmée !</h1>
+                    <p>Bonjour " . htmlspecialchars($utilisateur->pseudo) . ",</p>
+                    <p>Votre réservation pour le trajet <strong>" . htmlspecialchars($covoiturage->lieu_depart) . "</strong> vers <strong>" . htmlspecialchars($covoiturage->lieu_arrivee) . "</strong> est confirmée.</p>
+                    <p><strong>Date :</strong> " . htmlspecialchars($covoiturage->date_depart) . " à " . htmlspecialchars(substr($covoiturage->heure_depart, 0, 5)) . "</p>
+                    <p><strong>Prix :</strong> " . htmlspecialchars($covoiturage->prix_personne) . " crédits (2 crédits déduits)</p>
+                    <p>Merci de voyager avec EcoRide !</p>
+                ";
+                
+                $mailer->send($utilisateur->email, $subject, $body);
+
+            } catch (\Throwable $e) {
+                // On loggue l'erreur mais on ne bloque pas la réponse positive car la réservation est faite
+                error_log("Erreur envoi email confirmation : " . $e->getMessage());
+            }
+
+            // 5. Réponse positive
             $this->jsonResponse([
                 'success' => true,
-                'success' => true,
-                'message' => 'Vous avez réservé votre place avec succès ! ' . $covoiturage->prix_personne . ' crédits ont été déduits de votre compte'
+                'message' => 'Vous avez réservé votre place avec succès ! 2 crédits ont été déduits de votre compte'
             ]);
         } catch (\Exception $e) {
             $this->jsonResponse(['success' => false, 'message' => 'Erreur lors de la réservation : ' . $e->getMessage()]);
@@ -128,7 +172,10 @@ class CovoituragesController extends AppController
     }
 
     /**
-     * Démarre un covoiturage (passage au statut 4: en_cours)
+     * Démarre un covoiturage (passage au statut 4: en_cours).
+     * Vérifie que l'utilisateur est bien le conducteur du trajet.
+     * 
+     * @return void Redirige vers la page d'édition du trajet
      */
     public function start()
     {
@@ -151,7 +198,10 @@ class CovoituragesController extends AppController
     }
 
     /**
-     * Termine un covoiturage (passage au statut 5: terminé)
+     * Termine un covoiturage (passage au statut 5: terminé).
+     * Envoie des emails de validation aux participants.
+     * 
+     * @return void Redirige vers le profil utilisateur
      */
     public function stop()
     {
@@ -176,12 +226,19 @@ class CovoituragesController extends AppController
         $this->redirect('index.php?p=utilisateurs.profile.index');
     }
 
+    /**
+     * Envoie les emails de validation aux participants d'un covoiturage terminé.
+     * Enregistre les envois dans un fichier log.
+     * 
+     * @param int $covoiturage_id ID du covoiturage terminé
+     * @return void
+     */
     private function sendValidationEmails($covoiturage_id)
     {
         // Récupérer les participants réels
         $participants = $this->Covoiturage->getParticipants($covoiturage_id);
         
-        // Log file creation as requested
+        // Création du fichier log comme demandé
         $logFile = ROOT . '/log/us11_trip_terminé.txt';
         $message = date('Y-m-d H:i:s') . " - Covoiturage $covoiturage_id terminé.\n";
         
@@ -205,8 +262,10 @@ class CovoituragesController extends AppController
     }
 
     /**
-     * Envoie une réponse JSON
-     * @param array $data Données à envoyer
+     * Envoie une réponse JSON et termine l'exécution.
+     * 
+     * @param array $data Données à encoder en JSON et envoyer
+     * @return void
      */
     private function jsonResponse($data)
     {

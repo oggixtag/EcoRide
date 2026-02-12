@@ -4,13 +4,20 @@ namespace NsAppEcoride\Model;
 
 use NsCoreEcoride\Model\Model;
 
+/**
+ * Modèle pour la gestion des avis utilisateurs.
+ * Fournit les méthodes CRUD et de recherche pour les avis.
+ */
 class AvisModel extends Model
 {
+    /** @var string Nom de la table en base de données */
     protected $table = 'avis';
+    
+    /** @var string Nom de la colonne clé primaire */
     protected $column = 'avis_id';
 
     /**
-     * Finds all reviews pending validation (statut_avis_id = 2 'modération')
+     * Trouve tous les avis en attente de validation (statut_avis_id = 2 'modération')
      * @return array
      */
     public function findAllPending()
@@ -26,7 +33,7 @@ class AvisModel extends Model
     }
 
     /**
-     * Updates the status of a review
+     * Met à jour le statut d'un avis
      * @param int $id
      * @param int $statusId
      * @return bool
@@ -40,7 +47,7 @@ class AvisModel extends Model
     }
 
     /**
-     * Finds a specific review with user details
+     * Trouve un avis spécifique avec les détails de l'utilisateur
      * @param int $id
      * @return object|null
      */

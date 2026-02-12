@@ -9,8 +9,18 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
+/**
+ * Contrôleur pour la gestion des utilisateurs.
+ * Gère l'authentification, l'inscription, le profil et l'historique.
+ */
 class UtilisateursController extends AppController
 {
+    /**
+     * Constructeur du contrôleur utilisateurs.
+     * Initialise le modèle Utilisateur.
+     * 
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
@@ -19,7 +29,10 @@ class UtilisateursController extends AppController
     }
 
     /**
-     * Affiche le tableau de bord de l'utilisateur authentifié
+     * Affiche le tableau de bord de l'utilisateur authentifié.
+     * Gère l'affichage différent selon le type d'auth (visiteur ou utilisateur).
+     * 
+     * @return void Affiche la vue utilisateurs.profile.index ou redirige vers login
      */
     public function index()
     {
@@ -58,7 +71,7 @@ class UtilisateursController extends AppController
                 return $r->date_depart >= $today;
             });
             
-            // Check History flags (Keep logic: check if ANY past exists)
+            // Vérifier les indicateurs d'historique (Garder la logique : vérifier si UN passé existe)
             $hist_ch = $this->Utilisateur->getHistoriqueCovoiturages($utilisateur_id);
             $has_history_chauffeur = !empty($hist_ch);
             
@@ -70,7 +83,10 @@ class UtilisateursController extends AppController
     }
 
     /**
-     * Affiche la page de connexion et gère l'authentification
+     * Affiche la page de connexion et gère l'authentification.
+     * Traite les données POST pour tenter une connexion.
+     * 
+     * @return void Affiche la vue utilisateurs.login ou redirige après connexion
      */
     public function login()
     {
@@ -82,7 +98,7 @@ class UtilisateursController extends AppController
 
             $auth = new DbAuth(App::getInstance()->getDb());
 
-            if ($auth->login($_POST['username'], $_POST['password'])) {
+            if ($auth->login($_POST['pseudo'], $_POST['password'])) {
                 header('Location: index.php?p=utilisateurs.index');
                 exit;
             } else {
@@ -95,7 +111,10 @@ class UtilisateursController extends AppController
     }
 
     /**
-     * Déconnecte l'utilisateur et redirige vers la page d'accueil
+     * Déconnecte l'utilisateur et redirige vers la page d'accueil.
+     * Détruit la session et supprime le cookie de session.
+     * 
+     * @return void Redirige vers index.php
      */
     public function logout()
     {
@@ -127,8 +146,10 @@ class UtilisateursController extends AppController
     }
 
     /**
-     * Gère la récupération de mot de passe
-     * Cherche l'utilisateur par email ou pseudo et affiche un message
+     * Gère la récupération de mot de passe.
+     * Cherche l'utilisateur par email ou pseudo et affiche un message.
+     * 
+     * @return void Affiche la vue utilisateurs.login avec message de récupération
      */
     public function recupererPassword()
     {
@@ -172,7 +193,10 @@ class UtilisateursController extends AppController
         $this->render('utilisateurs.login', compact('form', 'message', 'message_type', 'recovery_method', 'recovery_input'));
     }
     /**
-     * Gère l'inscription d'un nouveau visiteur
+     * Gère l'inscription d'un nouveau visiteur.
+     * Valide les données, crée le compte visiteur et envoie un email de validation.
+     * 
+     * @return void Affiche la vue utilisateurs.inscrir ou redirige après création
      */
     public function inscrir()
     {
@@ -181,12 +205,12 @@ class UtilisateursController extends AppController
         $data = [];
 
         if (!empty($_POST)) {
-            $pseudo = htmlspecialchars(trim($_POST['username']));
-            $email = htmlspecialchars(trim($_POST['email']));
+            $pseudo = htmlspecialchars(trim($_POST['pseudo']));
+            $email = htmlspecialchars(strtolower(trim($_POST['email'])));
             $password = trim($_POST['password']);
             
             // Simuler data pour pré-remplir le form en cas d'échec
-            $data = ['username' => $pseudo, 'email' => $email];
+            $data = ['pseudo' => $pseudo, 'email' => $email];
 
             // Validation basique
             if (empty($pseudo) || empty($email) || empty($password)) {
@@ -231,7 +255,10 @@ class UtilisateursController extends AppController
     }
 
     /**
-     * Vérification AJAX de l'unicité
+     * Vérification AJAX de l'unicité d'un pseudo ou email.
+     * Utilisé pour la validation en temps réel du formulaire d'inscription.
+     * 
+     * @return void Envoie une réponse JSON avec le résultat de la vérification
      */
     public function verificationUnique()
     {
@@ -247,13 +274,16 @@ class UtilisateursController extends AppController
             $unique = $this->Utilisateur->isEmailUnique($value);
             echo json_encode(['unique' => $unique]);
         } else {
-            echo json_encode(['error' => 'Invalid field']);
+            echo json_encode(['error' => 'Champ invalide']);
         }
         exit;
     }
     
     /**
-     * Valide l'email du visiteur connecté (passe statut_mail_id à 2)
+     * Valide l'email du visiteur connecté.
+     * Passe le statut_mail_id à 2 (validé) dans la table visiteur.
+     * 
+     * @return void Redirige vers le profil utilisateur
      */
     public function validerEmail()
     {
@@ -277,7 +307,10 @@ class UtilisateursController extends AppController
     }
 
     /**
-     * Finalise l'inscription (Visiteur -> Utilisateur)
+     * Finalise l'inscription d'un visiteur en utilisateur complet.
+     * Transfère les données de visiteur_utilisateur vers utilisateur.
+     * 
+     * @return void Redirige vers le profil utilisateur après la mise à niveau
      */
     public function finaliserInscription()
     {
@@ -299,7 +332,7 @@ class UtilisateursController extends AppController
 
             // Validation des champs
             // Nom, Prénom, Téléphone, Adresse, Date de Naissance
-            // TODO: Ajouter validation robuste
+            // TODO : Ajouter validation robuste
             
             $data = [
                 'nom' => htmlspecialchars($_POST['nom']),
@@ -329,10 +362,12 @@ class UtilisateursController extends AppController
         }
     }
     /**
-     * Envoie l'email de validation
-     * @param string $email
-     * @param string $pseudo
-     * @return bool
+     * Envoie l'email de validation à un nouveau visiteur.
+     * Utilise le service Mailer pour l'envoi.
+     * 
+     * @param string $email Adresse email du destinataire
+     * @param string $pseudo Pseudo de l'utilisateur pour personnaliser l'email
+     * @return bool True si l'email a été envoyé avec succès, false sinon
      */
     private function sendValidationEmail($email, $pseudo)
     {
@@ -353,7 +388,10 @@ class UtilisateursController extends AppController
         return $mailer->send($email, $subject, $body, $altBody);
     }
     /**
-     * Modifie les informations du profil utilisateur
+     * Modifie les informations du profil utilisateur.
+     * Gère la mise à jour des données personnelles et du rôle.
+     * 
+     * @return void Affiche la vue utilisateurs.profile.edit ou redirige après mise à jour
      */
     public function edit()
     {
@@ -376,16 +414,20 @@ class UtilisateursController extends AppController
             // Both checked = 3 (Chauffeur-Passager)
             
             $is_passager = isset($_POST['role_passager']); // Checked box sends value
-            $is_chauffeur = isset($_POST['role_chauffeur']);
+            // $is_chauffeur = isset($_POST['role_chauffeur']); // Désactivé, on vérifie les voitures
 
-            $role_id = 2; // Default fallback
+            // Vérifier si l'utilisateur a des voitures pour déterminer le rôle Chauffeur
+            $voitures = $this->Utilisateur->getVoituresForUser($id);
+            $has_cars = !empty($voitures);
+            
+            $is_chauffeur = $has_cars;
+
+            $role_id = 2; // Default fallback (Passager)
             
             if ($is_chauffeur) {
-                $role_id = 3; // Si Chauffeur est coché, on passe en "Chauffeur-Passager" (3)
-            } elseif ($is_passager) {
-                $role_id = 2; // Passager uniquement
+                $role_id = 3; // Si a des voitures, on passe en "Chauffeur-Passager" (3) automatiquement
             } else {
-                // If nothing checked, default to Passager (2)
+                // Si pas de voiture, on reste Passager (2) même si on essayait d'être chauffeur
                 $role_id = 2; 
             }
 
@@ -398,15 +440,15 @@ class UtilisateursController extends AppController
                 'role_id' => $role_id 
             ];
 
-            // Update User info
+            // Mettre à jour les infos utilisateur
             if ($this->Utilisateur->update($id, $data)) {
                 $message = "Profil mis à jour avec succès.";
                 $message_type = "success";
                 
-                // Update Preferences
+                // Mettre à jour les préférences
                 $this->Utilisateur->clearPreferences($id);
                 
-                // Handle standard checkboxes (fumeur, animaux)
+                // Gérer les cases à cocher standard (fumeur, animaux)
                 if (isset($_POST['pref_fumeur'])) {
                     $this->Utilisateur->addPreference($id, 'Fumeur');
                 } else {
@@ -419,7 +461,7 @@ class UtilisateursController extends AppController
                     $this->Utilisateur->addPreference($id, 'Pas d\'animaux');
                 }
                 
-                // Handle custom preferences
+                // Gérer les préférences personnalisées
                 if (!empty($_POST['custom_prefs'])) {
                     $customs = explode(',', $_POST['custom_prefs']);
                     foreach ($customs as $pref) {
@@ -430,7 +472,7 @@ class UtilisateursController extends AppController
                     }
                 }
                 
-                // Refresh data
+                // Rafraîchir les données
                 $utilisateur = $this->Utilisateur->find($id);
 
             } else {
@@ -441,7 +483,7 @@ class UtilisateursController extends AppController
 
         $preferences = $this->Utilisateur->getPreferences($id);
         
-        // Prepare preferences for view (simple array of labels)
+        // Préparer les préférences pour la vue (tableau simple de libellés)
         $user_prefs = [];
         foreach ($preferences as $p) {
             $user_prefs[] = $p->libelle;
@@ -453,7 +495,10 @@ class UtilisateursController extends AppController
         $this->render('utilisateurs.profile.edit', compact('utilisateur', 'user_prefs', 'message', 'message_type', 'has_cars'));
     }
     /**
-     * Affiche l'historique des covoiturages et participations
+     * Affiche l'historique des covoiturages et participations passés.
+     * Récupère les trajets terminés en tant que chauffeur et passager.
+     * 
+     * @return void Affiche la vue utilisateurs.profile.historique
      */
     public function historique()
     {
@@ -466,10 +511,41 @@ class UtilisateursController extends AppController
          
          $utilisateur = $this->Utilisateur->find($utilisateur_id);
          
-         // Fetch Data
+         // Récupérer les données
          $historique_chauffeur = $this->Utilisateur->getHistoriqueCovoiturages($utilisateur_id);
          $historique_passager = $this->Utilisateur->getHistoriqueParticipations($utilisateur_id);
          
          $this->render('utilisateurs.profile.historique', compact('utilisateur', 'historique_chauffeur', 'historique_passager'));
+    }
+    /**
+     * Valide les données d'inscription (Email et Mot de passe).
+     * Méthode publique statique pour permettre les tests unitaires.
+     * 
+     * @param string $email
+     * @param string $emailConfirm
+     * @param string $password
+     * @return array Tableau d'erreurs (vide si valide)
+     */
+    public static function validateRegistrationData($email, $emailConfirm, $password)
+    {
+        $errors = [];
+
+        // 1. Validation Format Email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = "L'adresse email n'est pas valide.";
+        }
+
+        // 2. Validation Correspondance Email
+        if ($email !== $emailConfirm) {
+            $errors[] = "Les adresses email ne correspondent pas.";
+        }
+
+        // 3. Validation Complexité Mot de Passe
+        // Au moins 8 caractères, 1 majuscule, 1 minuscule, 1 chiffre
+        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/', $password)) {
+            $errors[] = "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre.";
+        }
+
+        return $errors;
     }
 }

@@ -3,14 +3,19 @@
 namespace NsAppEcoride;
 
 /**
- * Class Autoloader
- * Permet de charger automatiquement les classes
+ * Classe Autoloader pour le namespace NsAppEcoride.
+ * Permet le chargement automatique des classes de l'application
+ * en utilisant la fonction spl_autoload_register de PHP.
  */
 class Autoloader
 {
 
-    /** Enregistre l'autoload 
+    /**
+     * Enregistre la fonction d'autoload auprès de PHP.
+     * Utilise spl_autoload_register pour associer la méthode fautoload
+     * au mécanisme d'autoloading de PHP.
      * 
+     * @return void
      */
     static function register()
     {
@@ -22,9 +27,12 @@ class Autoloader
         spl_autoload_register(array(__CLASS__, 'fautoload'));
     }
 
-    /** Méthode d'autoload 
+    /**
+     * Fonction d'autoload appelée par PHP lors du chargement d'une classe.
+     * Charge automatiquement le fichier de la classe si elle appartient au namespace NsAppEcoride.
      * 
-     * @param string $class_name : nom de la classe à charger
+     * @param string $class Nom complet de la classe à charger (avec namespace)
+     * @return void
      */
     static function fautoload($class)
     {

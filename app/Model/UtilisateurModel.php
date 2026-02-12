@@ -4,9 +4,16 @@ namespace NsAppEcoride\Model;
 
 use NsCoreEcoride\Model\Model;
 
+/**
+ * Modèle pour la gestion des utilisateurs.
+ * Fournit les méthodes d'authentification, gestion de profil, crédits, préférences et historique.
+ */
 class UtilisateurModel extends Model
 {
+    /** @var string Nom de la table en base de données */
     protected $table = 'utilisateur';
+    
+    /** @var string Nom de la colonne clé primaire */
     protected $column = 'utilisateur_id';
 
     /**
@@ -114,7 +121,7 @@ class UtilisateurModel extends Model
         }
 
         // Exécuter la mise à jour
-        $result = $this->query(
+        $rowCount = $this->db->executeRowCount(
             "UPDATE utilisateur 
             SET credit = credit - ? 
             WHERE utilisateur_id = ? AND credit >= ?",
@@ -122,7 +129,7 @@ class UtilisateurModel extends Model
         );
 
         // Retourner true si au moins une ligne a été affectée
-        return $result > 0;
+        return $rowCount > 0;
     }
 
     /**
@@ -139,14 +146,14 @@ class UtilisateurModel extends Model
         }
 
         // Exécuter la mise à jour
-        $result = $this->query(
+        $rowCount = $this->db->executeRowCount(
             "UPDATE utilisateur 
             SET credit = credit + ? 
             WHERE utilisateur_id = ?",
             [$montant_credit, $utilisateur_id]
         );
 
-        return $result > 0;
+        return $rowCount > 0;
     }
 
     /**
@@ -462,6 +469,38 @@ class UtilisateurModel extends Model
             AND c.date_depart < CURRENT_DATE()
             ORDER BY c.date_depart DESC",
             [$utilisateur_id]
+        );
+    }
+    /**
+     * Suspendre un utilisateur
+     * @param int $id
+     * @return bool
+     */
+    public function suspendre($id)
+    {
+        return $this->query("UPDATE utilisateur SET est_suspendu = 1 WHERE utilisateur_id = ?", [$id]);
+    }
+
+    /**
+     * Réactiver un utilisateur
+     * @param int $id
+     * @return bool
+     */
+    public function reactiver($id)
+    {
+        return $this->query("UPDATE utilisateur SET est_suspendu = 0 WHERE utilisateur_id = ?", [$id]);
+    }
+    /**
+     * Récupère tous les utilisateurs avec le libellé de leur rôle
+     * @return array
+     */
+    public function findAllWithRole()
+    {
+        return $this->query(
+            "SELECT u.*, r.libelle as role_libelle 
+            FROM utilisateur u 
+            LEFT JOIN role r ON u.role_id = r.role_id
+            ORDER BY u.prenom"
         );
     }
 }

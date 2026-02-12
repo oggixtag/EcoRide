@@ -46,7 +46,7 @@
                 </div>
             </div>
 
-            <!-- Optional Date/Heure Arrivee if needed, usually calculated or optional. Added for completeness based on DB -->
+            <!-- Date/Heure Arrivée optionnelles si nécessaire, généralement calculées ou facultatives. Ajouté pour compléter la DB -->
              <div class="form-group-row">
                 <div class="form-group">
                     <label for="date_arrivee">Date d'arrivée (optionnel)</label>

@@ -3,19 +3,15 @@
     background-color: var(--color-ecogreen);
     padding: 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative; /* Pour positionner le menu mobile en absolu */
 }
 
 .nav-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
+    padding: 10px 20px;
 }
-
-/*
-.logo{
-    border: 1px solid;
-}*/
 
 .logo a {
     color: white;
@@ -25,6 +21,7 @@
     padding: 10px 0;
 }
 
+/* Styles par défaut (Desktop) */
 .main-nav ul {
     list-style: none;
     margin: 0;
@@ -47,7 +44,9 @@
     background-color: var(--color-ecogreen-survol);
 }
 
-.auth-button a {
+/* Boutons d'authentification */
+.auth-button a, 
+.auth-button-mobile a {
     background-color: var(--color-connexion);
     color: white;
     padding: 8px 15px;
@@ -56,50 +55,121 @@
     transition: background-color 0.3s;
     font-weight: bold;
     margin-left: 5px;
+    display: inline-block;
 }
 
-.auth-button a:hover {
+.auth-button a:hover,
+.auth-button-mobile a:hover {
     background-color: #34495e;
 }
 
-.auth-button .btn-login {
-    background-color: var(--color-ecogreen);
+.btn-login { background-color: var(--color-ecogreen) !important; }
+.btn-login:hover { background-color: var(--color-ecodark) !important; }
+
+.btn-dashboard { background-color: var(--color-price) !important; }
+.btn-dashboard:hover { background-color: #16a39d) !important; }
+
+.btn-logout { background-color: #d32f2f !important; }
+.btn-logout:hover { background-color: #b71c1c !important; }
+
+/* Icône Burger (Cachée sur Desktop) */
+.burger-icon {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1001;
 }
 
-.auth-button .btn-login:hover {
-    background-color: var(--color-ecodark);
+.burger-icon span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 5px 0;
+    transition: 0.3s;
 }
 
-.auth-button .btn-dashboard {
-    background-color: var(--color-price);
+/* Auth Mobile (Caché sur Desktop) */
+.auth-button-mobile {
+    display: none;
 }
 
-.auth-button .btn-dashboard:hover {
-    background-color: #16a39d;
-}
-
-.auth-button .btn-logout {
-    background-color: #d32f2f;
-}
-
-.auth-button .btn-logout:hover {
-    background-color: #b71c1c;
-}
-
-/* Responsive : Masquer le menu sur mobile et afficher le bouton de Connexion */
-@media (max-width: 768px) {
+/* RESPONSIVE MOBILE (Max 600px) */
+@media (max-width: 600px) {
     .nav-content {
-        flex-wrap: wrap;
-        justify-content: center;
+        justify-content: space-between;
+    }
+
+    .burger-icon {
+        display: block; /* Afficher le burger */
+    }
+
+    /* Animation Burger Actif */
+    .burger-icon.active span:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+    }
+    .burger-icon.active span:nth-child(2) {
+        opacity: 0;
+    }
+    .burger-icon.active span:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+    }
+
+    /* Menu Mobile */
+    .nav-menu {
+        display: none; /* Caché par défaut */
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: var(--color-ecogreen);
+        flex-direction: column;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        z-index: 1000;
+        text-align: center;
+    }
+
+    .nav-menu.active {
+        display: flex; /* Afficher quand actif */
+    }
+
+    .nav-menu ul {
+        flex-direction: column;
+        width: 100%;
         gap: 10px;
     }
-    .logo {
+    
+    .nav-menu li {
         width: 100%;
-        text-align: center;
-        margin-bottom: 5px;
     }
-    .main-nav ul {
-        display: none; /* Masquer la navigation principale pour simplifier */
+
+    .nav-menu a {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Cacher les boutons desktop */
+    .desktop-only {
+        display: none;
+    }
+
+    /* Afficher les boutons mobile dans le menu */
+    .auth-button-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 15px;
+        width: 100%;
+    }
+    
+    .auth-button-mobile a {
+        margin: 0;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
     }
 }
-/* Fin du menu (US2) */

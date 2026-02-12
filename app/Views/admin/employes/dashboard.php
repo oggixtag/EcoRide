@@ -26,11 +26,11 @@
                                 <td><?= htmlspecialchars($avis->note); ?></td>
                                 <td><?= htmlspecialchars($avis->commentaire); ?></td>
                                 <td>
-                                    <form action="index.php?p=admin.employe.validateAvis" method="post" style="display:inline;">
+                                    <form action="index.php?p=admin.employes.validateAvis" method="post" style="display:inline;">
                                         <input type="hidden" name="id" value="<?= $avis->avis_id; ?>">
                                         <button type="submit" class="btn btn-success btn-sm">Valider</button>
                                     </form>
-                                    <form action="index.php?p=admin.employe.refuseAvis" method="post" style="display:inline;">
+                                    <form action="index.php?p=admin.employes.refuseAvis" method="post" style="display:inline;">
                                         <input type="hidden" name="id" value="<?= $avis->avis_id; ?>">
                                         <button type="submit" class="btn btn-danger btn-sm">Refuser</button>
                                     </form>

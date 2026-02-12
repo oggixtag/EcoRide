@@ -166,7 +166,13 @@
                 <?php
                 $nb_place = intval($trajet->nb_place);
                 if ($nb_place > 0) {
-                    // Formulaire pour participer au covoiturage
+                    $estConnecte = isset($utilisateur_courant);
+                    $creditSuffisant = $estConnecte ? ($utilisateur_courant->credit >= 2) : true;
+                    
+                    if ($estConnecte && !$creditSuffisant) {
+                        echo '<button class="btn-action btn-disabled" disabled><i class="fa-solid fa-coins"></i> Crédit insuffisant</button>';
+                    } else {
+                        // Formulaire pour participer au covoiturage
                 ?>
                     <form method="POST" id="formParticiper">
                         <input type="hidden" name="covoiturage_id" value="<?= htmlspecialchars($trajet->covoiturage_id) ?>">

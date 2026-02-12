@@ -133,535 +133,415 @@
     border: 1px solid #c3e6cb;
 }
 
-/* ================== DASHBOARD PAGE ================== */
-
-.container-dashboard {
-    padding: 40px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+/* ================== EDIT PROFILE FORM (Horizontal) ================== */
+.form-utilisateurs .form-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
-.dashboard-header {
-    background: linear-gradient(135deg, var(--color-ecogreen) 0%, var(--color-ecodark) 100%);
-    color: white;
-    padding: 40px 30px;
-    border-radius: 8px;
-    margin-bottom: 40px;
+/* Target only the main label of the input, not nested labels (like in checkboxes) */
+.form-utilisateurs .form-group>label {
+    margin-bottom: 0;
+    margin-right: 20px;
+    flex: 0 0 30%;
+    /* Fixed width for alignment */
+    text-align: left;
 }
 
-.dashboard-header h1 {
-    margin: 0 0 10px 0;
-    font-size: 2em;
+.form-utilisateurs .form-group>.form-control {
+    flex: 1;
 }
 
-.dashboard-header p {
-    margin: 0;
-    font-size: 1.1em;
-    opacity: 0.95;
-}
-
-.dashboard-section {
-    background-color: var(--color-card-bg);
-    border-radius: 8px;
-    padding: 30px;
-    margin-bottom: 30px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.dashboard-section h2 {
-    color: var(--color-nightblue);
-    margin-top: 0;
-    margin-bottom: 25px;
-    font-size: 1.5em;
-    border-bottom: 3px solid var(--color-ecogreen);
-    padding-bottom: 10px;
-}
-
-/* ================== INFO GRID ================== */
-
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+/* Special handling for Checkbox groups to avoid "justify-content: space-between" spreading them too far */
+.form-utilisateurs .checkbox-group {
+    justify-content: flex-start;
     gap: 20px;
+    align-items: flex-start;
+    /* Align to top if multi-line */
 }
 
-.info-item {
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-left: 4px solid var(--color-ecogreen);
-    border-radius: 4px;
+/* If checkbox-items need to remain as block, we can override or leave them. 
+   Currently they are divs, so they will be flex items in the row. 
+   This makes them side-by-side, which is good. */
+
+/* Responsive for Edit Form */
+@media (max-width: 600px) {
+    .form-utilisateurs .form-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .form-utilisateurs .form-group>label {
+        margin-bottom: 8px;
+        margin-right: 0;
+        flex: none;
+        width: 100%;
+    }
+
+    .form-utilisateurs .checkbox-group {
+        flex-direction: row;
+        /* Keep checkboxes likely side-by-side or wrap */
+        flex-wrap: wrap;
+    }
 }
 
-.info-item label {
-    display: block;
-    color: var(--color-nightblue);
-    font-weight: bold;
-    font-size: 0.9em;
-    margin-bottom: 8px;
-}
+/* ================== DASHBOARD LAYOUT (Sidebar + Content) ================== */
 
-.info-item p {
-    margin: 0;
-    color: var(--color-text);
-    font-size: 1em;
-}
-
-.credit-amount {
-    font-size: 1.2em;
-    color: var(--color-price);
-    font-weight: bold;
-}
-
-/* ================== ROLE INFO ================== */
-
-.role-info {
+/* Par dÃ©faut (Mobile first) */
+.presentation-section {
+    background-color: white;
+    /* ou transparent sur mobile si voulu */
     padding: 20px;
-    background-color: #f0f7ff;
-    border-radius: 4px;
-    border: 2px solid var(--color-ecogreen);
+    margin: 20px auto;
+    border-radius: 8px;
+    /* Styles de base conservÃ©s */
 }
 
-.role-badge {
-    display: inline-block;
+/* Sidebar cachÃ©e par dÃ©faut sur mobile ou affichÃ©e diffÃ©remment */
+.sidebar {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.user-summary {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.user-avatar-placeholder {
+    width: 80px;
+    height: 80px;
     background-color: var(--color-ecogreen);
     color: white;
-    padding: 10px 20px;
-    border-radius: 20px;
+    font-size: 32px;
     font-weight: bold;
-    margin: 0;
-}
-
-/* ================== AVIS LIST ================== */
-
-.avis-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-}
-
-.avis-item {
-    background-color: #f9f9f9;
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    padding: 20px;
-}
-
-.avis-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.avis-note {
-    background-color: var(--color-rating);
-    color: white;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 0.9em;
-}
-
-.avis-text {
-    color: var(--color-text);
-    margin: 0 0 10px 0;
-    font-style: italic;
-    line-height: 1.5;
-}
-
-.avis-date {
-    color: #999;
-    font-size: 0.85em;
-    margin: 0;
-}
-
-/* ================== VOITURES LIST ================== */
-
-.voitures-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-}
-
-.voiture-item {
-    background-color: #f9f9f9;
-    border: 2px solid var(--color-ecogreen);
-    border-radius: 6px;
-    padding: 20px;
-}
-
-.voiture-item h3 {
-    margin-top: 0;
-    color: var(--color-nightblue);
-    font-size: 1.2em;
-}
-
-.voiture-item p {
-    margin: 8px 0;
-    color: var(--color-text);
-}
-
-.voiture-item strong {
-    color: var(--color-nightblue);
-}
-
-/* ================== COVOITURAGES LIST ================== */
-
-.covoiturages-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 20px;
-}
-
-.covoiturage-item {
-    background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
-    border-left: 5px solid var(--color-price);
-    border-radius: 6px;
-    padding: 20px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-}
-
-.covoiturage-item h3 {
-    margin-top: 0;
-    color: var(--color-nightblue);
-    font-size: 1.1em;
-}
-
-.covoiturage-item p {
-    margin: 8px 0;
-    color: var(--color-text);
-    font-size: 0.95em;
-}
-
-.covoiturage-item strong {
-    color: var(--color-nightblue);
-}
-
-/* ================== RESERVATIONS LIST ================== */
-
-.reservations-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-}
-
-.reservation-item {
-    background-color: #f0f7ff;
-    border: 2px solid var(--color-ecogreen);
-    border-radius: 6px;
-    padding: 20px;
-}
-
-.reservation-item h3 {
-    margin-top: 0;
-    color: var(--color-nightblue);
-}
-
-.reservation-item p {
-    margin: 8px 0;
-    color: var(--color-text);
-}
-
-/* ================== EMPTY STATE ================== */
-
-.empty-message {
-    color: #999;
-    font-style: italic;
-    text-align: center;
-    padding: 40px 20px;
-    background-color: #f9f9f9;
-    border-radius: 4px;
-}
-
-/* ================== RESPONSIVE ================== */
-
-@media (max-width: 768px) {
-    .login-box {
-        padding: 25px;
-    }
-
-    .dashboard-header {
-        padding: 25px 15px;
-    }
-
-    .dashboard-header h1 {
-        font-size: 1.5em;
-    }
-
-    .dashboard-section {
-        padding: 20px 15px;
-    }
-
-    .dashboard-section h2 {
-        font-size: 1.2em;
-    }
-
-    .info-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .avis-list,
-    .voitures-list,
-    .covoiturages-list,
-    .reservations-list {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 480px) {
-    .login-box {
-        padding: 15px;
-    }
-
-    .login-box h1 {
-        font-size: 1.5em;
-        margin-bottom: 20px;
-    }
-
-    .form-control {
-        padding: 10px;
-        font-size: 16px;
-        /* Prevent zoom on iOS */
-    }
-
-    .btn {
-        padding: 10px;
-        font-size: 0.95em;
-    }
-
-    .container-dashboard {
-        padding: 15px 10px;
-    }
-
-    .dashboard-header {
-        padding: 20px 10px;
-    }
-
-    .dashboard-header h1 {
-        font-size: 1.3em;
-    }
-
-    .dashboard-section {
-        padding: 15px 10px;
-    }
-
-    .dashboard-section h2 {
-        font-size: 1.1em;
-    }
-}
-
-/* ================ RECOVERY FORM STYLES ================ */
-
-.recovery-method-selector {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.recovery-method-selector label {
     display: flex;
     align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
     margin: 0;
-    font-weight: normal;
-    cursor: pointer;
-    font-size: 0.95em;
 }
 
-.recovery-method-selector input[type="radio"] {
-    margin-right: 8px;
-    cursor: pointer;
-    accent-color: var(--color-ecogreen);
-}
-
-/* ================ BUTTON TOGGLE STYLES ================ */
-
-#toggleRecovery,
-#backToLogin a {
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-#toggleRecovery:hover,
-#backToLogin a:hover {
-    color: var(--color-ecodark);
-}
-
-/* Helpers for Buttons inside headers and lists */
-.btn-sm {
-    padding: 5px 10px;
-    font-size: 0.8rem;
-    border-radius: 4px;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.float-right-btn {
-    float: right;
-    font-size: 0.8em;
-}
-
-.voiture-actions {
-    margin-top: 10px;
-}
-
-.mt-20 {
-    margin-top: 20px;
-}
-
-/* Alert styles within dashboard */
-.alert-warning {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-/* Compact section for US8 */
-.compact-section {
-    padding: 15px;
-    /* Reduced from 20px/30px */
-}
-
-.compact-section h2 {
-    margin-bottom: 10px;
-    font-size: 1.3em;
-    padding-bottom: 5px;
-}
-
-.compact-section .info-grid {
-    gap: 10px;
-    /* Reduced from 20px */
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    /* Allow smaller columns */
-}
-
-.compact-section .info-item {
-    padding: 10px;
-    /* Reduced from 15px */
-    border-left-width: 3px;
-}
-
-.compact-section .info-item label {
-    margin-bottom: 4px;
-    font-size: 0.85em;
-}
-
-.compact-section .info-item p {
-    font-size: 0.95em;
-}
-
-.compact-section .form-group {
-    margin-bottom: 10px;
-    /* Reduced from 15px/20px */
-}
-
-.compact-section .form-buttons {
-    margin-top: 10px;
-}
-
-.compact-section .voiture-item {
-    padding: 10px;
-}
-
-.compact-section .voiture-item h3 {
-    font-size: 1.1em;
+.sidebar-nav li {
     margin-bottom: 5px;
 }
 
-.compact-section .voiture-item p {
-    margin: 4px 0;
-    font-size: 0.9em;
-}
-
-/* ================== US10 REFACTOR ================== */
-
-.header-grid {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-}
-
-h1.header-grid-title,
-span.header-grid-title {
-    margin: 0;
-    text-align: center;
-}
-
-.text-left {
-    text-align: left;
-}
-
-.text-right {
-    text-align: right;
-}
-
-.text-center {
-    text-align: center;
-}
-
-.subtitle-centered {
-    text-align: center;
-    margin-top: 10px;
-}
-
-.mt-20 {
-    margin-top: 20px;
-}
-
-.history-item {
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    opacity: 0.8;
-    background-color: #f9f9f9;
-}
-
-.btn-history {
-    background-color: #FFFFE0;
-    border: 1px solid #FFD700;
-    color: #000;
-}
-
-.form-centered-600 {
-    text-align: left;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.form-centered-800 {
-    text-align: left;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.covoiturage-link-item {
+.sidebar-nav a {
     display: block;
+    padding: 10px 15px;
     text-decoration: none;
-    color: inherit;
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
+    color: var(--color-nightblue);
+    border-radius: 4px;
+    transition: background-color 0.2s;
 }
 
-.header-plain {
-    background: none;
-    color: inherit;
-    padding: 0;
-    box-shadow: none;
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+    background-color: #f0f7ff;
+    color: var(--color-ecogreen);
+    font-weight: bold;
 }
 
-.container-alert-full {
-    padding: 15px;
-    margin: 10px auto;
-}
-
-.w-100 {
+/* Content Area */
+.content-area {
     width: 100%;
 }
 
-.chauffeur-info-box {
-    margin-top: 20px;
+.dashboard-section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    /* LÃ©ger ombrage pour dÃ©tacher du fond */
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.section-header h2 {
+    margin: 0;
+    font-size: 1.25em;
+    color: var(--color-nightblue);
+}
+
+/* CARDS pour listes (Voitures, Trajets, etc.) */
+.card-style {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 6px;
     padding: 15px;
-    background-color: #e8f5e9;
+    margin-bottom: 15px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-style:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Info Grid - Replaces Grid with Vertical Flex (List style) */
+.info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-item label {
+    font-size: 0.95em;
+    color: #666;
+    margin-bottom: 0;
+    font-weight: 500;
+    /* Fixed width or flex-basis if strict alignment is needed, 
+       but space-between works well for "Label ........ Value" */
+    flex: 0 0 auto;
+    margin-right: 20px;
+}
+
+.info-item p,
+.info-item .credit-amount {
+    font-weight: 600;
+    color: var(--color-nightblue);
+    margin: 0;
+    text-align: right;
+    word-break: break-all;
+    /* Prevent long emails/values from breaking layout */
+}
+
+/* Specific fix for masked inputs container */
+.info-item .input-group-display {
+    justify-content: flex-end;
+    /* Align right */
+    width: auto;
+}
+
+/* RESPONSIVE: Stack on very small screens if needed, 
+   but "Name: Value" usually fits. 
+   Let's ensure it wraps gracefully. */
+@media (max-width: 500px) {
+    .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .info-item p,
+    .info-item .credit-amount,
+    .info-item .input-group-display {
+        text-align: left;
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .info-item label {
+        margin-right: 0;
+        margin-bottom: 2px;
+        color: #888;
+        font-size: 0.85em;
+    }
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
     border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status-confirmÃ© {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-en_attente {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-annulÃ©,
+.status-refusÃ© {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Trip Summary in Cards */
+.trip-summary {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+}
+
+.trip-route {
+    font-weight: bold;
+    font-size: 1.05em;
+    color: var(--color-nightblue);
+}
+
+.trip-date {
+    color: #555;
+    font-size: 0.9em;
+}
+
+.trip-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.trip-price {
+    font-weight: bold;
+    color: var(--color-price);
+}
+
+
+/* ================== RESPONSIVE MEDIA QUERIES ================== */
+
+/* TABLETTE & DESKTOP (Layout 2 colonnes) */
+@media (min-width: 601px) {
+
+    /* Utilise la classe .main-layout dÃ©finie dans style_app.css */
+    /* .main-layout { display: grid; grid-template-columns: ... } */
+    /* Force l'alignement en haut et à gauche, surcharge .presentation-section */
+    .presentation-section.main-layout {
+        align-items: start !important;
+        /* Force override */
+        text-align: left !important;
+    }
+
+    .main-layout {
+        align-items: start;
+        text-align: left;
+    }
+
+    /* Assure que la sidebar colle en haut lors du scroll si l'Ã©cran est assez grand */
+    .sidebar {
+        align-self: start;
+        /* S'aligne en haut de la cellule de grille */
+        position: sticky;
+        top: 20px;
+        height: fit-content;
+        margin-bottom: 0;
+    }
+
+    .dashboard-header-mobile {
+        display: none;
+        /* Cache le titre mobile car dÃ©jÃ  dans sidebar ou autre */
+    }
+}
+
+/* MOBILE (< 600px) */
+@media (max-width: 600px) {
+    .main-layout {
+        display: block;
+        /* Pas de grille, tout empilÃ© */
+    }
+
+    .sidebar {
+        text-align: center;
+    }
+
+    .sidebar-nav {
+        display: none;
+        /* On peut cacher la nav latÃ©rale sur mobile et juste afficher le rÃ©sumÃ© user */
+    }
+
+    /* Ou transformer la sidebar en barre de navigation horizontale */
+    /*
+    .sidebar-nav ul {
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+    .sidebar-nav li { margin-right: 10px; }
+    */
+
+    .dashboard-section {
+        padding: 15px;
+    }
+}
+
+/* Dashboard Container Style (remplace presentation-section pour le dashboard) */
+.dashboard-container {
+    background-color: transparent;
+    /* Fond transparent pour laisser voir le background body */
+    padding: 20px 20px;
+    margin: 30px auto;
+    width: 95%;
+    max-width: 1200px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+    .dashboard-container {
+        padding: 0 15px;
+    }
+}
+
+/* Fix Mes Trajets formatting: remove link styles from cards */
+a.covoiturage-item {
+    display: block !important;
+    text-decoration: none !important;
+    color: inherit !important;
+    border-bottom: none !important;
+    /* Safety against border-bottom style links */
+}
+
+a.covoiturage-item:hover {
+    text-decoration: none !important;
+    transform: translateY(-2px);
+    color: inherit !important;
+}
+
+a.covoiturage-item .trip-route {
+    color: var(--color-nightblue) !important;
+    text-decoration: none !important;
+}
+
+a.covoiturage-item .trip-price {
+    color: var(--color-price) !important;
+    font-weight: bold;
+    font-size: 1.2em;
+    text-decoration: none !important;
+}
+
+a.covoiturage-item:visited,
+a.covoiturage-item:active,
+a.covoiturage-item:focus {
+    text-decoration: none !important;
+    color: inherit !important;
+    outline: none;
 }

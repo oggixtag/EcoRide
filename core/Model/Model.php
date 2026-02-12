@@ -95,12 +95,12 @@ class Model
 
         //die();
 
-        return $this->query("UPDATE {$this->table} SET $sqlSet WHERE id=?", $attributes, true);
+        return $this->query("UPDATE {$this->table} SET $sqlSet WHERE {$this->column}=?", $attributes, true);
     }
 
     public function delete($id)
     {
-        return $this->query("DELETE FROM {$this->table} WHERE id=?", [$id], true);
+        return $this->query("DELETE FROM {$this->table} WHERE {$this->column}=?", [$id], true);
     }
 
     public function insert($fields)

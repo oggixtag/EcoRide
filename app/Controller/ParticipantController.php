@@ -4,8 +4,18 @@ namespace NsAppEcoride\Controller;
 
 use \NsCoreEcoride\HTML\MyForm;
 
+/**
+ * Contrôleur pour la gestion des participations aux covoiturages.
+ * Gère la validation des trajets par les participants.
+ */
 class ParticipantController extends AppController
 {
+    /**
+     * Constructeur du contrôleur des participations.
+     * Initialise les modèles Covoiturage et Utilisateur.
+     * 
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
@@ -14,11 +24,14 @@ class ParticipantController extends AppController
     }
 
     /**
-     * Affiche la page de validation pour un utilisateur
+     * Affiche la page de validation d'un covoiturage pour un participant.
+     * Vérifie que l'utilisateur est connecté et que le covoiturage existe.
+     * 
+     * @return void Affiche la vue participant.validate ou redirige vers login
      */
     public function validate()
     {
-        // TODO: En prod, vérifier le token de sécurité reçu par mail
+        // TODO : En prod, vérifier le token de sécurité reçu par mail
         
         $covoiturage_id = isset($_GET['covoiturage_id']) ? intval($_GET['covoiturage_id']) : 0;
         $utilisateur_id = $_SESSION['auth'] ?? 0;
@@ -40,7 +53,11 @@ class ParticipantController extends AppController
     }
 
     /**
-     * Traite la validation du covoiturage
+     * Traite la soumission de validation d'un covoiturage.
+     * Gère le crédit du chauffeur si le trajet s'est bien passé,
+     * ou enregistre un incident si le trajet s'est mal passé.
+     * 
+     * @return void Affiche un message de confirmation
      */
     public function submitValidation()
     {
@@ -76,7 +93,7 @@ class ParticipantController extends AppController
             // Ouvrir un incident (Log, Table spécifique, ou juste mail admin)
             // Pour l'instant on ne crédite pas le chauffeur.
             $commentaire = $_POST['commentaire'] ?? '';
-            // TODO: Enregistrer l'incident
+            // TODO : Enregistrer l'incident
             error_log("Incident signalé pour covoiturage $covoiturage_id par user $utilisateur_id : $commentaire");
         }
 
@@ -87,7 +104,7 @@ class ParticipantController extends AppController
         // Si c'est stocké dans `covoiturage.avis_covoiturage_id`, ça écrase pour tout le monde ?
         // Supposons que ça met à jour le statut global du covoiturage si c'est ce que la DB demande.
         
-        // Update covoiturage table if that's where it is stored
+        // Mettre à jour la table covoiturage si c'est là que c'est stocké
         if ($avis_covoiturage_id > 0) {
             $this->Covoiturage->query("UPDATE covoiturage SET avis_covoiturage_id = ? WHERE covoiturage_id = ?", [$avis_covoiturage_id, $covoiturage_id]);
         }

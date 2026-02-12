@@ -49,24 +49,24 @@
             <h3>Mon Rôle</h3>
             <?php 
                 $role_id = $utilisateur->role_id;
-                // Logic for checking boxes
+                // Logique pour cocher les cases
                 $check_passager = ($role_id == 2 || $role_id == 3);
                 $check_chauffeur = ($role_id == 1 || $role_id == 3 || (isset($has_cars) && $has_cars));
             ?>
             <div class="form-group checkbox-group">
                 <div class="checkbox-item">
                     <input type="checkbox" id="role_passager" name="role_passager" value="2" <?= $check_passager ? 'checked' : '' ?>>
-                    <label for="role_passager">Passager</label>
+                    <label for="role_passager">Passanger</label>
                 </div>
                 <div class="checkbox-item">
-                    <input type="checkbox" id="role_chauffeur" name="role_chauffeur" value="1" <?= $check_chauffeur ? 'checked' : '' ?> onchange="toggleChauffeurInfo(this)">
+                    <input type="checkbox" id="role_chauffeur" name="role_chauffeur" value="1" <?= $has_cars ? 'checked' : '' ?> disabled>
                     <label for="role_chauffeur">Chauffeur</label>
                 </div>
             </div>
 
-            <div id="chauffeur-info" class="chauffeur-info-box" style="display: <?= !$check_chauffeur ? 'block' : 'none' ?>;">
+            <div id="chauffeur-info" class="chauffeur-info-box" style="display: <?= $has_cars ? 'none' : 'block' ?>;">
                 <p><strong>Information Chauffeur :</strong></p>
-                <p>Pour être chauffeur il faut impérativement ajouter un véhicule dans la section <a href="index.php?p=utilisateurs.voitures.index">Mes Voitures</a>.</p>
+                <p>Pour devenir chauffeur, vous devez impérativement ajouter un véhicule dans la section <a href="index.php?p=utilisateurs.voitures.index">Mes Voitures</a>. Le rôle sera activé automatiquement.</p>
             </div>
 
             <h3>Préférences</h3>

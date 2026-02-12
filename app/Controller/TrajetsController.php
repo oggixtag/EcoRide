@@ -7,16 +7,25 @@ use \NsCoreEcoride\HTML\MyForm;
 class TrajetsController extends AppController
 {
 
+    /**
+     * Constructeur du contrôleur de trajets.
+     * Initialise les modèles Trajet et Covoiturage.
+     * 
+     * @return void
+     */
     public function __construct()
     {
         parent::__construct();
-        $this->loadModel('Trajet'); // Loads TrajetModel
-        $this->loadModel('Covoiturage'); // Loads CovoiturageModel for methods not in Trajet if any, or just use Trajet
+        $this->loadModel('Trajet'); // Charge TrajetModel
+        $this->loadModel('Covoiturage'); // Charge CovoiturageModel pour les méthodes non présentes dans Trajet, ou utiliser simplement Trajet
     }
 
     /**
-     * Affiche la liste des trajets (Résultat de recherche)
-     * Déplacé depuis CovoituragesController::show
+     * Affiche la liste des trajets (Résultat de recherche).
+     * Gère la recherche par lieu de départ et date, avec filtres optionnels.
+     * Déplacé depuis CovoituragesController::show.
+     * 
+     * @return void Affiche la vue trajets.trajet
      */
     public function show()
     {
@@ -30,6 +39,7 @@ class TrajetsController extends AppController
             // **NOUVEAU SEARCH POST** : Stocker les critères dans la session
             $_SESSION['search_criteria'] = array(
                 'lieu_depart' => $_POST['lieu_depart'],
+                'lieu_arrivee' => $_POST['lieu_arrivee'] ?? '', // Ajout lieu_arrivee
                 'date' => $_POST['date'],
                 'filters' => array(
                     'energie' => isset($_POST['energie']) && is_array($_POST['energie']) ? $_POST['energie'] : array(),
@@ -41,17 +51,20 @@ class TrajetsController extends AppController
             );
 
             $lieu_depart = $_POST['lieu_depart'];
+            $lieu_arrivee = $_POST['lieu_arrivee'] ?? ''; // Extraction
             $date = $_POST['date'];
             $filters = $_SESSION['search_criteria']['filters'];
         } elseif (isset($_SESSION['search_criteria'])) {
             // **RETOUR SANS POST** : Récupérer les critères depuis la session
             $lieu_depart = $_SESSION['search_criteria']['lieu_depart'];
+            $lieu_arrivee = $_SESSION['search_criteria']['lieu_arrivee'] ?? ''; // Récupération
             $date = $_SESSION['search_criteria']['date'];
             $filters = $_SESSION['search_criteria']['filters'];
         } else {
             // **PREMIER ACCÈS** : Pas de critères, afficher formulaire vide
             $error_form_recherche = true;
             $lieu_depart = '';
+            $lieu_arrivee = '';
             $date = '';
             $filters = array(
                 'energie' => array(),
@@ -62,28 +75,32 @@ class TrajetsController extends AppController
             );
         }
 
+
+
         // Récupérer les données si on a les critères
         if (!$error_form_recherche) {
-            // USING TrajetModel (assuming it has methods from CovoiturageModel or we use CovoiturageModel directly)
-            // Since we created TrajetModel extending Model directly, it does NOT automatically have 'recherche' unless we added it or it extends CovoiturageModel.
-            // I created TrajetModel extending Model directly in step 48, so it DOES NOT have 'recherche'.
-            // I should have extended CovoiturageModel.
-            // CORRECTIVE ACTION: I will use $this->Covoiturage here for search, or update TrajetModel to extend CovoiturageModel.
-            // Requirement said "créer TrajetModel", usually implies clean slate or extended.
-            // Given I loaded 'Covoiturage' model too, I will use it for search as it already has the logic.
-            // BUT strict US instructions might imply using TrajetModel.
-            // US9: "4. créer TrajetModel".
-            // Implementation Plan said: "TrajetModel (which may just be an alias for CovoiturageModel...)"
-            // I'll stick to using CovoiturageModel for searching to avoid code duplication, OR duplicate the methods.
-            // For now, I'll use $this->Covoiturage->recherche to be safe and efficient.
+            // UTILISATION de TrajetModel (en supposant qu'il a les méthodes de CovoiturageModel ou nous utilisons CovoiturageModel directement)
+            // Puisque j'ai créé TrajetModel étendant Model directement, il n'a PAS automatiquement 'recherche' sauf si nous l'avons ajouté ou s'il étend CovoiturageModel.
+            // J'ai créé TrajetModel étendant Model directement à l'étape 48, donc il n'a PAS 'recherche'.
+            // J'aurais dû étendre CovoiturageModel.
+            // ACTION CORRECTIVE : J'utiliserai $this->Covoiturage ici pour la recherche, ou mettre à jour TrajetModel pour étendre CovoiturageModel.
+            // L'exigence dit "créer TrajetModel", ce qui implique généralement une nouvelle classe ou une extension.
+            // Étant donné que j'ai également chargé le modèle 'Covoiturage', je l'utiliserai pour la recherche car il a déjà la logique.
+            // MAIS les instructions strictes des US pourraient impliquer l'utilisation de TrajetModel.
+            // US9 : "4. créer TrajetModel".
+            // Le plan d'implémentation dit : "TrajetModel (qui peut être juste un alias pour CovoiturageModel...)"
+            // Je vais utiliser $this->Covoiturage->recherche pour être sûr et efficace.
             
-            $trajets = $this->Covoiturage->recherche($lieu_depart, $date); // Renamed from $covoiturages
-            $trajet_lieu_ou_date = $this->Covoiturage->recherche_lieu_ou_date($lieu_depart, $date); // Renamed from $covoiturages_lieu_ou_date
+            $trajets = $this->Covoiturage->recherche($lieu_depart, $date); // Renommé depuis $covoiturages
+            $trajet_lieu_ou_date = $this->Covoiturage->recherche_lieu_ou_date($lieu_depart, $date); // Renommé depuis $covoiturages_lieu_ou_date
 
-            // Application des filtres
+            // Application des filtres via le modèle
             if (!empty(array_filter($filters))) {
-                $trajets = $this->applyFilters($trajets, $filters);
-                $trajet_lieu_ou_date = $this->applyFilters($trajet_lieu_ou_date, $filters);
+                // $trajets = $this->applyFilters($trajets, $filters); // Ancienne méthode
+                $trajets = $this->Covoiturage->filterResults($trajets, $filters);
+                
+                // $trajet_lieu_ou_date = $this->applyFilters($trajet_lieu_ou_date, $filters); // Ancienne méthode
+                $trajet_lieu_ou_date = $this->Covoiturage->filterResults($trajet_lieu_ou_date, $filters);
             }
         } else {
             $trajets = array();
@@ -110,20 +127,36 @@ class TrajetsController extends AppController
             }
         }
 
-        // Normaliser l'énergie pour chaque covoiturage
+        // Normaliser l'énergie pour chaque covoiturage (Pour la vue, même si le modèle le fait aussi pour le filtre)
         $energie_normalized_map = array();
+
         foreach (array_merge($trajets, $trajet_lieu_ou_date) as $trajet) {
             $energie_normalized_map[$trajet->covoiturage_id] = strtolower($this->removeAccents($trajet->energie ?? ''));
         }
+        if (isset($_GET['ajax']) || (isset($_POST['ajax']) && $_POST['ajax'] == 1)) {
+            // Rendre uniquement la vue partielle
+             // Variables nécessaires à la vue partielle :
+             // $trajet_lieu_ou_date (filtré), $energie_normalized_map, $utilisateur_courant, $participations_utilisateur
+             
+             // Extraction des variables pour qu'elles soient disponibles dans le require
+             extract(compact('trajets', 'trajet_lieu_ou_date', 'energie_normalized_map', 'utilisateur_courant', 'participations_utilisateur'));
+             
+             // Inclusion de la vue partielle
+             require ROOT . '/app/Views/trajets/liste_resultats.php';
+             exit; // Arrêter le script ici pour ne pas charger le layout
+        }
 
-        // ça appelle la page trajet (C:\xampp\htdocs\EcoRide\app\Views\trajets)
-        // Note: View path needs to be updated or created. US says "déplacement du fichier 'EcoRide\app\Views\trajets\trajet.php'"
-        $this->render('trajets.trajet', compact('trajets', 'trajet_lieu_ou_date', 'form', 'error_form_recherche', 'filters', 'energie_normalized_map', 'utilisateur_courant', 'participations_utilisateur'));
+        $this->render('trajets.trajet', compact('trajets', 'trajet_lieu_ou_date', 'form', 'error_form_recherche', 'filters', 'energie_normalized_map', 'utilisateur_courant', 'participations_utilisateur', 'lieu_depart', 'lieu_arrivee', 'date'));
     }
 
+
+
     /**
-     * Affiche le détail d'un trajet
-     * Déplacé depuis CovoituragesController::detail
+     * Affiche le détail d'un trajet spécifique.
+     * Récupère les informations complètes du covoiturage par son ID.
+     * Déplacé depuis CovoituragesController::detail.
+     * 
+     * @return void Affiche la vue trajets.trajet_detail ou redirige si non trouvé
      */
     public function detail()
     {
@@ -134,11 +167,11 @@ class TrajetsController extends AppController
             exit;
         }
 
-        $trajets_id = intval($_GET['id']); // Renamed from $covoiturage_id
+        $trajets_id = intval($_GET['id']); // Renommé depuis $covoiturage_id
 
         // Récupérer les détails complets du covoiturage
-        // Using CovoiturageModel for findWithDetails
-        $trajet = $this->Covoiturage->findWithDetails($trajets_id); // Renamed from $covoiturage
+        // Utilisation de CovoiturageModel pour findWithDetails
+        $trajet = $this->Covoiturage->findWithDetails($trajets_id); // Renommé depuis $covoiturage
 
         // Vérifier que le covoiturage existe
         if (!$trajet) {
@@ -150,12 +183,23 @@ class TrajetsController extends AppController
         // Normaliser l'énergie pour la comparaison
         $energie_normalized = strtolower($this->removeAccents($trajet->energie ?? ''));
 
+        // Récupérer l'utilisateur courant pour les vérifications de crédit
+        $auth = new \NsCoreEcoride\Auth\DbAuth(\App::getInstance()->getDb());
+        $utilisateur_courant = null;
+        if ($auth->isConnected()) {
+            $this->loadModel('Utilisateur');
+            $utilisateur_courant = $this->Utilisateur->find($auth->getConnectedUserId());
+        }
+
         // Rendu du template complet
-        $this->render('trajets.trajet_detail', compact('trajet', 'energie_normalized'));
+        $this->render('trajets.trajet_detail', compact('trajet', 'energie_normalized', 'utilisateur_courant'));
     }
 
     /**
-     * Affiche le formulaire de création de trajet
+     * Affiche le formulaire de création d'un nouveau trajet.
+     * Vérifie que l'utilisateur est connecté et récupère ses véhicules.
+     * 
+     * @return void Affiche la vue trajets.nouveau.index ou redirige vers login
      */
     public function nouveau()
     {
@@ -168,9 +212,9 @@ class TrajetsController extends AppController
         $this->loadModel('Utilisateur');
         $utilisateur = $this->Utilisateur->find($_SESSION['auth']);
 
-        // Check Chauffeur role (Assuming 1 is Chauffeur, or based on us9 requirement "si l'utilisateur est un chauffeur")
-        // and credits logic handling is in sauvegarder usually, but good to check here too?
-        // Let's just render the view. Controller specific logic for vehicle selection is needed.
+        // Vérifier le rôle Chauffeur (En supposant que 1 est Chauffeur, ou basé sur l'exigence us9 "si l'utilisateur est un chauffeur")
+        // et la logique de gestion des crédits est généralement dans sauvegarder, mais bien de vérifier ici aussi ?
+        // Affichons simplement la vue. La logique spécifique au contrôleur pour la sélection du véhicule est nécessaire.
         
         $this->loadModel('Voiture');
         $voitures = $this->Voiture->getVoituresByUserId($_SESSION['auth']);
@@ -181,7 +225,11 @@ class TrajetsController extends AppController
     }
 
     /**
-     * Enregistre un nouveau trajet
+     * Enregistre un nouveau trajet en base de données.
+     * Vérifie les crédits de l'utilisateur (coût: 2 crédits), valide les données
+     * et crée le covoiturage avec le statut "prévu".
+     * 
+     * @return void Redirige vers le profil utilisateur ou affiche une erreur
      */
     public function sauvegarder()
     {
@@ -203,7 +251,7 @@ class TrajetsController extends AppController
 
         // 1. Vérification des crédits (2 crédits)
         if ($utilisateur->credit < 2) {
-             // Handle error (maybe redirect with message)
+             // Gérer l'erreur (peut-être rediriger avec un message)
              $_SESSION['flash_message'] = "Crédits insuffisants (2 nécessaires).";
              $_SESSION['flash_type'] = "danger";
              header('Location: index.php?p=trajets.nouveau');
@@ -230,42 +278,48 @@ class TrajetsController extends AppController
             'date_depart' => $_POST['date_depart'],
             'heure_depart' => $_POST['heure_depart'],
             'lieu_depart' => $_POST['lieu_depart'],
-            'date_arrivee' => $_POST['date_depart'], // Assuming same day for MVP or complex logic? Requirement says "date de départ ainsi que d'arrivée".
-             // Actually input form should have date_arrivee too or we assume same if not asked. 
-             // Requirement 2: "une adresse de départ, une adresse d’arrivée". But usually date too.
-             // Implémentation point 2 lists fields: adresse dep, adresse arr, prix, places, vehicule. Matches inputs.
-             // But DB has date_arrivee. I will assume date_arrivee = date_depart + duration (if calculated) or let user input it.
-             // For simplify, I'll take date_arrivee from POST if exists, else date_depart.
-             // Wait, the "nouveau" implementation list: "adresse départ, adresse arrivée, prix, places, véhicule". Doesn't list DATES.
-             // But they are REQUIRED for a Trip. I MUST ask for Date and Time.
-             // I will assume the form includes Date/Time.
+            'date_arrivee' => $_POST['date_depart'], // En supposant le même jour pour le MVP ou logique complexe ? L'exigence dit "date de départ ainsi que d'arrivée".
+             // En fait le formulaire devrait avoir date_arrivee aussi ou on suppose la même si non demandé.
+             // Exigence 2 : "une adresse de départ, une adresse d'arrivée". Mais généralement la date aussi.
+             // Le point d'implémentation 2 liste les champs : adresse dep, adresse arr, prix, places, vehicule. Correspond aux inputs.
+             // Mais la BDD a date_arrivee. Je vais supposer date_arrivee = date_depart + durée (si calculée) ou laisser l'utilisateur la saisir.
+             // Pour simplifier, je prendrai date_arrivee depuis POST si existe, sinon date_depart.
+             // Attendez, la liste d'implémentation "nouveau" : "adresse départ, adresse arrivée, prix, places, véhicule". Ne liste pas les DATES.
+             // Mais elles sont REQUISES pour un trajet. Je DOIS demander Date et Heure.
+             // Je vais supposer que le formulaire inclut Date/Heure.
             'date_arrivee' => $_POST['date_arrivee'] ?? $_POST['date_depart'], 
             'heure_arrivee' => $_POST['heure_arrivee'] ?? $_POST['heure_depart'], // This assumes 0 duration? Bad. 
             // I'll add them to form.
             'lieu_arrivee' => $_POST['lieu_arrivee'],
             'statut_covoiturage_id' => 2, // 2 = prévu (1=annulé, 3=confirmé) 
-            // DDL: statut_covoiturage.
-            // DML: 1=annulé, 2=prévu, 3=confirmé. (Wait, let's check DML.sql step 21)
-            // Lines 89-92: 1('annulé'), 2('prévu'), 3('confirmé') ?? No, auto_increment starts at 1.
-            // ('annulé'), ('prévu'), ('confirmé'). Order depends on insertion.
-            // Let's check DML again. Values are Auto Increment.
+            // DDL : statut_covoiturage.
+            // DML : 1=annulé, 2=prévu, 3=confirmé. (Attendez, vérifions DML.sql étape 21)
+            // Lignes 89-92 : 1('annulé'), 2('prévu'), 3('confirmé') ?? Non, auto_increment commence à 1.
+            // ('annulé'), ('prévu'), ('confirmé'). L'ordre dépend de l'insertion.
+            // Vérifions DML à nouveau. Les valeurs sont Auto Increment.
             // INSERT INTO `statut_covoiturage` (`libelle`) VALUES ('annulé'), ('prévu'), ('confirmé');
-            // So 1=annulé, 2=prévu, 3=confirmé.
-            // I should use 2 (prévu).
+            // Donc 1=annulé, 2=prévu, 3=confirmé.
+            // Je devrais utiliser 2 (prévu).
             'nb_place' => $_POST['nb_place'],
             'prix_personne' => $_POST['prix_personne'],
             'voiture_id' => $_POST['voiture_id']
         ];
         
-        // Use TrajetModel to create
-        // Note: TrajetModel create method accepts array.
-        $this->Trajet->create($data); // Assumes $this->Trajet is loaded (loaded in construct)
+        // Utiliser TrajetModel pour créer
+        // Note : La méthode create de TrajetModel accepte un tableau.
+        $this->Trajet->create($data); // Suppose que $this->Trajet est chargé (chargé dans construct)
 
         // 5. Redirection
         header('Location: index.php?p=utilisateurs.profile.index');
         exit;
     }
 
+    /**
+     * Affiche le formulaire d'édition d'un trajet existant.
+     * Vérifie que l'utilisateur est propriétaire du trajet.
+     * 
+     * @return void Affiche la vue trajets.nouveau.edit ou redirige si non autorisé
+     */
     public function edit()
     {
         if (empty($_GET['id'])) {
@@ -274,15 +328,15 @@ class TrajetsController extends AppController
         }
         $id = intval($_GET['id']);
         
-        // Load trip
-        $trajet = $this->Trajet->find($id); // TrajetModel extends Model -> has find($id) ?? 
-        // My TrajetModel extends Model but Model usually has generic find? I need to check Model.
-        // CovoiturageModel had a specific find($id) implementation with joins.
-        // TrajetModel (my code) did NOT override find().
-        // Does Model::find() exist? I should check AppModel or Model.
-        // For safety, I'll use CovoiturageModel::find which has the JOINS (needed for displaying car info etc if we want).
-        // Or I should implement find in TrajetModel properly.
-        // Given I didn't verify Model base class, I'll rely on CovoiturageModel which I know works.
+        // Charger le trajet
+        $trajet = $this->Trajet->find($id); // TrajetModel étend Model -> a find($id) ?? 
+        // Mon TrajetModel étend Model mais Model a généralement un find générique ? Je dois vérifier Model.
+        // CovoiturageModel avait une implémentation find($id) spécifique avec des jointures.
+        // TrajetModel (mon code) n'a PAS redéfini find().
+        // Est-ce que Model::find() existe ? Je devrais vérifier AppModel ou Model.
+        // Par sécurité, j'utiliserai CovoiturageModel::find qui a les JOINTURES (nécessaires pour afficher les infos voiture etc si on veut).
+        // Ou je devrais implémenter find dans TrajetModel correctement.
+        // Étant donné que je n'ai pas vérifié la classe de base Model, je me fie à CovoiturageModel qui fonctionne.
         
         $trajet = $this->Covoiturage->findWithDetails($id);
 
@@ -291,31 +345,31 @@ class TrajetsController extends AppController
              exit;
         }
 
-        // Check ownership (security)
-        if (empty($_SESSION['auth']) || $_SESSION['auth'] != $trajet->utilisateur_id) { // Wait, find() returns object with utilisateur pseudo?
-             // CovoiturageModel::find() joins with Usuario.
-             // But does it return utilisateur_id?
-             // Query: select c.*, ... u.pseudo, v.energie from ...
-             // It does NOT select u.utilisateur_id in the SELECT list of CovoiturageModel::find (step 44 line 103).
-             // It joins v -> u.
-             // It joins voiture v, and voiture has utilisateur_id.
-             // I need to check if I can check ownership.
-             // covoiturage table has voiture_id. voiture table has utilisateur_id.
-             // CovoiturageModel::find JOINs voiture v on c.voiture_id = v.voiture_id
+        // Vérifier la propriété (sécurité)
+        if (empty($_SESSION['auth']) || $_SESSION['auth'] != $trajet->utilisateur_id) { // Attendez, find() retourne un objet avec utilisateur pseudo ?
+             // CovoiturageModel::find() joint avec Usuario.
+             // Mais retourne-t-il utilisateur_id ?
+             // Requête : select c.*, ... u.pseudo, v.energie from ...
+             // Il ne sélectionne PAS u.utilisateur_id dans la liste SELECT de CovoiturageModel::find (étape 44 ligne 103).
+             // Il joint v -> u.
+             // Il joint voiture v, et voiture a utilisateur_id.
+             // Je dois vérifier si je peux vérifier la propriété.
+             // la table covoiturage a voiture_id. la table voiture a utilisateur_id.
+             // CovoiturageModel::find fait JOIN voiture v on c.voiture_id = v.voiture_id
              // JOIN utilisateur u on u.utilisateur_id = v.utilisateur_id.
-             // It selects: "u.pseudo". It does NOT select "v.utilisateur_id" or "u.utilisateur_id".
-             // PROBLEM: I cannot verify ownership easily with existing CovoiturageModel::find.
-             // I should use CovoiturageModel::findWithDetails which selects "u.utilisateur_id" (line 145).
+             // Il sélectionne : "u.pseudo". Il ne sélectionne PAS "v.utilisateur_id" ou "u.utilisateur_id".
+             // PROBLÈME : Je ne peux pas vérifier la propriété facilement avec CovoiturageModel::find existant.
+             // Je devrais utiliser CovoiturageModel::findWithDetails qui sélectionne "u.utilisateur_id" (ligne 145).
              
              $trajet = $this->Covoiturage->findWithDetails($id);
              if ($_SESSION['auth'] != $trajet->utilisateur_id) {
-                 header('Location: index.php?p=utilisateurs.profile.index'); // Access denied
+                 header('Location: index.php?p=utilisateurs.profile.index'); // Accès refusé
                  exit;
              }
         }
 
-        $form = new MyForm((array)$trajet); // Cast object to array for form filling?
-        // MyForm probably expects array.
+        $form = new MyForm((array)$trajet); // Convertir l'objet en tableau pour remplir le formulaire ?
+        // MyForm attend probablement un tableau.
         
         $this->loadModel('Voiture');
         $voitures = $this->Voiture->getVoituresByUserId($_SESSION['auth']);
@@ -324,6 +378,12 @@ class TrajetsController extends AppController
         $this->render('trajets.nouveau.edit', compact('form', 'trajet', 'voitures', 'statuts'));
     }
 
+    /**
+     * Met à jour les informations d'un trajet existant.
+     * Traite les données POST et enregistre les modifications.
+     * 
+     * @return void Redirige vers le profil utilisateur après mise à jour
+     */
     public function update()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['covoiturage_id'])) {
@@ -333,8 +393,8 @@ class TrajetsController extends AppController
         
         $id = intval($_POST['covoiturage_id']);
         
-        // Ownership check again?
-        // ... skipped for brevity but should be there ...
+        // Vérification de propriété à nouveau ?
+        // ... omis pour brièveté mais devrait être présent ...
         
         $data = [
             'date_depart' => $_POST['date_depart'],
@@ -355,6 +415,11 @@ class TrajetsController extends AppController
         exit;
     }
 
+    /**
+     * Supprime un trajet de la base de données.
+     * 
+     * @return void Redirige vers le profil utilisateur après suppression
+     */
     public function delete()
     {
         if (!empty($_POST['covoiturage_id'])) {
@@ -365,7 +430,11 @@ class TrajetsController extends AppController
     }
 
     /**
-     * Annule un trajet
+     * Annule un trajet et gère les remboursements.
+     * Vérifie la propriété, empêche l'annulation des trajets passés,
+     * rembourse les crédits aux participants et envoie des notifications par email.
+     * 
+     * @return void Redirige vers le profil utilisateur avec message flash
      */
     public function annuler()
     {
@@ -376,14 +445,14 @@ class TrajetsController extends AppController
 
         $covoiturage_id = intval($_POST['covoiturage_id']);
         
-        // Ownership check
+        // Vérification de propriété
         if (empty($_SESSION['auth'])) {
              header('Location: index.php?p=utilisateurs.login');
              exit;
         }
         $utilisateur_id = $_SESSION['auth'];
         
-        // Find Trip Details
+        // Trouver les détails du trajet
         $trajet = $this->Covoiturage->findWithDetails($covoiturage_id);
         
         if (!$trajet || $trajet->utilisateur_id != $utilisateur_id) {
@@ -391,13 +460,13 @@ class TrajetsController extends AppController
              exit;
         }
         
-        // Verify Status - only non-cancelled trips?
+        // Vérifier le statut - seulement les trajets non annulés ?
         if ($trajet->statut == 'annulé') { 
             header('Location: index.php?p=utilisateurs.profile.index');
             exit;
         }
 
-        // Prevent cancelling past trips
+        // Empêcher l'annulation des trajets passés
         $trip_date = new \DateTime($trajet->date_depart . ' ' . $trajet->heure_depart);
         $now = new \DateTime();
         if ($trip_date < $now) {
@@ -407,17 +476,17 @@ class TrajetsController extends AppController
              exit;
         }
         
-        // 1. Execute Cancellation (Status Update, Refund, Notify)
+        // 1. Exécuter l'annulation (Mise à jour du statut, Remboursement, Notification)
         $result = $this->Covoiturage->cancelTrip($covoiturage_id, $utilisateur_id);
         
-        // 2. Send Emails via Service
+        // 2. Envoyer les emails via le Service
         if ($result && !empty($result['participants'])) {
             require_once ROOT . '/app/Service/Mailer.php';
             $mailer = new \NsAppEcoride\Service\Mailer();
             
             $trip = $result['trip'];
             foreach ($result['participants'] as $participant) {
-                // Formatting Date
+                // Formatage de la date
                 $dateFormatted = date('d/m/Y', strtotime($trip->date_depart));
                 
                 $subject = "Annulation de votre trajet EcoRide";
@@ -442,137 +511,23 @@ class TrajetsController extends AppController
     }
 
 
-    private function applyFilters($covoiturages, $filters)
-    {
-        if (empty($covoiturages)) {
-            return $covoiturages;
-        }
-
-        $filtered = $covoiturages;
-
-        // Filtre par type d'énergie (écologique/standard)
-        if (!empty($filters['energie']) && is_array($filters['energie'])) {
-            $filtered = array_filter($filtered, function ($covoiturage) use ($filters) {
-                $energie_normalized = strtolower($this->removeAccents($covoiturage->energie));
-                $est_ecologique = ($energie_normalized === 'electrique');
-
-                // Vérifier si 'écologique' et/ou 'standard' sont sélectionnés
-                $inclure_ecologique = in_array('ecologique', $filters['energie']);
-                $inclure_standard = in_array('standard', $filters['energie']);
-
-                // Retourner true si le covoiturage correspond à l'une des sélections
-                if ($inclure_ecologique && $est_ecologique) {
-                    return true;
-                }
-                if ($inclure_standard && !$est_ecologique) {
-                    return true;
-                }
-
-                return false;
-            });
-        }
-
-        // Filtre par prix minimum
-        if (!empty($filters['prix_min'])) {
-            $prix_min = floatval($filters['prix_min']);
-            $filtered = array_filter($filtered, function ($covoiturage) use ($prix_min) {
-                return floatval($covoiturage->prix_personne) >= $prix_min;
-            });
-        }
-
-        // Filtre par prix maximum
-        if (!empty($filters['prix_max'])) {
-            $prix_max = floatval($filters['prix_max']);
-            $filtered = array_filter($filtered, function ($covoiturage) use ($prix_max) {
-                return floatval($covoiturage->prix_personne) <= $prix_max;
-            });
-        }
-
-        // Filtre par durée maximale du voyage
-        if (!empty($filters['duree_max'])) {
-            $duree_max_heures = floatval($filters['duree_max']); // en heures (1-12 du slider)
-            $duree_max_minutes = $duree_max_heures * 60; // convertir en minutes
-            $filtered = array_filter($filtered, function ($covoiturage) use ($duree_max_minutes) {
-                $depart = \DateTime::createFromFormat('Y-m-d H:i:s', $covoiturage->date_depart . ' ' . $covoiturage->heure_depart);
-                $arrivee = \DateTime::createFromFormat('Y-m-d H:i:s', $covoiturage->date_arrivee . ' ' . $covoiturage->heure_arrivee);
-                if ($depart && $arrivee) {
-                    $interval = $arrivee->diff($depart);
-                    $duree_minutes = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
-                    return $duree_minutes <= $duree_max_minutes;
-                }
-                return true;
-            });
-        }
-
-        // Filtre par score minimum (NOTE: À adapter selon votre structure de base de données)
-        if (!empty($filters['score_min'])) {
-            $score_min = floatval($filters['score_min']);
-            // Vous devrez ajouter la colonne score dans votre table covoiturage
-            // $filtered = array_filter($filtered, function ($covoiturage) use ($score_min) {
-            //     return floatval($covoiturage->score) >= $score_min;
-            // });
-        }
-
-        return array_values($filtered); // Réinitialiser les clés du tableau
-    }
-
-    private function removeAccents($str)
-    {
+    /**
+     * Supprime les accents d'une chaîne de caractères.
+     * 
+     * @param string $str La chaîne avec accents
+     * @return string La chaîne sans accents
+     */
+    private function removeAccents($str) {
         $str = (string) $str;
         $map = array(
-            'à' => 'a',
-            'á' => 'a',
-            'â' => 'a',
-            'ã' => 'a',
-            'ä' => 'a',
-            'å' => 'a',
-            'ç' => 'c',
-            'è' => 'e',
-            'é' => 'e',
-            'ê' => 'e',
-            'ë' => 'e',
-            'ì' => 'i',
-            'í' => 'i',
-            'î' => 'i',
-            'ï' => 'i',
-            'ñ' => 'n',
-            'ò' => 'o',
-            'ó' => 'o',
-            'ô' => 'o',
-            'õ' => 'o',
-            'ö' => 'o',
-            'ù' => 'u',
-            'ú' => 'u',
-            'û' => 'u',
-            'ü' => 'u',
-            'ý' => 'y',
-            'ÿ' => 'y',
-            'À' => 'A',
-            'Á' => 'A',
-            'Â' => 'A',
-            'Ã' => 'A',
-            'Ä' => 'A',
-            'Å' => 'A',
-            'Ç' => 'C',
-            'È' => 'E',
-            'É' => 'E',
-            'Ê' => 'E',
-            'Ë' => 'E',
-            'Ì' => 'I',
-            'Í' => 'I',
-            'Î' => 'I',
-            'Ï' => 'I',
-            'Ñ' => 'N',
-            'Ò' => 'O',
-            'Ó' => 'O',
-            'Ô' => 'O',
-            'Õ' => 'O',
-            'Ö' => 'O',
-            'Ù' => 'U',
-            'Ú' => 'U',
-            'Û' => 'U',
-            'Ü' => 'U',
-            'Ý' => 'Y'
+            'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'ç' => 'c',
+            'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i',
+            'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ù' => 'u',
+            'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ý' => 'y', 'ÿ' => 'y', 'À' => 'A', 'Á' => 'A',
+            'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E',
+            'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I', 'Ñ' => 'N',
+            'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ù' => 'U', 'Ú' => 'U',
+            'Û' => 'U', 'Ü' => 'U', 'Ý' => 'Y'
         );
         return strtr($str, $map);
     }
