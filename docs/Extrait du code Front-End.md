@@ -442,7 +442,8 @@ graph TD
     D -- Oui --> E[Cacher le bouton de soumission];
     E --> F[Ajouter des écouteurs d'événements à toutes les entrées de filtre];
 
-    subgraph Interaction avec les Filtres
+    subgraph Interaction_avec_les_Filtres [Interaction avec les Filtres]
+
         G[L'utilisateur modifie un filtre] --> H{Type d'entrée ?};
         H -- Curseur/Texte --> I[Appeler la fonction AJAX avec debounce];
         H -- Case à cocher/Select --> J[Appeler la fonction AJAX immédiate];
@@ -450,7 +451,8 @@ graph TD
 
     subgraph Processus_AJAX [Processus AJAX]
         K[Obtenir les données du formulaire] --> L[Ajouter le paramètre 'ajax=1'];
-        L --> M[Définir l'état de chargement (ex: opacité)];
+        L --> M["Définir l'état de chargement (ex: opacité)"];
+
         M --> N[Requête Fetch vers le serveur avec les données du formulaire];
         N --> O{Requête réussie ?};
         O -- Oui --> P[Recevoir la réponse HTML];
@@ -460,17 +462,20 @@ graph TD
         R --> S;
     end
     
-    subgraph Interaction de Réinitialisation
+    subgraph Interaction_de_Réinitialisation [Interaction de Réinitialisation]
+
         T[L'utilisateur clique sur le bouton 'Réinitialiser'] --> U[Empêcher l'action par défaut];
         U --> V[Réinitialiser toutes les valeurs des entrées du formulaire];
         V --> W[Mettre à jour les étiquettes des curseurs];
         W --> X[Appeler la fonction AJAX immédiate];
     end
 
-    F --> Interaction avec les Filtres;
+    F --> Interaction_avec_les_Filtres;
+
     I --> Processus_AJAX;
     J --> Processus_AJAX;
-    F --> Interaction de Réinitialisation;
+    F --> Interaction_de_Réinitialisation;
+
     X --> Processus_AJAX;
 
 ```
