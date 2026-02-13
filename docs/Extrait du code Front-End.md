@@ -649,13 +649,12 @@ graph TD
     C --> D[Parcourir chaque formulaire];
     D --> E[Ajouter un écouteur d'événement 'submit' au formulaire];
     
-    subgraph Evenement_de_Soumission [Événement de Soumission]
-        F[L'utilisateur clique sur 'Supprimer' pour une voiture] --> G["L'événement 'submit' du formulaire est déclenché"];
-        G --> H{"Afficher la boîte de dialogue de confirmation : Êtes-vous sûr ?"};
+    subgraph Événement de Soumission
+        F[L'utilisateur clique sur 'Supprimer' pour une voiture] --> G[L'événement 'submit' du formulaire est déclenché];
+        G --> H{"Afficher la boîte de dialogue de confirmation : 'Êtes-vous sûr ?'"};
         H -- L'utilisateur clique sur OK --> I[Autoriser la soumission du formulaire];
         H -- L'utilisateur clique sur Annuler --> J[Empêcher la soumission du formulaire];
     end
-
 
     E --> F;
 ```
