@@ -128,14 +128,14 @@ graph TD
     B --> C[Récupérer les éléments du formulaire];
 
     subgraph Interaction Utilisateur
-        D[L'utilisateur tape dans le champ Pseudo] --> E{L'utilisateur quitte le champ (blur)};
+        D[L'utilisateur tape dans le champ Pseudo] --> E{"L'utilisateur quitte le champ (blur)"};
         E --> F[Appeler checkUniqueness pour le pseudo];
         F --> G[Requête Fetch vers le serveur];
         G --> H{Est-ce unique ?};
         H -- Non --> I[Afficher l'erreur 'déjà utilisé'];
         H -- Oui --> J[Effacer l'erreur];
 
-        K[L'utilisateur tape dans le champ Email] --> L{L'utilisateur quitte le champ (blur)};
+        K[L'utilisateur tape dans le champ Email] --> L{"L'utilisateur quitte le champ (blur)"};
         L --> M[Valider le format de l'email];
         M -- Invalide --> N[Afficher l'erreur de format];
         M -- Valide --> O[Appeler checkUniqueness pour l'email];
@@ -144,7 +144,7 @@ graph TD
         Q -- Non --> R[Afficher l'erreur 'déjà utilisé'];
         Q -- Oui --> S[Effacer l'erreur];
 
-        T[L'utilisateur tape dans la Confirmation d'Email] --> U{L'utilisateur quitte le champ (blur)};
+        T[L'utilisateur tape dans la Confirmation d'Email] --> U{"L'utilisateur quitte le champ (blur)"};
         U --> V{Les emails correspondent ?};
         V -- Non --> W[Afficher l'erreur 'ne correspondent pas'];
         V -- Oui --> X[Effacer l'erreur];
