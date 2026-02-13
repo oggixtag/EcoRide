@@ -342,9 +342,10 @@ graph TD
     D -- Oui --> E[Ajouter un écouteur de clic à l'icône burger];
     D -- Non --> H[Fin];
     
-    subgraph Événement de Clic
+    subgraph Clic_Burger [Événement de Clic]
         F[L'utilisateur clique sur l'icône burger] --> G[Basculer la classe 'active' sur la nav et le burger];
     end
+
     
     E --> F;
 ```
@@ -387,9 +388,10 @@ graph TD
     D -- Oui --> E[Ajouter un écouteur de clic au bouton];
     D -- Non --> H[Fin];
 
-    subgraph Événement de Clic
+    subgraph Clic_Sidebar [Événement de Clic]
         F[L'utilisateur clique sur le bouton de basculement] --> G[Basculer la classe 'active' sur la barre latérale];
     end
+
 
     E --> F;
 ```
