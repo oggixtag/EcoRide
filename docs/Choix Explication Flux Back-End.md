@@ -1,4 +1,4 @@
-# Extraction du Code Back-End & Analyse MVC 
+# Choix Explication Flux Back-End.md
 
 Ce document analyse l'architecture MVC (Modèle-Vue-Contrôleur) PHP personnalisée du projet EcoRide. Il extrait des segments de code clés de chaque couche de l'architecture pour expliquer leurs rôles et interactions.
 
@@ -16,20 +16,20 @@ L'application suit un modèle "Front Controller", où toutes les requêtes HTTP 
 
 ```mermaid
 graph TD
-    A[Requête HTTP] --> B[public/index.php];
-    B --> C[Définition de la constante ROOT];
-    C --> D[Chargement de app/App.php];
-    D --> E[Appel de App::load()];
-    subgraph App_load ["App::load()"]
-        F[session_start()]
+    A["Requête HTTP"] --> B["public/index.php"]
+    B --> C["Définition de la constante ROOT"]
+    C --> D["Chargement de app/App.php"]
+    D --> E["Appel de App::load()"]
+    subgraph App_load [App Load]
+        F["session_start()"]
         G[Enregistrement des Autoloaders]
     end
-    E --> F --> G;
-    G --> H[Analyse du paramètre '?p=' de l'URL];
-    H --> I{Logique de routage (if/elseif)};
-    I -- '?p=utilisateurs.login' --> J[Instanciation de UtilisateursController];
-    J --> K[Appel de la méthode login()];
-    I -- autres routes --> L[...];
+    E --> F --> G
+    G --> H["Analyse du paramètre '?p=' de l'URL"]
+    H --> I{"Logique de routage (if/elseif)"}
+    I -- '?p=utilisateurs.login' --> J[Instanciation de UtilisateursController]
+    J --> K["Appel de la méthode login()"]
+    I -- autres routes --> L[...]
 ```
 
 ### 1.3. Code Source : `public/index.php`
@@ -82,20 +82,20 @@ La classe `App` agit comme le cœur du framework. Elle utilise un pattern Single
 
 ```mermaid
 graph TD
-    A[Le contrôleur appelle App::getInstance()->getTable('Utilisateur')] --> B[La méthode getTable('Utilisateur') démarre];
-    B --> C[Construit le nom de la classe : '\\NsAppEcoride\\Model\\UtilisateurModel'];
-    C --> D[Appelle getDb() pour obtenir l'instance de la base de données];
-    subgraph getDb ["getDb()"]
-        E{db_instance existe ?}
-        E -- Non --> F[Charge le fichier de configuration];
-        F --> G[Crée une nouvelle instance de MysqlDatabase];
-        G --> H[Stocke l'instance dans db_instance];
-        E -- Oui --> H;
-        H --> I[Retourne db_instance];
+    A["Le contrôleur appelle App::getInstance()->getTable('Utilisateur')"] --> B["La méthode getTable('Utilisateur') démarre"]
+    B --> C["Construit le nom de la classe : '\\\\NsAppEcoride\\\\Model\\\\UtilisateurModel'"]
+    C --> D["Appelle getDb() pour obtenir l'instance de la base de données"]
+    subgraph getDb [getDb]
+        E{"db_instance existe ?"}
+        E -- Non --> F["Charge le fichier de configuration"]
+        F --> G["Crée une nouvelle instance de MysqlDatabase"]
+        G --> H["Stocke l'instance dans db_instance"]
+        E -- Oui --> H
+        H --> I[Retourne db_instance]
     end
-    D --> I;
-    I --> J[Instancie un nouveau UtilisateurModel(db_instance)];
-    J --> K[Retourne l'instance du modèle au Contrôleur];
+    D --> I
+    I --> J["Instancie un nouveau UtilisateurModel(db_instance)"]
+    J --> K["Retourne l'instance du modèle au Contrôleur"]
 ```
 
 ### 2.3. Code Source : `app/App.php`
@@ -180,18 +180,18 @@ La méthode `UtilisateursController::login()` est un exemple classique des respo
 
 ```mermaid
 graph TD
-    A[Requête pour 'utilisateurs.login'] --> B[Appel de UtilisateursController->login()];
-    B --> C{La méthode de requête est POST ?};
-    C -- Non --> D[Préparer un formulaire vide];
-    C -- Oui --> E[Instancier le service DbAuth];
-    E --> F[Appeler auth->login() avec les données POST];
-    F --> G{Connexion réussie ?};
-    G -- Oui --> H[Rediriger vers le tableau de bord utilisateur];
-    H --> I[Fin de la Requête];
-    G -- Non --> J[Définir un indicateur d'erreur];
-    J --> D;
-    D --> K[Appeler render('utilisateurs.login', ...)];
-    K --> L[Fin de la Requête];
+    A["Requête pour 'utilisateurs.login'"] --> B["Appel de UtilisateursController->login()"]
+    B --> C{"La méthode de requête est POST ?"}
+    C -- Non --> D["Préparer un formulaire vide"]
+    C -- Oui --> E[Instancier le service DbAuth]
+    E --> F["Appeler auth->login() avec les données POST"]
+    F --> G{"Connexion réussie ?"}
+    G -- Oui --> H[Rediriger vers le tableau de bord utilisateur]
+    H --> I["Fin de la Requête"]
+    G -- Non --> J["Définir un indicateur d'erreur"]
+    J --> D
+    D --> K["Appeler render('utilisateurs.login', ...)"]
+    K --> L["Fin de la Requête"]
 ```
 
 ### 3.3. Code Source : `core/Controller/Controller.php` et `app/Controller/UtilisateursController.php`
@@ -280,20 +280,20 @@ La classe de base `Model` est cruciale car elle implémente la logique d'accès 
 
 ```mermaid
 graph TD
-    A[Le contrôleur appelle UtilisateurModel->findByPseudo('john')] --> B[La méthode findByPseudo('john') démarre];
-    B --> C[Appelle sa propre méthode générique query()];
-    subgraph methode_query ["méthode query()"]
-        D[Construit le nom de la classe Entité ('UtilisateurEntity')]
-        E{Attributs fournis ?}
-        E -- Oui --> F[Appelle db->prepare(SQL, attributes, ...)];
-        E -- Non --> G[Appelle db->query(SQL, ...)];
+    A["Le contrôleur appelle UtilisateurModel->findByPseudo('john')"] --> B["La méthode findByPseudo('john') démarre"]
+    B --> C["Appelle sa propre méthode générique query()"]
+    subgraph methode_query [Methode Query]
+        D["Construit le nom de la classe Entité ('UtilisateurEntity')"]
+        E{"Attributs fournis ?"}
+        E -- Oui --> F["Appelle db->prepare(SQL, attributes, ...)"]
+        E -- Non --> G["Appelle db->query(SQL, ...)"]
     end
-    C --> D;
-    D --> E;
-    F --> H[Retourne le résultat de la couche BDD];
-    G --> H;
-    H --> I[Retourne le résultat à findByPseudo()];
-    I --> J[Retourne l'entité Utilisateur au Contrôleur];
+    C --> D
+    D --> E
+    F --> H["Retourne le résultat de la couche BDD"]
+    G --> H
+    H --> I["Retourne le résultat à findByPseudo()"]
+    I --> J["Retourne l'entité Utilisateur au Contrôleur"]
 ```
 
 ### 4.3. Code Source : `core/Model/Model.php` et `app/Model/UtilisateurModel.php`
@@ -392,29 +392,29 @@ La vue `login.php` est un exemple parfait de cette couche. C'est presque du HTML
 
 ```mermaid
 graph TD
-    A[Le contrôleur appelle this->render('utilisateurs.login', ...)];
-    A --> B[ob_start() commence la mise en tampon de la sortie];
-    B --> C[Les variables sont extraites (ex: $errors)];
-    C --> D[require('views/utilisateurs/login.php')];
-    subgraph execution_login ["exécution de login.php"]
+    A["Le contrôleur appelle this->render('utilisateurs.login', ...)"]
+    A --> B["ob_start() commence la mise en tampon de la sortie"]
+    B --> C["Les variables sont extraites (ex: $errors)"]
+    C --> D["require('views/utilisateurs/login.php')"]
+    subgraph execution_login [Execution Login]
         E[Le HTML est généré]
-        F{if ($errors)}
+        F{"if ($errors)"}
         F -- Vrai --> G[Le div d'erreur est généré]
     end
-    D --> E --> F;
-    G --> H[La sortie est mise en tampon, pas envoyée au navigateur];
-    F -- Faux --> H;
-    H --> I[ob_get_clean() stocke la sortie tamponnée dans $content];
-    I --> J[require('views/templates/default.php')];
-    subgraph execution_default ["exécution de default.php"]
+    D --> E --> F
+    G --> H["La sortie est mise en tampon, pas envoyée au navigateur"]
+    F -- Faux --> H
+    H --> I["ob_get_clean() stocke la sortie tamponnée dans $content"]
+    I --> J["require('views/templates/default.php')"]
+    subgraph execution_default [Execution Default]
         K[Rend l'en-tête, le menu, etc.]
         L[echo $content]
         M[Rend le pied de page]
     end
-    J --> K;
-    K --> L;
-    L --> M;
-    M --> N[Le HTML final est envoyé au navigateur];
+    J --> K
+    K --> L
+    L --> M
+    M --> N["Le HTML final est envoyé au navigateur"]
 ```
 
 ### 5.3. Code Source : `app/Views/utilisateurs/login.php`
@@ -488,22 +488,22 @@ Cela garde le contrôleur propre et la logique d'authentification réutilisable 
 
 ```mermaid
 graph TD
-    A[Le contrôleur appelle DbAuth->login(username, password)];
-    A --> B[Interroge la table 'utilisateur' pour le nom d'utilisateur donné];
-    B --> C{Utilisateur trouvé ?};
-    C -- Oui --> D[password_verify(password, user->password)];
-    D --> E{Le mot de passe correspond ?};
-    E -- Oui --> F[Définit la session : auth=user_id, auth_type='utilisateur'];
-    F --> G[Retourne vrai];
-    C -- Non --> H[Interroge la table 'visiteur_utilisateur' pour le nom d'utilisateur];
-    E -- Non --> H;
-    H --> I{Visiteur trouvé ?};
-    I -- Oui --> J[password_verify(password, visiteur->password)];
-    J --> K{Le mot de passe correspond ?};
-    K -- Oui --> L[Définit la session : auth=visiteur_id, auth_type='visiteur'];
-    L --> G;
-    I -- Non --> M[Retourne faux];
-    K -- Non --> M;
+    A["Le contrôleur appelle DbAuth->login(username, password)"]
+    A --> B["Interroge la table 'utilisateur' pour le nom d'utilisateur donné"]
+    B --> C{"Utilisateur trouvé ?"}
+    C -- Oui --> D["password_verify(password, user->password)"]
+    D --> E{"Le mot de passe correspond ?"}
+    E -- Oui --> F["Définit la session : auth=user_id, auth_type='utilisateur'"]
+    F --> G[Retourne vrai]
+    C -- Non --> H["Interroge la table 'visiteur_utilisateur' pour le nom d'utilisateur"]
+    E -- Non --> H
+    H --> I{"Visiteur trouvé ?"}
+    I -- Oui --> J["password_verify(password, visiteur->password)"]
+    J --> K{"Le mot de passe correspond ?"}
+    K -- Oui --> L["Définit la session : auth=visiteur_id, auth_type='visiteur'"]
+    L --> G
+    I -- Non --> M[Retourne faux]
+    K -- Non --> M
 ```
 
 ### 6.3. Code Source : `core/Auth/DbAuth.php`
