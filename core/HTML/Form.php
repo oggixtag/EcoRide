@@ -1,6 +1,6 @@
 <?php
 
-namespace NsCoreEcoride\Html;
+namespace NsCoreEcoride\HTML;
 
 class Form
 {

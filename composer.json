@@ -6,6 +6,9 @@
         "psr-4": {
             "NsAppEcoride\\": "app/",
             "NsCoreEcoride\\": "core/"
-        }
+        },
+        "classmap": [
+            "app/App.php"
+        ]
     }
 }
