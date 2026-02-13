@@ -1,0 +1,19 @@
+# racine
+note prj.txt
+EcoRide.code-workspace
+
+# app\Model
+CovoiturageModel - filtre OK.php
+
+# app\Views\covoiturages
+trajet - filtre OK.php
+
+# app\Controller
+CovoituragesController - filtre OK.php
+
+# public\css
+style_trajet - filtre OK.css
+
+# maquette
+test.html
+vendor/
