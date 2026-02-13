@@ -24,21 +24,25 @@ class DbAuth
     public function login($username, $password)
     {
         // 1. Essayer de se connecter en tant qu'utilisateur complet
-        $user = $this->db->prepare("SELECT * FROM utilisateur WHERE pseudo = ? and password=?", [$username, $password], null, true);
+        $user = $this->db->prepare("SELECT * FROM utilisateur WHERE pseudo = ?", [$username], null, true);
 
         if ($user) {
-            $_SESSION['auth'] = $user->utilisateur_id;
-            $_SESSION['auth_type'] = 'utilisateur';
-            return true;
+            if (password_verify($password, $user->password)) {
+                $_SESSION['auth'] = $user->utilisateur_id;
+                $_SESSION['auth_type'] = 'utilisateur';
+                return true;
+            }
         }
 
         // 2. Essayer de se connecter en tant que visiteur (inscription en cours)
-        $visiteur = $this->db->prepare("SELECT * FROM visiteur_utilisateur WHERE pseudo = ? and password=?", [$username, $password], null, true);
+        $visiteur = $this->db->prepare("SELECT * FROM visiteur_utilisateur WHERE pseudo = ?", [$username], null, true);
 
         if ($visiteur) {
-            $_SESSION['auth'] = $visiteur->visiteur_utilisateur_id;
-            $_SESSION['auth_type'] = 'visiteur';
-            return true;
+             if (password_verify($password, $visiteur->password)) {
+                $_SESSION['auth'] = $visiteur->visiteur_utilisateur_id;
+                $_SESSION['auth_type'] = 'visiteur';
+                return true;
+             }
         }
 
         return false;
@@ -52,20 +56,22 @@ class DbAuth
     public function loginEmploye($username, $password)
     {
         // Récupérer l'employé avec son poste
-        $employe = $this->db->prepare("SELECT * FROM employe WHERE pseudo = ? and password=?", [$username, $password], null, true);
+        $employe = $this->db->prepare("SELECT * FROM employe WHERE pseudo = ?", [$username], null, true);
 
         if ($employe) {
-            // Stocker l'ID dans la session correspondante selon le poste
-            if ($employe->id_poste == 1) {
-                // Administrateur - stocker l'ID dans auth_admin
-                $_SESSION['auth_admin'] = $employe->id_emp;
-            } else {
-                // Employé - stocker l'ID dans auth_employe
-                $_SESSION['auth_employe'] = $employe->id_emp;
+             if (password_verify($password, $employe->password)) {
+                // Stocker l'ID dans la session correspondante selon le poste
+                if ($employe->id_poste == 1) {
+                    // Administrateur - stocker l'ID dans auth_admin
+                    $_SESSION['auth_admin'] = $employe->id_emp;
+                } else {
+                    // Employé - stocker l'ID dans auth_employe
+                    $_SESSION['auth_employe'] = $employe->id_emp;
+                }
+                
+                // Retourner le poste pour que le contrôleur puisse rediriger correctement
+                return $employe->id_poste;
             }
-            
-            // Retourner le poste pour que le contrôleur puisse rediriger correctement
-            return $employe->id_poste;
         }
 
         return false;

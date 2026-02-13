@@ -224,10 +224,12 @@ class UtilisateursController extends AppController
                  $message_type = "error";
             } else {
                  // Création du compte visiteur
-                 file_put_contents(ROOT . '/log/email_debug.txt', date('Y-m-d H:i:s'). " - Tentative création visiteur ($pseudo)\n", FILE_APPEND);
+                 // Création du compte visiteur
                  
-                 if ($this->Utilisateur->createVisiteur($pseudo, $email, $password)) {
-                     file_put_contents(ROOT . '/log/email_debug.txt', date('Y-m-d H:i:s'). " - Visiteur créé avec succès\n", FILE_APPEND);
+                 $passwordHashed = password_hash($password, PASSWORD_DEFAULT);
+                 
+                 if ($this->Utilisateur->createVisiteur($pseudo, $email, $passwordHashed)) {
+
                      
                      // Envoi de l'email de validation
                      $this->sendValidationEmail($email, $pseudo);
@@ -287,6 +289,8 @@ class UtilisateursController extends AppController
      */
     public function validerEmail()
     {
+
+        
         // On récupère le visiteur connecté (auth_type doit être visiteur)
         $auth = new DbAuth(App::getInstance()->getDb());
         $auth_type = $auth->getAuthType();
@@ -299,7 +303,10 @@ class UtilisateursController extends AppController
                 header('Location: index.php?p=utilisateurs.index');
                 exit;
             }
+
+        
         }
+        
         
         // Si erreur ou déjà validé
         header('Location: index.php?p=utilisateurs.index');
@@ -314,11 +321,16 @@ class UtilisateursController extends AppController
      */
     public function finaliserInscription()
     {
+
+        
         $auth = new DbAuth(App::getInstance()->getDb());
         $auth_type = $auth->getAuthType();
         $id = $auth->getConnectedUserId();
+
+        
         
         if (!$auth->isConnected() || $auth_type !== 'visiteur') {
+
             $this->forbidden();
         }
 
@@ -348,15 +360,18 @@ class UtilisateursController extends AppController
                  // Mise à jour de la session pour passer en 'utilisateur'
                  $_SESSION['auth_type'] = 'utilisateur';
                  
-                 // On récupère le nouvel ID utilisateur grâce au pseudo/password stockés
-                 $user = $this->Utilisateur->getUserByCredentials($visiteur->pseudo, $visiteur->password);
+                 // On récupère le nouvel ID utilisateur grâce au pseudo
+                 $user = $this->Utilisateur->findByPseudo($visiteur->pseudo);
+                 
                  if ($user) {
                       $_SESSION['auth'] = $user->utilisateur_id;
+                      $_SESSION['auth_type'] = 'utilisateur'; 
                  }
                  
                  header('Location: index.php?p=utilisateurs.index');
                  exit;
             } else {
+
                 // Erreur
             }
         }
@@ -542,7 +557,7 @@ class UtilisateursController extends AppController
 
         // 3. Validation Complexité Mot de Passe
         // Au moins 8 caractères, 1 majuscule, 1 minuscule, 1 chiffre
-        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/', $password)) {
+        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/', $password)) {
             $errors[] = "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre.";
         }
 

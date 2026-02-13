@@ -125,6 +125,7 @@ Exécutez les scripts SQL situés dans le dossier (racine ou `scripts_DB` selon 
 2.  **Schéma** : Importez `DDL.sql` (ou `MCD.sql` selon disponibilité).
 3.  **Données** : Importez `DML.sql` pour les données de test.
 4.  **Configuration** : Mettez à jour `config/config.php` (ou équivalent dans `App.php`) avec vos identifiants.
+5.  **Sécurité** : Si vous utilisez les données de démonstration (`DML.sql`), exécutez `php scripts_DB/migrate_passwords.php` pour chiffrer les mots de passe. Pour cela vérifier 6. Sécurité des Mots de Passe (Hashage).
 
 **Attention :** Pour pouvoir vous connecter à l'interface d'administration, vous devez insérer les données suivantes dans la table `employe` :
 ```sql
@@ -463,6 +464,14 @@ Les utilisateurs suspendus voient leur interface restreinte visuellement et fonc
 ### 5. Protection de la Vie Privée (Data Masking)
 *   **Masquage par défaut** : L'adresse email est masquée (`j***n@email.com`) sur le profil pour éviter l'exposition involontaire (shoulder surfing). Un bouton "Regarder" permet de la révéler à la demande via JavaScript.
 *   **Validation des Entrées** : Le champ téléphone n'accepte que des caractères numériques (`pattern="[0-9]+"`) pour garantir l'intégrité des données.
+
+### 6. Sécurité des Mots de Passe (Hashage)
+Les mots de passe des utilisateurs ne sont jamais stockés en clair.
+*   **Technologie** : Utilisation de l'algorithme standard **Bcrypt** via les fonctions natives PHP `password_hash()` et `password_verify()`.
+*   **Migration** : Un script de migration a été mis en place pour sécuriser les anciens comptes.
+    *   **Script** : `scripts_DB/migrate_passwords.php`
+    *   **Usage** : Exécuter `php scripts_DB/migrate_passwords.php` à la racine du projet une seule fois pour crypter tous les mots de passe existants en base de données.
+    *   **Sécurité** : Les colonnes `password` des tables `utilisateur`, `visiteur_utilisateur` et `employe` ont été redimensionnées à `VARCHAR(255)` pour accueillir les hashs sécurisés.
 
 ## 📧 Contact
 Pour toute question, contactez l'équipe technique EcoRide.

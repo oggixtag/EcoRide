@@ -18,12 +18,14 @@ class UtilisateurModel extends Model
 
     /**
      * Récupère un utilisateur par son pseudo et mot de passe
+     * @deprecated Cette méthode n'est plus sécurisée car elle nécessite le mot de passe en clair. Utiliser findByPseudo + password_verify.
      * @param string $pseudo
      * @param string $password
      * @return \NsAppEcoride\Entity\UtilisateurEntity|null
      */
     public function getUserByCredentials($pseudo, $password)
     {
+        // Attention: Ne devrait plus être utilisé pour l'authentification
         return $this->query(
             "SELECT * FROM utilisateur WHERE pseudo = ? AND password = ?",
             [$pseudo, $password],
@@ -319,11 +321,13 @@ class UtilisateurModel extends Model
             ]
         );
         
+        
         if ($res) {
             // 2. Supprimer de visiteur_utilisateur
             $this->query("DELETE FROM visiteur_utilisateur WHERE visiteur_utilisateur_id = ?", [$visiteur_id]);
             return true;
         }
+
         return false;
     }
     /**
