@@ -383,17 +383,16 @@ Le script est très simple et semble être un placeholder ou une implémentation
 ```mermaid
 graph TD
     PA[Chargement de la page] --> PB{DOM Content Loaded};
-    PB --> PC[Trouver le bouton de basculement et la barre latérale];
-    PC --> PD{Les deux sont-ils trouvés ?};
-    PD -- Oui --> PE[Ajouter un écouteur de clic au bouton];
-    PD -- Non --> PH[Fin];
+    PB --> PC[Recherche des éléments .sidebar-toggle et .sidebar];
+    PC --> PD{Éléments trouvés ?};
+    PD -- Oui --> PE[Ajout écouteur 'click' sur .sidebar-toggle];
+    PD -- Non --> PH[Fin du script];
 
-    subgraph Clic_Sidebar [Événement de Clic]
-        PF[L'utilisateur clique sur le bouton de basculement] --> PG[Basculer la classe 'active' sur la barre latérale];
+    subgraph Interaction_Sidebar [Interaction Sidebar]
+        PE -.-> PF(Attente de l'événement);
+        PF --> PG[L'utilisateur clique sur .sidebar-toggle];
+        PG --> PH_Action[Basculer classe 'active' sur .sidebar];
     end
-
-
-    PE --> PF;
 ```
 
 ### 4.3. Code Source
