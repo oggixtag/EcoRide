@@ -127,7 +127,8 @@ graph TD
     A[Chargement de la page] --> B{DOM Content Loaded};
     B --> C[Récupérer les éléments du formulaire];
 
-    subgraph Interaction Utilisateur
+    subgraph Interaction_Utilisateur
+
         D[L'utilisateur tape dans le champ Pseudo] --> E{"L'utilisateur quitte le champ (blur)"};
         E --> F[Appeler checkUniqueness pour le pseudo];
         F --> G[Requête Fetch vers le serveur];
@@ -154,7 +155,8 @@ graph TD
         Z -- Valide --> AB[Effacer l'erreur];
     end
 
-    subgraph Soumission du Formulaire
+    subgraph Soumission_du_Formulaire
+
         AC[L'utilisateur clique sur Soumettre] --> AD{Événement de soumission du formulaire};
         AD --> AE[Exécuter à nouveau toutes les validations];
         AE --> AF{Toutes les validations sont-elles OK ?};
@@ -162,8 +164,9 @@ graph TD
         AF -- Non --> AH[Empêcher la soumission & afficher une alerte];
     end
 
-    C --> Interaction Utilisateur;
-    Interaction Utilisateur --> Soumission du Formulaire;
+    C --> Interaction_Utilisateur;
+    Interaction_Utilisateur --> Soumission_du_Formulaire;
+
 ```
 
 ### 2.3. Code Source
