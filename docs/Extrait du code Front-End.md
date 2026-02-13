@@ -324,7 +324,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 ---
 
-## 3. `script_menu.js`
+## 3. `script_menu.js` and `script_profile.js`
 
 ### 3.1. Objectif et Fonctionnalités
 
@@ -332,45 +332,7 @@ C'est un script simple pour gérer le menu "burger" responsif pour les vues mobi
 
 Il ajoute un écouteur d'événement `click` à l'icône du burger. Lorsqu'on clique dessus, il bascule une classe `active` sur le menu de navigation (`.nav-menu`) et sur l'icône du burger elle-même. La classe `active` est utilisée dans le CSS pour contrôler la visibilité et l'animation du menu mobile.
 
-### 3.2. Flux Schématique
-
-```mermaid
-graph TD
-    A[Chargement de la page] --> B{DOM Content Loaded};
-    B --> C[Trouver l'icône burger et le menu de navigation];
-    C --> D{Les deux sont-ils trouvés ?};
-    D -- Oui --> E[Ajouter un écouteur de clic à l'icône burger];
-    D -- Non --> H[Fin];
-    
-    subgraph Clic_Burger [Événement de Clic]
-        F[L'utilisateur clique sur l'icône burger] --> G[Basculer la classe 'active' sur la nav et le burger];
-    end
-
-    
-    E --> F;
-```
-
-### 3.3. Code Source
-
-```javascript
-document.addEventListener('DOMContentLoaded', function () {
-    const burger = document.querySelector('.burger-icon');
-    const nav = document.querySelector('.nav-menu');
-
-    if (burger && nav) {
-        burger.addEventListener('click', function () {
-            nav.classList.toggle('active');
-            burger.classList.toggle('active');
-        });
-    }
-});
-```
-
----
-
-## 4. `script_profile.js`
-
-### 4.1. Objectif et Fonctionnalités
+### 3.2. Objectif et Fonctionnalités
 
 Ce script est destiné à gérer les interactions sur la page de profil de l'utilisateur, spécifiquement pour basculer une barre latérale (sidebar) responsive.
 
@@ -378,7 +340,7 @@ Il recherche un élément `.sidebar-toggle` et un élément `.sidebar`. Si les d
 
 Le script est très simple et semble être un placeholder ou une implémentation minimale pour de futures améliorations, comme indiqué par le commentaire à l'intérieur.
 
-### 4.2. Flux Schématique
+### 3.3. Flux Schématique
 
 ```mermaid
 graph TD
@@ -395,7 +357,7 @@ graph TD
     end
 ```
 
-### 4.3. Code Source
+### 3.4. Code Source
 
 ```javascript
 document.addEventListener('DOMContentLoaded', function () {
