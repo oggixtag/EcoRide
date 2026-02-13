@@ -20,7 +20,7 @@ graph TD
     B --> C[Définition de la constante ROOT];
     C --> D[Chargement de app/App.php];
     D --> E[Appel de App::load()];
-    subgraph App::load()
+    subgraph App_load [App::load()]
         F[session_start()]
         G[Enregistrement des Autoloaders]
     end
@@ -85,7 +85,7 @@ graph TD
     A[Le contrôleur appelle App::getInstance()->getTable('Utilisateur')] --> B[La méthode getTable('Utilisateur') démarre];
     B --> C[Construit le nom de la classe : '\\NsAppEcoride\\Model\\UtilisateurModel'];
     C --> D[Appelle getDb() pour obtenir l'instance de la base de données];
-    subgraph getDb()
+    subgraph getDb [getDb()]
         E{db_instance existe ?}
         E -- Non --> F[Charge le fichier de configuration];
         F --> G[Crée une nouvelle instance de MysqlDatabase];
@@ -282,7 +282,7 @@ La classe de base `Model` est cruciale car elle implémente la logique d'accès 
 graph TD
     A[Le contrôleur appelle UtilisateurModel->findByPseudo('john')] --> B[La méthode findByPseudo('john') démarre];
     B --> C[Appelle sa propre méthode générique query()];
-    subgraph méthode query()
+    subgraph methode_query [méthode query()]
         D[Construit le nom de la classe Entité ('UtilisateurEntity')]
         E{Attributs fournis ?}
         E -- Oui --> F[Appelle db->prepare(SQL, attributes, ...)];
@@ -396,7 +396,7 @@ graph TD
     A --> B[ob_start() commence la mise en tampon de la sortie];
     B --> C[Les variables sont extraites (ex: $errors)];
     C --> D[require('views/utilisateurs/login.php')];
-    subgraph exécution de login.php
+    subgraph execution_login ["exécution de login.php"]
         E[Le HTML est généré]
         F{if ($errors)}
         F -- Vrai --> G[Le div d'erreur est généré]
@@ -406,7 +406,7 @@ graph TD
     F -- Faux --> H;
     H --> I[ob_get_clean() stocke la sortie tamponnée dans $content];
     I --> J[require('views/templates/default.php')];
-    subgraph exécution de default.php
+    subgraph execution_default ["exécution de default.php"]
         K[Rend l'en-tête, le menu, etc.]
         L[echo $content]
         M[Rend le pied de page]
