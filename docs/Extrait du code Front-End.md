@@ -1,4 +1,4 @@
-# Annexe 12 - Extraction du Code Front-End - v2.md
+# Extraction du Code Front-End.md
 
 Ce document fournit une explication détaillée du code JavaScript utilisé dans le projet EcoRide. Chaque section est dédiée à un script spécifique, décrivant son objectif, ses fonctionnalités, et fournissant le code source complet pour examen.
 
